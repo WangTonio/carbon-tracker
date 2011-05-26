@@ -1,8 +1,8 @@
 package de.unigoettingen.ct.service;
 
-import de.unigoettingen.ct.data.io.CachingStrategy;
-import de.unigoettingen.ct.data.io.PersistenceBridge;
-import de.unigoettingen.ct.data.io.UplinkFacade;
+import de.unigoettingen.ct.io.CachingStrategy;
+import de.unigoettingen.ct.io.PersistenceBridge;
+import de.unigoettingen.ct.io.UplinkFacade;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;

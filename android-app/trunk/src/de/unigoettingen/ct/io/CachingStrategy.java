@@ -1,4 +1,4 @@
-package de.unigoettingen.ct.data.io;
+package de.unigoettingen.ct.io;
 
 import java.util.Observable;
 import java.util.Observer;
