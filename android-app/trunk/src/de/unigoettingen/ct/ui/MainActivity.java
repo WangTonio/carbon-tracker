@@ -1,5 +1,7 @@
-package de.unigoettingen.ct;
+package de.unigoettingen.ct.ui;
 
+import de.unigoettingen.ct.R;
+import de.unigoettingen.ct.R.layout;
 import android.app.Activity;
 import android.os.Bundle;
 
