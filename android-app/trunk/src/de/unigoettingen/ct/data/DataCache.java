@@ -7,4 +7,7 @@ public class DataCache extends Observable{
 
 	private Set<Route> storedRoutes;
 	private Route activeRoute;
+	public void addTupleToCurrentRoute(Tuple tuple){
+		
+	}
 }
