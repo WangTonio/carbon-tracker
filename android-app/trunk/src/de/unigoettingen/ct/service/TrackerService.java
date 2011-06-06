@@ -17,7 +17,7 @@ public class TrackerService extends Service{
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
-		return mBinder;
+		return mBinder; 
 	}
 	
 	public class TrackerServiceBinder extends Binder{
