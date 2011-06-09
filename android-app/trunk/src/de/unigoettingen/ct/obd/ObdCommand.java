@@ -32,6 +32,23 @@ public abstract class ObdCommand {
 			}
 			
 		});
+		map.put("ELM_DISABLE_ECHO", new ObdCommand() {
+			@Override
+			public void queryResult(Tuple tuple, InputStream in, OutputStream out)
+					throws IOException {
+				out.write("ate0\r\n".getBytes(CHARSET_USED));
+				out.flush();
+				List<Byte> result = this.readResult(in);
+				byte[] byteResult = new byte[result.size()];
+				for(int i=0; i<result.size(); i++){ //workaround for List.toArray(..) related issues
+					byteResult[i] = result.get(i);
+				}
+				if(!new String(byteResult, CHARSET_USED).equalsIgnoreCase("OK")){
+					//if "OK" is not returned, something went wrong
+					throw new IOException("Adapter did not respond to ate0 command");
+				}
+			}
+		});
 		return map;
 	}
 	

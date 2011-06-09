@@ -45,18 +45,35 @@ public class MeasurementFacade implements LocationListener{
 		this.listeners.add(listener);
 	}
 	
-	public void setUp(BluetoothSocket socket, LocationManager locationMgr){
-		//register for gps positioning signals
-		//two updates every measurement interval are good enough; the frequency restriction saves power
-		locationMgr.requestLocationUpdates( LocationManager.GPS_PROVIDER, measurementInterval/2, 0, this);
-		this.socket = socket;
-		try{
-			this.socket.connect();
-			this.inStream = this.socket.getInputStream();
-			this.outStream = this.socket.getOutputStream();
-		}
-		catch(IOException e){
-			//TODO handle this
+	public void setUp(final BluetoothSocket socket, final LocationManager locationMgr){
+		if(!this.exec.isTerminated())
+			throw new IllegalStateException();
+		this.exec.execute(new Runnable() {		
+			@Override
+			public void run() {
+				//register for gps positioning signals
+				//two updates every measurement interval are good enough; the frequency restriction saves power
+				locationMgr.requestLocationUpdates( LocationManager.GPS_PROVIDER, measurementInterval/2, 0, MeasurementFacade.this);
+				MeasurementFacade.this.socket = socket;
+				try{
+					MeasurementFacade.this.socket.connect();
+					MeasurementFacade.this.inStream = MeasurementFacade.this.socket.getInputStream();
+					MeasurementFacade.this.outStream = MeasurementFacade.this.socket.getOutputStream();
+					ObdCommand.getCommand("ELM_DISABLE_ECHO").queryResult(null, MeasurementFacade.this.inStream, MeasurementFacade.this.outStream);
+					//if no exception is thrown, the link is established and the command is accepted
+					MeasurementFacade.this.informListeners(new MeasurementStatus(MeasurementStatus.States.SET_UP));
+				}
+				catch(IOException e){
+					//TODO handle this
+				}		
+			}
+		});
+
+	}
+	
+	private void informListeners(MeasurementStatus stat){
+		for(MeasurementStatusListener currentListener: this.listeners){
+			currentListener.notify(stat, this);
 		}
 	}
 	
