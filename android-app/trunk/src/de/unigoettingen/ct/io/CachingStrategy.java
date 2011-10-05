@@ -8,11 +8,8 @@ public class CachingStrategy implements Observer{ //TODO exchange the observer l
 	private UplinkFacade uplink;
 	private PersistenceBridge persistence;
 	
-	
-	@Override
+	//@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

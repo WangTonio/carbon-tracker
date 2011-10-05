@@ -49,7 +49,7 @@ public class MeasurementFacade implements LocationListener{
 		if(!this.exec.isTerminated())
 			throw new IllegalStateException();
 		this.exec.execute(new Runnable() {		
-			@Override
+			//@Override
 			public void run() {
 				//register for gps positioning signals
 				//two updates every measurement interval are good enough; the frequency restriction saves power
@@ -80,7 +80,7 @@ public class MeasurementFacade implements LocationListener{
 	public void startMeasurement(){
 		if(this.exec.isTerminated()){
 			this.exec.execute(new Runnable() {			
-				@Override
+				//@Override
 				public void run() {
 					while(!forceStop){
 						long beforeMeasurement = System.currentTimeMillis();
@@ -121,25 +121,25 @@ public class MeasurementFacade implements LocationListener{
 		this.forceStop = true;
 	}
 
-	@Override
+	//@Override
 	public void onLocationChanged(Location loc) {
 		this.lastLongitude = loc.getLongitude();
 		this.lastLatitude = loc.getLatitude();
 	}
 
-	@Override
+	//@Override
 	public void onProviderDisabled(String arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	//@Override
 	public void onProviderEnabled(String arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	//@Override
 	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
 		// TODO Auto-generated method stub
 		

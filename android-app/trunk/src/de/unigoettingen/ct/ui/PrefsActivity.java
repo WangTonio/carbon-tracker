@@ -1,7 +1,13 @@
 package de.unigoettingen.ct.ui;
 
-import android.app.Activity;
+import de.unigoettingen.ct.R;
+import android.os.Bundle;
+import android.preference.PreferenceActivity;
 
-public class PrefsActivity extends Activity{
-
-}
+public class PrefsActivity extends PreferenceActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.prefsettings);
+             }
+    }
