@@ -11,4 +11,6 @@
  
         <CheckBoxPreference android:summary="Auto login on phone boot" android:title="Auto login"
          android:key="autostart" android:defaultValue="true"></CheckBoxPreference>
+        <CheckBoxPreference android:key="gps" android:title="GPS" android:summary="Activate GPS"></CheckBoxPreference>
+        <CheckBoxPreference android:title="Bluetooth" android:key="bluetooth" android:summary="Activate Bluetooth"></CheckBoxPreference>
 </PreferenceScreen>
