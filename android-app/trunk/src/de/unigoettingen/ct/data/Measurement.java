@@ -16,17 +16,17 @@ public class Measurement {
 	private long ert;
 	private double lambda;
 
-	public Measurement(double d, double longitude, double latitude, double altitude, double e, double maf, int speed, Calendar calendar, long ert,
+	public Measurement(Calendar pointOfTime, double longitude, double latitude, double altitude, int rpm, double maf, int speed, int eot, long ert,
 			double lambda) {
 		super();
-		this.pointOfTime = d;
+		this.pointOfTime = pointOfTime;
 		this.longitude = longitude;
 		this.latitude = latitude;
 		this.altitude = altitude;
-		this.rpm = e;
+		this.rpm = rpm;
 		this.maf = maf;
 		this.speed = speed;
-		this.eot = calendar;
+		this.eot = eot;
 		this.ert = ert;
 		this.lambda = lambda;
 	}

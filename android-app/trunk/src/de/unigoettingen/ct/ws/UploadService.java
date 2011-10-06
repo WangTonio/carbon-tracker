@@ -5,7 +5,6 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
-
 import de.unigoettingen.ct.data.TrackPart;
 
 public class UploadService {
@@ -15,9 +14,12 @@ public class UploadService {
 	private static final String URL = "http://134.76.20.156/Android_WS/services/WebService";
 
 	public void callWebservice(TrackPart track) {
+		
 		SoapObject soapObject = new SoapObject(NAMESPACE, METHOD_NAME);
 		SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(
-				SoapEnvelope.VER11);
+				SoapEnvelope.VER12);
+		
+		soapObject.addProperty("TrackPart", track);
 
 		soapEnvelope.setOutputSoapObject(soapObject);
 		HttpTransportSE httpTransportSE = new HttpTransportSE(URL);
