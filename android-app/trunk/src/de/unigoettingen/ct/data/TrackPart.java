@@ -15,7 +15,7 @@ public class TrackPart {
 
 	}
 
-	public TrackPart(Calendar startedAt, String vin, boolean lastPart, String description, Person driver, Measurement[] measurements) {
+	public TrackPart(Calendar startedAt, String vin, boolean lastPart, String description, Person driver, Measurement[] measurements ){
 		super();
 		this.startedAt = startedAt;
 		this.vin = vin;
@@ -23,34 +23,6 @@ public class TrackPart {
 		this.description = description;
 		this.driver = driver;
 		this.measurements = measurements;
-	}
-
-
-	/**
-	 * it transmits the relevant data to the insertInMySQLDB-object, which inserts the data into the mysql-database
-	 * 
-	 * @return Message
-	 */
-	
-	@Override
-	public String toString() {
-		//
-		StringBuilder sb = new StringBuilder();
-		sb.append("(Track: startedAt=" + DateUtils.calendarToString(startedAt) + " ,vin=" + vin + " ,lastPart=" + lastPart + " , description="
-				+ description + " ,driver=" + driver.toString() + " ,measurements=[ \n");
-
-		if (measurements != null) {
-
-			for (Measurement m : measurements) {
-
-				sb.append(m.toString());
-				sb.append("\n");
-			}
-		}
-		sb.append("])");
-
-		return sb.toString();
-
 	}
 
 	public Calendar getStartedAt() {
@@ -100,5 +72,4 @@ public class TrackPart {
 	public void setMeasurements(Measurement[] measurements) {
 		this.measurements = measurements;
 	}
-
 }
