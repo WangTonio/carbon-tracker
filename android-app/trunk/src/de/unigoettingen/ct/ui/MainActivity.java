@@ -1,6 +1,7 @@
 package de.unigoettingen.ct.ui;
 
 import java.util.Calendar;
+//import android.util.Log;
 
 import de.unigoettingen.ct.R;
 import de.unigoettingen.ct.data.Measurement;
@@ -17,11 +18,13 @@ import de.unigoettingen.ct.ws.UploadService;
 public class MainActivity extends Activity {
 	TextView tv;
     private static final int SETTINGS = 3;
+    public static final String LOG_TAG = "carbontracker";
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+//        Log.v(LOG_TAG, "Hallo Welt");
         tv = (TextView)findViewById(R.id.textView1);
         
         
