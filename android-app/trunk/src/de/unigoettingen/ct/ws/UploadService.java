@@ -23,7 +23,7 @@ public class UploadService {
 				SoapEnvelope.VER12);
 		
 		soapObject.addProperty("TrackPart", track);
-//		soapObject.addProperty("TrackPart", "HelloWorld");
+//		soapObject.addProperty("TrackPart", "<?xml version='1.0' encoding='UTF-8'?><Track started_at='2011/09/23 13:42:01' last_part='false' vin='2SHDBV35JAS' description='paar bier geholt' >	<Person name='Kevin' forename='Horst'/>	<Measurement point_of_time='2011/09/23 13:42:01' longitude='13.408056' latitude='52.510611' altitude='11.1' rpm='1500' maf='100' speed='101'		eot='90' ert='00:16:00'/>	<Measurement point_of_time='2011/09/23 13:42:02' longitude='13.408156' latitude='52.511611' altitude='12.2' rpm='1501' maf='101' speed='102'		eot='90' ert='00:16:01'/>	<Measurement point_of_time='2011/09/23 13:42:03' longitude='13.408256' latitude='52.512611' altitude='13.3' rpm='1502' maf='102' speed='103' eot='90' ert='00:16:02'/></Track>");
 
 		soapEnvelope.setOutputSoapObject(soapObject);
 		

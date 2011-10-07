@@ -2,6 +2,7 @@ package de.unigoettingen.ct.data;
 
 import java.util.Calendar;
 
+
 public class TrackPart {
 
 	private Calendar startedAt;
@@ -14,7 +15,6 @@ public class TrackPart {
 	public TrackPart() {
 
 	}
-
 	public TrackPart(Calendar startedAt, String vin, boolean lastPart, String description, Person driver, Measurement[] measurements ){
 		super();
 		this.startedAt = startedAt;

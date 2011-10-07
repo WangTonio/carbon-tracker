@@ -55,17 +55,6 @@ public class MainActivity extends Activity {
 		measurements[1].setPointOfTime(Calendar.getInstance());
 		measurements[1].setRpm(1500);
 		measurements[1].setSpeed(101);
-		
-//		measurements[0] = new Measurement(11.1, 90, 1000, 1, 52.510611, 13.408056, 100, Calendar.getInstance(), 1500, 101);
-//		measurements[1] = new Measurement(12.1, 91, 1001, 1, 52.810611, 13.808056, 101, Calendar.getInstance(), 1501, 102);
-		// (altitude, eot, ert, lambda, latitude, longitude, maf, pointOfTime, rpm, speed)
-
-		trackPart.setDescription("Bockwurstaction");
-		trackPart.setDriver(new Person("Hans", "Wurst"));
-		trackPart.setLastPart(false);
-		trackPart.setStartedAt(Calendar.getInstance());
-		trackPart.setVin("2SHDBV35JAS");
-		trackPart.setMeasurements(measurements);
 
 		UploadService uploadService = new UploadService();
 		uploadService.callWebservice(trackPart);
