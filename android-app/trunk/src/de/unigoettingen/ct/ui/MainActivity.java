@@ -48,13 +48,26 @@ public class MainActivity extends Activity {
 		measurements[1].setAltitude(12.1);
 		measurements[1].setEot(91);
 		measurements[1].setErt(1001);
-		measurements[1].setLambda(1.00);
-		measurements[1].setLatitude(52.510611);
-		measurements[1].setLongitude(13.408056);
-		measurements[1].setMaf(100);
-		measurements[1].setPointOfTime(Calendar.getInstance());
-		measurements[1].setRpm(1500);
-		measurements[1].setSpeed(101);
+		measurements[1].setLambda(1.01);
+		measurements[1].setLatitude(53.510611);
+		measurements[1].setLongitude(14.408056);
+		measurements[1].setMaf(101);
+		Calendar oneSecLater = Calendar.getInstance();
+		oneSecLater.roll(Calendar.SECOND, true);
+		measurements[1].setPointOfTime(oneSecLater);
+		measurements[1].setRpm(1501);
+		measurements[1].setSpeed(102);
+		
+//		measurements[0] = new Measurement(11.1, 90, 1000, 1, 52.510611, 13.408056, 100, Calendar.getInstance(), 1500, 101);
+//		measurements[1] = new Measurement(12.1, 91, 1001, 1, 52.810611, 13.808056, 101, Calendar.getInstance(), 1501, 102);
+		// (altitude, eot, ert, lambda, latitude, longitude, maf, pointOfTime, rpm, speed)
+
+		trackPart.setDescription("Betrunken durch Göttingen gerast");
+		trackPart.setDriver(new Person("Heinz", "Harald"));
+		trackPart.setLastPart(false);
+		trackPart.setStartedAt(measurements[0].getPointOfTime());
+		trackPart.setVin("SAMPLEVIN");
+		trackPart.setMeasurements(measurements);
 
 		UploadService uploadService = new UploadService();
 		uploadService.callWebservice(trackPart);

@@ -16,7 +16,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import de.unigoettingen.ct.data.DataCache;
-import de.unigoettingen.ct.data.Tuple;
+import de.unigoettingen.ct.data.Measurement;
+import de.unigoettingen.ct.obd.cmd.CommandProvider;
+import de.unigoettingen.ct.obd.cmd.ObdCommand;
 
 public class MeasurementFacade implements LocationListener{
 	
@@ -59,7 +61,7 @@ public class MeasurementFacade implements LocationListener{
 					MeasurementFacade.this.socket.connect();
 					MeasurementFacade.this.inStream = MeasurementFacade.this.socket.getInputStream();
 					MeasurementFacade.this.outStream = MeasurementFacade.this.socket.getOutputStream();
-					ObdCommand.getCommand("ELM_DISABLE_ECHO").queryResult(null, MeasurementFacade.this.inStream, MeasurementFacade.this.outStream);
+					CommandProvider.getCommand("DISABLE_ELM_ECHO").queryResult(null, MeasurementFacade.this.inStream, MeasurementFacade.this.outStream);
 					//if no exception is thrown, the link is established and the command is accepted
 					MeasurementFacade.this.informListeners(new MeasurementStatus(MeasurementStatus.States.SET_UP));
 				}
@@ -86,10 +88,10 @@ public class MeasurementFacade implements LocationListener{
 						long beforeMeasurement = System.currentTimeMillis();
 						double lngBeforeMeasurement = lastLongitude;
 						double latBeforeMeasurement = lastLatitude;
-						Tuple currentTuple = new Tuple();
+						Measurement currentMeasurement = new Measurement();
 						for(ObdCommand currentCmd : obdCmds){
 							try{
-								currentCmd.queryResult(currentTuple, inStream, outStream);
+								currentCmd.queryResult(currentMeasurement, inStream, outStream);
 							}
 							catch(IOException e){
 								//TODO log this, inform listeners, but go on
@@ -98,12 +100,12 @@ public class MeasurementFacade implements LocationListener{
 						long afterMeasurement = System.currentTimeMillis();
 						Calendar timeStamp = new GregorianCalendar();
 						timeStamp.setTimeInMillis((beforeMeasurement+afterMeasurement)/2);
-						currentTuple.setTimeStamp(timeStamp);
+						currentMeasurement.setPointOfTime(timeStamp);
 						//coordinates are adjusted by calculating the arithmetic mean of the coordinates
 						//before and after the obd measurement. It is an approximation.
-						currentTuple.setLongitude((lastLongitude + lngBeforeMeasurement)/2);
-						currentTuple.setLatitude((lastLatitude+latBeforeMeasurement)/2);
-						dataCache.addTupleToCurrentRoute(currentTuple);
+						currentMeasurement.setLongitude((lastLongitude + lngBeforeMeasurement)/2);
+						currentMeasurement.setLatitude((lastLatitude+latBeforeMeasurement)/2);
+						//dataCache.addTupleToCurrentRoute(currentMeasurement);
 						try {
 							Thread.sleep(measurementInterval);
 						} catch (InterruptedException e) {

@@ -1,6 +1,5 @@
 package de.unigoettingen.ct.data;
 
-import java.sql.Time;
 import java.util.Calendar;
 
 public class Measurement {
@@ -117,7 +116,6 @@ public class Measurement {
 
 	@Override
 	public String toString() {
-		//
 		return "(Measurement: pointOfTime=" + DateUtils.calendarToString(pointOfTime) + " ,longitude=" + longitude + " , latitude=" + latitude + " ,altitude=" + altitude + " "
 				+ ",rpm=" + rpm + " ,maf=" + maf + " speed=" + speed + " ,eot=" + eot + " ,ert=" + ert + " ,lamda=" + lambda + ")";
 	}

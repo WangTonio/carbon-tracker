@@ -1,13 +1,21 @@
 package de.unigoettingen.ct.ws;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 
-import de.unigoettingen.ct.data.TrackPart;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+
 import android.util.Log;
+import de.unigoettingen.ct.data.TrackPart;
+import de.unigoettingen.ct.json.CalendarTransformer;
+import flexjson.JSONSerializer;
 
 public class UploadService {
 	private static final String SOAP_ACTION = "http://data.ct.unigoettingen.de/start2";
@@ -16,30 +24,75 @@ public class UploadService {
 	private static final String URL = "http://134.76.20.156/Android_WS/services/WebService";
 	public static final String LOG_TAG = "carbontracker";
 
+//	public void callWebservice(TrackPart track) {
+//		
+//		SoapObject soapObject = new SoapObject(NAMESPACE, METHOD_NAME);
+//		SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(
+//				SoapEnvelope.VER12);
+//		
+//		soapObject.addProperty("TrackPart", track);
+////		soapObject.addProperty("TrackPart", "HelloWorld");
+//
+//		soapEnvelope.setOutputSoapObject(soapObject);
+//		
+//		HttpTransportSE httpTransportSE = new HttpTransportSE(URL);
+//		httpTransportSE.debug = true;
+//		
+//		try {
+//			httpTransportSE.call(SOAP_ACTION, soapEnvelope);
+//			SoapPrimitive resultString1 = (SoapPrimitive) soapEnvelope
+//					.getResponse();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		String debug = "";
+//		debug = httpTransportSE.requestDump;
+//		Log.v(LOG_TAG, debug);
+//	}
+	
 	public void callWebservice(TrackPart track) {
+		Log.d(LOG_TAG, " -------------------------------------------------------- ");
+		JSONSerializer serializer = new JSONSerializer().prettyPrint(true).transform(new CalendarTransformer(), Calendar.class);
+//		JSONDeserializer<TrackPart> deserializer = new JSONDeserializer<TrackPart>().use(Calendar.class, (ObjectFactory) new CalendarTransformer());
+		String json = serializer.deepSerialize(track);
+		System.out.println("Will send this to the web service:");
+		System.out.println(json);
 		
-		SoapObject soapObject = new SoapObject(NAMESPACE, METHOD_NAME);
-		SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(
-				SoapEnvelope.VER12);
-		
-		soapObject.addProperty("TrackPart", track);
-//		soapObject.addProperty("TrackPart", "<?xml version='1.0' encoding='UTF-8'?><Track started_at='2011/09/23 13:42:01' last_part='false' vin='2SHDBV35JAS' description='paar bier geholt' >	<Person name='Kevin' forename='Horst'/>	<Measurement point_of_time='2011/09/23 13:42:01' longitude='13.408056' latitude='52.510611' altitude='11.1' rpm='1500' maf='100' speed='101'		eot='90' ert='00:16:00'/>	<Measurement point_of_time='2011/09/23 13:42:02' longitude='13.408156' latitude='52.511611' altitude='12.2' rpm='1501' maf='101' speed='102'		eot='90' ert='00:16:01'/>	<Measurement point_of_time='2011/09/23 13:42:03' longitude='13.408256' latitude='52.512611' altitude='13.3' rpm='1502' maf='102' speed='103' eot='90' ert='00:16:02'/></Track>");
-
-		soapEnvelope.setOutputSoapObject(soapObject);
-		
-		HttpTransportSE httpTransportSE = new HttpTransportSE(URL);
-		httpTransportSE.debug = true;
-		
+		HttpPost httppost = new HttpPost("http://134.76.20.156/CarbonTrackerWS/TrackPart");          
+		StringEntity se = null;
 		try {
-			httpTransportSE.call(SOAP_ACTION, soapEnvelope);
-			SoapPrimitive resultString1 = (SoapPrimitive) soapEnvelope
-					.getResponse();
-		} catch (Exception e) {
-			e.printStackTrace();
+			se = new StringEntity(json,HTTP.UTF_8);
 		}
-		String debug = "";
-		debug = httpTransportSE.requestDump;
-		Log.v(LOG_TAG, debug);
+		catch (UnsupportedEncodingException e) {
+			Log.e(LOG_TAG, "UNSUPPORTED ENCODING UTF-8");
+			e.printStackTrace();
+			return;
+		}
+
+		se.setContentType("application/json");  
+		httppost.setHeader("Content-Type","application/json;charset=UTF-8");
+		httppost.setEntity(se);  
+
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpResponse httpResponse;
+		try {
+			httpResponse = httpclient.execute(httppost);
+		}
+		catch (ClientProtocolException e) {
+			Log.e(LOG_TAG, "ClientProtocolException.. WAT");
+			e.printStackTrace();
+			return;
+		}
+		catch (IOException e) {
+			Log.e(LOG_TAG, "IOEXCEPTION");
+			e.printStackTrace();
+			return;
+		}
+		System.out.println("Status Code: "+httpResponse.getStatusLine().getStatusCode());
+		System.out.println("Phrase: "+httpResponse.getStatusLine().getReasonPhrase());
+		System.out.println("Whole line: "+httpResponse.getStatusLine().toString());
+
+		
 	}
 
 }
