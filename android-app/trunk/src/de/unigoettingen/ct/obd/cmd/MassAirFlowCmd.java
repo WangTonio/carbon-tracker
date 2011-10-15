@@ -12,9 +12,9 @@ public class MassAirFlowCmd extends ObdCommand{
 	}
 
 	@Override
-	public void processResponse(byte[] response, Measurement measure) throws IOException {
+	public void processResponse(String response, Measurement measure) throws IOException {
 		//TODO i hope this is right but can not guarantee anything
-		measure.setMaf(((response[0]*256)+response[1]) / 100D);
+		measure.setMaf( (Integer.parseInt(response, 16) / 100D) );
 	}
 	
 	

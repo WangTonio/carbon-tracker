@@ -3,7 +3,6 @@ package de.unigoettingen.ct.obd.cmd;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 
 import de.unigoettingen.ct.data.Measurement;
 
@@ -17,7 +16,7 @@ import de.unigoettingen.ct.data.Measurement;
 public abstract class ObdCommand {
 	
 	private static final String CHARSET_USED = "ASCII";
-	private byte[] buffer = new byte[10]; //will be used temporarily, when bytes are read from input streams. 
+	private final byte[] buffer = new byte[30]; //will be used temporarily, when bytes are read from input streams. 
 										//this is not located in the method scope to avoid allocation costs in every call.
 
 	/**
@@ -27,26 +26,14 @@ public abstract class ObdCommand {
 	 * @param out the output stream expected to be from the ELM adapter
 	 * @param measure data object, where the result will be stored in
 	 * @throws IOException if the obd command is not supported or the connection was lost
+	 * @throws UnsupportedObdCommandException 
 	 */
-	public void queryResult(Measurement measure, InputStream in, OutputStream out) throws IOException{
-		out.write((getCommandString()+"\r\n").getBytes(CHARSET_USED));
+	public void queryResult(Measurement measure, InputStream in, OutputStream out) throws IOException, UnsupportedObdCommandException{
+		out.write((getCommandString()+"\r").getBytes(CHARSET_USED)); //a carriage return terminates a command. line feed not necessary.
 		out.flush();
 		processResponse(readResultBackIn(in), measure);
 	}
 	
-	/**
-	 * Creates a string with the encoding used by ELM from the bytes provided.
-	 * @param response 
-	 * @return string made out of the argument
-	 */
-	public String responseToString(byte[] response){
-		try {
-			return new String(response, CHARSET_USED);
-		}
-		catch (UnsupportedEncodingException e) {
-			throw new InternalError("The platform does not even support ASCII encoding. This is very unexpected");
-		}
-	}
 	
 	/**
 	 * Returns the specific OBD/ELM command, that will be send out to the adapter.
@@ -63,23 +50,47 @@ public abstract class ObdCommand {
 	 * @param measure
 	 * @throws IOException if the result could not be interpreted / was invalid
 	 */
-	public abstract void processResponse(byte[] response, Measurement measure) throws IOException;
+	public abstract void processResponse(String response, Measurement measure) throws IOException;
 	
 	/**
 	 * Utility method, that reads as many ASCII characters from the stream until the command prompt has returned.
+	 * It returns those characters as a string, stripping any spaces, NULL chars, carriage returns or command echoes.
 	 * @param in
-	 * @return
+	 * @return the pure response string containing only hex digits directly interpretable as the result (e.g. "A1E4") or a custom
+	 * ASCII string in the case of an ELM system command
 	 * @throws IOException
+	 * @throws UnsupportedObdCommandException 
 	 */
-	private byte[] readResultBackIn(InputStream in) throws IOException{
+	private String readResultBackIn(InputStream in) throws IOException, UnsupportedObdCommandException{
 		byte read = -1;
-		int index =0;
+		int index =0; //will be the number of characters read after the while loop
 		while ( (read = (byte) in.read()) != '>'){
-			this.buffer[index]=read;
-			index++;
+			if(read == -1){
+				//end of stream reached, before the answer could be read => connection lost
+				throw new IOException("Lost connection to the adapter.");
+			}
+			if(read != 0 && read != ' ' && read != '\r'){ 
+				//bytes with value 0 must be filtered out. see the ELM documentation p. 8
+				//white spaces are also filtered out to simplify further processing
+				this.buffer[index]=read;
+				index++;
+			}
 		}
-		byte[] ret = new byte[index];
-		System.arraycopy(this.buffer, 0, ret, 0, index);
+		//check, if the ELM 'error code' for an unsupported command was returned
+		if(index == 6 && new String(this.buffer,0,index).equalsIgnoreCase("NODATA")){
+			throw new UnsupportedObdCommandException("Command "+this.getCommandString()+" returns NODATA and is not supported by the vehicle.");
+		}
+		
+		String ret;
+		//when obd commands were issued, the first 4 returned bytes echo the command itself back
+		//in that case, there are already removed from the result
+		//commands directed at the ELM chip however, do not echo the command; their length is < 4 and will not be touched
+		if(index > 4){
+			ret = new String(this.buffer,4,index-4);
+		}
+		else{
+			ret = new String(this.buffer,0,index);
+		}
 		return ret;
 	}
 	

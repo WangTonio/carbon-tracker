@@ -19,6 +19,7 @@ import de.unigoettingen.ct.data.DataCache;
 import de.unigoettingen.ct.data.Measurement;
 import de.unigoettingen.ct.obd.cmd.CommandProvider;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
+import de.unigoettingen.ct.obd.cmd.UnsupportedObdCommandException;
 
 public class MeasurementFacade implements LocationListener{
 	
@@ -68,6 +69,9 @@ public class MeasurementFacade implements LocationListener{
 				catch(IOException e){
 					//TODO handle this
 				}		
+				catch(UnsupportedObdCommandException e){
+					//TODO unexpected
+				}
 			}
 		});
 
@@ -95,6 +99,9 @@ public class MeasurementFacade implements LocationListener{
 							}
 							catch(IOException e){
 								//TODO log this, inform listeners, but go on
+							}
+							catch(UnsupportedObdCommandException e2){
+								//TODO remove the command from the job list
 							}
 						}
 						long afterMeasurement = System.currentTimeMillis();

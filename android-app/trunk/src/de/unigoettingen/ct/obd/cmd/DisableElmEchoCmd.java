@@ -18,8 +18,8 @@ public class DisableElmEchoCmd extends ObdCommand{
 	}
 
 	@Override
-	public void processResponse(byte[] response, Measurement measure) throws IOException {
-		if(!responseToString(response).equalsIgnoreCase("OK")){
+	public void processResponse(String response, Measurement measure) throws IOException {
+		if(!response.equalsIgnoreCase("OK")){
 			//if "OK" is not returned, something went wrong
 			throw new IOException("Adapter did not respond to ate0 command");
 		}
