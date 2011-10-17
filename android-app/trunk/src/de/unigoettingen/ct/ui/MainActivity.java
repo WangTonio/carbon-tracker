@@ -1,82 +1,69 @@
 package de.unigoettingen.ct.ui;
 
-import java.util.Calendar;
-//import android.util.Log;
-
-import de.unigoettingen.ct.R;
-import de.unigoettingen.ct.data.Measurement;
-import de.unigoettingen.ct.data.Person;
-import de.unigoettingen.ct.data.TrackPart;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-import de.unigoettingen.ct.ws.UploadService;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import de.unigoettingen.ct.R;
+import de.unigoettingen.ct.service.TrackerService;
+import de.unigoettingen.ct.service.TrackerService.TrackerServiceBinder;
 
-public class MainActivity extends Activity {
-	TextView tv;
+public class MainActivity extends Activity implements OnClickListener{
+
     private static final int SETTINGS = 3;
-    public static final String LOG_TAG = "carbontracker";
-	/** Called when the activity is first created. */
+    private static final String LOG_TAG = "MainActivity";
+    
+    private Button startMeasurementBtn;
+    private Button preferencesBtn;
+    private Button viewLogBtn;
+    
+    private TrackerServiceBinder serviceBinder;
+     
+    
+    /** Defines callbacks for service binding, initiated by bindService().
+     *  Does not have any functionality besides these two callback methods- */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+        	//service is bound by the system
+        	//store a reference to the binder, as it is the communication interface for the service
+        	//register this activity as a listener for state changes
+            serviceBinder = (TrackerServiceBinder) service;
+           // serviceBinder.setStatusListener(MainActivity.this);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+        	//the service exited; this will only happen in cases of unrecoverable errors
+        }
+    };
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-//        Log.v(LOG_TAG, "Hallo Welt");
-        tv = (TextView)findViewById(R.id.textView1);
-        
-        
-		TrackPart trackPart = new TrackPart();
-		Measurement measurements[] = new Measurement[2];
-
-		measurements[0] = new Measurement();
-		measurements[1] = new Measurement();
-		
-		measurements[0].setAltitude(11.1);
-		measurements[0].setEot(90);
-		measurements[0].setErt(1000);
-		measurements[0].setLambda(1.00);
-		measurements[0].setLatitude(52.510611);
-		measurements[0].setLongitude(13.408056);
-		measurements[0].setMaf(100);
-		measurements[0].setPointOfTime(Calendar.getInstance());
-		measurements[0].setRpm(1500);
-		measurements[0].setSpeed(101);
-		
-		measurements[1].setAltitude(12.1);
-		measurements[1].setEot(91);
-		measurements[1].setErt(1001);
-		measurements[1].setLambda(1.01);
-		measurements[1].setLatitude(53.510611);
-		measurements[1].setLongitude(14.408056);
-		measurements[1].setMaf(101);
-		Calendar oneSecLater = Calendar.getInstance();
-		oneSecLater.roll(Calendar.SECOND, true);
-		measurements[1].setPointOfTime(oneSecLater);
-		measurements[1].setRpm(1501);
-		measurements[1].setSpeed(102);
-		
-//		measurements[0] = new Measurement(11.1, 90, 1000, 1, 52.510611, 13.408056, 100, Calendar.getInstance(), 1500, 101);
-//		measurements[1] = new Measurement(12.1, 91, 1001, 1, 52.810611, 13.808056, 101, Calendar.getInstance(), 1501, 102);
-		// (altitude, eot, ert, lambda, latitude, longitude, maf, pointOfTime, rpm, speed)
-
-		trackPart.setDescription("Betrunken durch Göttingen gerast");
-		trackPart.setDriver(new Person("Heinz", "Harald"));
-		trackPart.setLastPart(false);
-		trackPart.setStartedAt(measurements[0].getPointOfTime());
-		trackPart.setVin("SAMPLEVIN");
-		trackPart.setMeasurements(measurements);
-
-		UploadService uploadService = new UploadService();
-		uploadService.callWebservice(trackPart);
-		
+        this.startMeasurementBtn = (Button) findViewById(R.id.startMeasurementBtn);
+        this.startMeasurementBtn.setOnClickListener(this);
+        this.preferencesBtn = (Button) findViewById(R.id.preferencesBtn);
+        this.preferencesBtn.setOnClickListener(this);
+        this.viewLogBtn = (Button) findViewById(R.id.logBtn);
+        this.viewLogBtn.setOnClickListener(this);	
     }
+    
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, SETTINGS, 0, "Settings");
         return true;
     }
+    
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case SETTINGS:
@@ -85,8 +72,30 @@ public class MainActivity extends Activity {
         }
         return false;
     }
+    
     private void updateConfig() {
     	Intent configIntent = new Intent(this,PrefsActivity.class);
     	startActivity(configIntent);
     }
+    
+	private void startAndBindRadioPlayerService(){
+        Intent intent = new Intent(this, TrackerService.class);
+		startService(intent);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        //the service will be bound and created
+        //when the service is set up, this object will receive an asynchronous call back
+	}
+	
+    
+	public void onClick(View v) {
+		if(v==this.startMeasurementBtn){
+			
+		}
+		else if(v == this.preferencesBtn){
+			this.updateConfig();
+		}
+		else if(v == this.viewLogBtn){
+			
+		}
+	}
 }
