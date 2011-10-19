@@ -15,6 +15,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.PrefsActivity" android:label="Settings"></activity>
-
+	 <service android:name="de.unigoettingen.ct.service.TrackerService" android:exported="false"></service>
     </application>
 </manifest>

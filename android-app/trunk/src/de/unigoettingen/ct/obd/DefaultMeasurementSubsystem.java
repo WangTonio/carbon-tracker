@@ -15,18 +15,18 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import de.unigoettingen.ct.data.DataCache;
+import de.unigoettingen.ct.container.TrackCache;
 import de.unigoettingen.ct.data.Measurement;
 import de.unigoettingen.ct.obd.cmd.CommandProvider;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
 import de.unigoettingen.ct.obd.cmd.UnsupportedObdCommandException;
 
-public class MeasurementFacade implements LocationListener{
+public class DefaultMeasurementSubsystem implements LocationListener, MeasurementSubsystem{
 	
 	private BluetoothSocket socket;
 	private InputStream inStream;
 	private OutputStream outStream;
-	private DataCache dataCache;
+	private TrackCache dataCache;
 	private List<MeasurementStatusListener> listeners;
 	private List<ObdCommand> obdCmds;
 	private ExecutorService exec;
@@ -36,7 +36,7 @@ public class MeasurementFacade implements LocationListener{
 	private volatile boolean forceStop;
 	
 	
-	public MeasurementFacade(DataCache dataCache, long measurementInterval){
+	public DefaultMeasurementSubsystem(TrackCache dataCache, long measurementInterval){
 		this.dataCache = dataCache;
 		this.measurementInterval = measurementInterval;
 		this.listeners = new ArrayList<MeasurementStatusListener>(1);
@@ -44,10 +44,16 @@ public class MeasurementFacade implements LocationListener{
 		this.forceStop = false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.unigoettingen.ct.obd.MeasurementSubsystem#addStatusListener(de.unigoettingen.ct.obd.MeasurementStatusListener)
+	 */
 	public void addStatusListener(MeasurementStatusListener listener){
 		this.listeners.add(listener);
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.unigoettingen.ct.obd.MeasurementSubsystem#setUp(android.bluetooth.BluetoothSocket, android.location.LocationManager)
+	 */
 	public void setUp(final BluetoothSocket socket, final LocationManager locationMgr){
 		if(!this.exec.isTerminated())
 			throw new IllegalStateException();
@@ -56,15 +62,15 @@ public class MeasurementFacade implements LocationListener{
 			public void run() {
 				//register for gps positioning signals
 				//two updates every measurement interval are good enough; the frequency restriction saves power
-				locationMgr.requestLocationUpdates( LocationManager.GPS_PROVIDER, measurementInterval/2, 0, MeasurementFacade.this);
-				MeasurementFacade.this.socket = socket;
+				locationMgr.requestLocationUpdates( LocationManager.GPS_PROVIDER, measurementInterval/2, 0, DefaultMeasurementSubsystem.this);
+				DefaultMeasurementSubsystem.this.socket = socket;
 				try{
-					MeasurementFacade.this.socket.connect();
-					MeasurementFacade.this.inStream = MeasurementFacade.this.socket.getInputStream();
-					MeasurementFacade.this.outStream = MeasurementFacade.this.socket.getOutputStream();
-					CommandProvider.getCommand("DISABLE_ELM_ECHO").queryResult(null, MeasurementFacade.this.inStream, MeasurementFacade.this.outStream);
+					DefaultMeasurementSubsystem.this.socket.connect();
+					DefaultMeasurementSubsystem.this.inStream = DefaultMeasurementSubsystem.this.socket.getInputStream();
+					DefaultMeasurementSubsystem.this.outStream = DefaultMeasurementSubsystem.this.socket.getOutputStream();
+					CommandProvider.getCommand("DISABLE_ELM_ECHO").queryResult(null, DefaultMeasurementSubsystem.this.inStream, DefaultMeasurementSubsystem.this.outStream);
 					//if no exception is thrown, the link is established and the command is accepted
-					MeasurementFacade.this.informListeners(new MeasurementStatus(MeasurementStatus.States.SET_UP));
+					DefaultMeasurementSubsystem.this.informListeners(new MeasurementStatus(MeasurementStatus.States.SET_UP));
 				}
 				catch(IOException e){
 					//TODO handle this
@@ -83,6 +89,9 @@ public class MeasurementFacade implements LocationListener{
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.unigoettingen.ct.obd.MeasurementSubsystem#startMeasurement()
+	 */
 	public void startMeasurement(){
 		if(this.exec.isTerminated()){
 			this.exec.execute(new Runnable() {			
@@ -126,6 +135,9 @@ public class MeasurementFacade implements LocationListener{
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.unigoettingen.ct.obd.MeasurementSubsystem#stopMeasurement()
+	 */
 	public void stopMeasurement(){
 		this.forceStop = true;
 	}

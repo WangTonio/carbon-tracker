@@ -18,7 +18,20 @@ public class MeasurementStatus {
 		this.state = state;
 		this.additionalInfo = additionalInfo;
 	}
+
+
+	public States getState() {
+		return state;
+	}
+
+
+	public String getAdditionalInfo() {
+		return additionalInfo;
+	}
 	
-	
+	@Override
+	public String toString() {
+		return state+" : "+additionalInfo;
+	}
 
 }

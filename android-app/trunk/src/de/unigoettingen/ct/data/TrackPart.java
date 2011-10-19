@@ -24,6 +24,10 @@ public class TrackPart {
 		this.driver = driver;
 		this.measurements = measurements;
 	}
+	
+	public TrackPart getCloneWithoutMeasurements(){
+		return new TrackPart((Calendar) startedAt.clone(), vin, lastPart, description, new Person(driver.getForename(), driver.getLastname()), null);
+	}
 
 	public Calendar getStartedAt() {
 		return startedAt;

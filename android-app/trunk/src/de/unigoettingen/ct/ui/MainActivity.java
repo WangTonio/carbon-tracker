@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,7 @@ public class MainActivity extends Activity implements OnClickListener{
         	//service is bound by the system
         	//store a reference to the binder, as it is the communication interface for the service
         	//register this activity as a listener for state changes
+        	Log.i(LOG_TAG, "Service bound");
             serviceBinder = (TrackerServiceBinder) service;
            // serviceBinder.setStatusListener(MainActivity.this);
         }
@@ -57,6 +59,7 @@ public class MainActivity extends Activity implements OnClickListener{
         this.preferencesBtn.setOnClickListener(this);
         this.viewLogBtn = (Button) findViewById(R.id.logBtn);
         this.viewLogBtn.setOnClickListener(this);	
+        this.startAndBindService();
     }
     
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -78,18 +81,17 @@ public class MainActivity extends Activity implements OnClickListener{
     	startActivity(configIntent);
     }
     
-	private void startAndBindRadioPlayerService(){
+	private void startAndBindService(){
         Intent intent = new Intent(this, TrackerService.class);
 		startService(intent);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         //the service will be bound and created
-        //when the service is set up, this object will receive an asynchronous call back
 	}
 	
     
 	public void onClick(View v) {
 		if(v==this.startMeasurementBtn){
-			
+			this.serviceBinder.start();
 		}
 		else if(v == this.preferencesBtn){
 			this.updateConfig();
