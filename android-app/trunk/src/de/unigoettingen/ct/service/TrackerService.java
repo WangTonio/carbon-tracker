@@ -33,7 +33,7 @@ public class TrackerService extends Service implements MeasurementStatusListener
 	private void setUpAndMeasure() {
 		if (!active) {
 			Log.i(LOG_TAG, "Creating subsystems");
-			TrackCache cache = new TrackCache(new OngoingTrack(Calendar.getInstance(), "VIN_NOT_IMPLEMENTED", "Some description", new Person("Heinz", "Harald")));
+			TrackCache cache = new TrackCache(new OngoingTrack(Calendar.getInstance(), "SAMPLEVIN", "Some description", new Person("Heinz", "Harald")));
 			this.cachingStrat = new SimpleCachingStratgey(cache);
 			this.measurementSystem = new MockMeasurementSubsystem(cache, 0xDEADCAFE);
 			this.measurementSystem.addStatusListener(this);
