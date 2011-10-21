@@ -17,4 +17,5 @@
         <activity android:name=".ui.PrefsActivity" android:label="Settings"></activity>
 	 <service android:name="de.unigoettingen.ct.service.TrackerService" android:exported="false"></service>
     </application>
+    <uses-sdk android:minSdkVersion="8" />
 </manifest>
