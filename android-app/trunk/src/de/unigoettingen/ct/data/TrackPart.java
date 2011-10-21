@@ -2,6 +2,8 @@ package de.unigoettingen.ct.data;
 
 import java.util.Calendar;
 
+import flexjson.JSON;
+
 
 public class TrackPart {
 
@@ -25,6 +27,7 @@ public class TrackPart {
 		this.measurements = measurements;
 	}
 	
+	@JSON(include=false)
 	public TrackPart getCloneWithoutMeasurements(){
 		return new TrackPart((Calendar) startedAt.clone(), vin, lastPart, description, new Person(driver.getForename(), driver.getLastname()), null);
 	}
