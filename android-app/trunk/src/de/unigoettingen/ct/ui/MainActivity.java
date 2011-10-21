@@ -1,6 +1,7 @@
 package de.unigoettingen.ct.ui;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 import de.unigoettingen.ct.R;
 import de.unigoettingen.ct.service.TrackerService;
 import de.unigoettingen.ct.service.TrackerService.TrackerServiceBinder;
 
-public class MainActivity extends Activity implements OnClickListener{
+public class MainActivity extends Activity implements OnClickListener, CallbackUI{
 
     private static final int SETTINGS = 3;
     private static final String LOG_TAG = "MainActivity";
@@ -25,8 +28,11 @@ public class MainActivity extends Activity implements OnClickListener{
     private Button startMeasurementBtn;
     private Button preferencesBtn;
     private Button viewLogBtn;
+    private TextView statusLine;
+    private ProgressDialog loadingDialog;
     
     private TrackerServiceBinder serviceBinder;
+    private boolean hasRunningService = false;
      
     
     /** Defines callbacks for service binding, initiated by bindService().
@@ -40,7 +46,7 @@ public class MainActivity extends Activity implements OnClickListener{
         	//register this activity as a listener for state changes
         	Log.i(LOG_TAG, "Service bound");
             serviceBinder = (TrackerServiceBinder) service;
-           // serviceBinder.setStatusListener(MainActivity.this);
+            serviceBinder.setUIforCallbacks(MainActivity.this);
         }
 
         @Override
@@ -59,6 +65,7 @@ public class MainActivity extends Activity implements OnClickListener{
         this.preferencesBtn.setOnClickListener(this);
         this.viewLogBtn = (Button) findViewById(R.id.logBtn);
         this.viewLogBtn.setOnClickListener(this);	
+        this.statusLine = (TextView) findViewById(R.id.statusLineTextView);
         this.startAndBindService();
     }
     
@@ -89,9 +96,15 @@ public class MainActivity extends Activity implements OnClickListener{
 	}
 	
     
+	
 	public void onClick(View v) {
 		if(v==this.startMeasurementBtn){
-			this.serviceBinder.start();
+			if(hasRunningService){
+				this.serviceBinder.stop();
+			}
+			else{
+				this.serviceBinder.start();
+			}
 		}
 		else if(v == this.preferencesBtn){
 			this.updateConfig();
@@ -100,4 +113,36 @@ public class MainActivity extends Activity implements OnClickListener{
 			
 		}
 	}
+
+	@Override
+	public void diplayText(String text) {
+		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void indicateRunning(boolean running) {
+		if(running){
+			this.statusLine.setText("Running ...");
+			this.startMeasurementBtn.setText("Stop Measurement");
+			this.hasRunningService = true;
+		}
+		else{
+			this.statusLine.setText("Stopped");
+			this.startMeasurementBtn.setText("Start Measurement");
+			this.hasRunningService = false;
+		}
+	}
+
+	@Override
+	public void indicateLoading(boolean loading) {
+		if(loading && this.loadingDialog == null){
+			this.loadingDialog = ProgressDialog.show(this, null, "Loading ...");
+			this.loadingDialog.show();
+		}
+		else if(!loading && this.loadingDialog != null){
+			this.loadingDialog.dismiss();
+		}
+	}
+	
+	
 }

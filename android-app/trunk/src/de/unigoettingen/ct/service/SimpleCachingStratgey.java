@@ -13,7 +13,7 @@ import de.unigoettingen.ct.data.TrackSummary;
  */
 public class SimpleCachingStratgey extends AbstractCachingStrategy{
 
-	private static final int MEASUREMENT_THRESHOLD = 10; //there is no sophisticated reason for this number
+	private static final int MEASUREMENT_THRESHOLD = 10000; //there is no sophisticated reason for this number
 	
 	public SimpleCachingStratgey(TrackCache cache) {
 		super(cache);

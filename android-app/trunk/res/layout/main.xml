@@ -4,6 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Welcome !" android:textSize="24dp" android:id="@+id/statusLineTextView"></TextView>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/startMeasurementBtn" android:text="Start Measurement"></Button>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Preferences" android:id="@+id/preferencesBtn"></Button>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="View Log" android:id="@+id/logBtn"></Button>
