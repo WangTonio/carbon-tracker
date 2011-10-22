@@ -20,26 +20,33 @@ import de.unigoettingen.ct.data.Measurement;
 import de.unigoettingen.ct.obd.cmd.CommandProvider;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
 import de.unigoettingen.ct.obd.cmd.UnsupportedObdCommandException;
+import de.unigoettingen.ct.service.AsynchronousSubsystem;
+import de.unigoettingen.ct.service.SubsystemStatus;
+import de.unigoettingen.ct.service.SubsystemStatusListener;
 
-public class DefaultMeasurementSubsystem implements LocationListener, MeasurementSubsystem{
+public class DefaultMeasurementSubsystem implements LocationListener, AsynchronousSubsystem{
 	
 	private BluetoothSocket socket;
 	private InputStream inStream;
 	private OutputStream outStream;
+	private LocationManager locationMgr;
 	private TrackCache dataCache;
-	private List<MeasurementStatusListener> listeners;
+	private List<SubsystemStatusListener> listeners;
 	private List<ObdCommand> obdCmds;
 	private ExecutorService exec;
 	private long measurementInterval;
 	private double lastLongitude;
 	private double lastLatitude;
+	private double lastAltitude;
 	private volatile boolean forceStop;
 	
 	
-	public DefaultMeasurementSubsystem(TrackCache dataCache, long measurementInterval){
+	public DefaultMeasurementSubsystem(TrackCache dataCache, long measurementInterval, BluetoothSocket btsock, LocationManager locationMgr){
 		this.dataCache = dataCache;
+		this.socket = btsock;
+		this.locationMgr = locationMgr;
 		this.measurementInterval = measurementInterval;
-		this.listeners = new ArrayList<MeasurementStatusListener>(1);
+		this.listeners = new ArrayList<SubsystemStatusListener>(1);
 		this.exec = Executors.newSingleThreadExecutor();
 		this.forceStop = false;
 	}
@@ -47,14 +54,14 @@ public class DefaultMeasurementSubsystem implements LocationListener, Measuremen
 	/* (non-Javadoc)
 	 * @see de.unigoettingen.ct.obd.MeasurementSubsystem#addStatusListener(de.unigoettingen.ct.obd.MeasurementStatusListener)
 	 */
-	public void addStatusListener(MeasurementStatusListener listener){
+	public void addStatusListener(SubsystemStatusListener listener){
 		this.listeners.add(listener);
 	}
 	
 	/* (non-Javadoc)
 	 * @see de.unigoettingen.ct.obd.MeasurementSubsystem#setUp(android.bluetooth.BluetoothSocket, android.location.LocationManager)
 	 */
-	public void setUp(final BluetoothSocket socket, final LocationManager locationMgr){
+	public void setUp(){
 		if(!this.exec.isTerminated())
 			throw new IllegalStateException();
 		this.exec.execute(new Runnable() {		
@@ -70,7 +77,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Measuremen
 					DefaultMeasurementSubsystem.this.outStream = DefaultMeasurementSubsystem.this.socket.getOutputStream();
 					CommandProvider.getCommand("DISABLE_ELM_ECHO").queryResult(null, DefaultMeasurementSubsystem.this.inStream, DefaultMeasurementSubsystem.this.outStream);
 					//if no exception is thrown, the link is established and the command is accepted
-					DefaultMeasurementSubsystem.this.informListeners(new MeasurementStatus(MeasurementStatus.States.SET_UP));
+					DefaultMeasurementSubsystem.this.informListeners(new SubsystemStatus(SubsystemStatus.States.SET_UP));
 				}
 				catch(IOException e){
 					//TODO handle this
@@ -83,8 +90,8 @@ public class DefaultMeasurementSubsystem implements LocationListener, Measuremen
 
 	}
 	
-	private void informListeners(MeasurementStatus stat){
-		for(MeasurementStatusListener currentListener: this.listeners){
+	private void informListeners(SubsystemStatus stat){
+		for(SubsystemStatusListener currentListener: this.listeners){
 			currentListener.notify(stat, this);
 		}
 	}
@@ -92,7 +99,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Measuremen
 	/* (non-Javadoc)
 	 * @see de.unigoettingen.ct.obd.MeasurementSubsystem#startMeasurement()
 	 */
-	public void startMeasurement(){
+	public void start(){
 		if(this.exec.isTerminated()){
 			this.exec.execute(new Runnable() {			
 				//@Override
@@ -138,7 +145,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Measuremen
 	/* (non-Javadoc)
 	 * @see de.unigoettingen.ct.obd.MeasurementSubsystem#stopMeasurement()
 	 */
-	public void stopMeasurement(){
+	public void stop(){
 		this.forceStop = true;
 	}
 
@@ -146,6 +153,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Measuremen
 	public void onLocationChanged(Location loc) {
 		this.lastLongitude = loc.getLongitude();
 		this.lastLatitude = loc.getLatitude();
+		this.lastAltitude = loc.getAltitude();
 	}
 
 	//@Override

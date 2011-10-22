@@ -15,7 +15,7 @@ import de.unigoettingen.ct.data.TrackSummary;
 import de.unigoettingen.ct.upload.AbstractUploader;
 import de.unigoettingen.ct.upload.TrackPartUploader;
 
-public abstract class AbstractCachingStrategy implements GenericObserver<List<TrackSummary>>{
+public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, GenericObserver<List<TrackSummary>>{
 
 	private static final String LOG_TAG = "Caching";
 	
@@ -24,11 +24,29 @@ public abstract class AbstractCachingStrategy implements GenericObserver<List<Tr
 	private AbstractUploader currentUpload;
 	private TrackPart currentlyUploadedTrackPart;
 	private int currentlyUploadedIndex;
+	private SubsystemStatusListener statusListener;
 	
 	public AbstractCachingStrategy(TrackCache cache){
 		this.cache = cache;
 		this.cache.addObserver(this);
 		this.executor = Executors.newSingleThreadExecutor();
+	}
+	
+	@Override
+	public void setUp() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void addStatusListener(SubsystemStatusListener listener) {
+		this.statusListener = listener;
 	}
 	
 	@Override
@@ -75,7 +93,7 @@ public abstract class AbstractCachingStrategy implements GenericObserver<List<Tr
 		currentlyUploadedIndex = -1;
 	}
 	
-	public void shutDown(){
+	public void stop(){
 		//submit a job waiting for a possible pending upload to finish
 		//give that job a few seconds using executor.awaitTermination(...)
 		executor.execute(new Runnable() {	

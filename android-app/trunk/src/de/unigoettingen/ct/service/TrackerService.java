@@ -5,9 +5,6 @@ import java.util.Calendar;
 import de.unigoettingen.ct.container.TrackCache;
 import de.unigoettingen.ct.data.OngoingTrack;
 import de.unigoettingen.ct.data.Person;
-import de.unigoettingen.ct.obd.MeasurementStatus;
-import de.unigoettingen.ct.obd.MeasurementStatusListener;
-import de.unigoettingen.ct.obd.MeasurementSubsystem;
 import de.unigoettingen.ct.obd.MockMeasurementSubsystem;
 import de.unigoettingen.ct.ui.CallbackUI;
 import android.app.Service;
@@ -18,13 +15,13 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-public class TrackerService extends Service implements MeasurementStatusListener{
+public class TrackerService extends Service implements SubsystemStatusListener{
 
 	private boolean active=false;
 	private CallbackUI ui;
 	private Handler mainThread;
 	private AbstractCachingStrategy cachingStrat;
-	private MeasurementSubsystem measurementSystem;
+	private AsynchronousSubsystem measurementSystem;
 	
 	private static final String LOG_TAG = "TrackerService";
 	
@@ -43,13 +40,13 @@ public class TrackerService extends Service implements MeasurementStatusListener
 			this.measurementSystem = new MockMeasurementSubsystem(cache, 0xDEADCAFE);
 			this.measurementSystem.addStatusListener(this);
 			this.active = true;
-			this.measurementSystem.startMeasurement();
+			this.measurementSystem.start();
 		}
 	}
 	
 	private void terminate(){
-		this.cachingStrat.shutDown(); //would be nice if this would be asynchronous
-		this.measurementSystem.stopMeasurement();
+		this.cachingStrat.stop(); //would be nice if this would be asynchronous
+		this.measurementSystem.stop();
 		this.cachingStrat = null;
 		this.measurementSystem = null;
 		this.active = false;
@@ -57,7 +54,7 @@ public class TrackerService extends Service implements MeasurementStatusListener
 	}
 	
 	@Override
-	public void notify(final MeasurementStatus status, final MeasurementSubsystem sender) {
+	public void notify(final SubsystemStatus status, final AsynchronousSubsystem sender) {
 		//this method gets called from another thread
 		//it is necessary to handle the status update in thread main, just as everything else in this class
 		this.mainThread.post(new Runnable() {	
