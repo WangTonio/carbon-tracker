@@ -55,8 +55,11 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 		}
 	}
 	
+	public synchronized List<TrackSummary> getSummary(){
+		return this.generateSummary();
+	}
 	
-	public List<TrackSummary> generateSummary(){
+	private List<TrackSummary> generateSummary(){
 		List<TrackSummary> retVal = new ArrayList<TrackSummary>(tracks.size());
 		for(OngoingTrack ot: this.tracks){
 			retVal.add(new TrackSummary(ot.getMeasurementCount(), ot.isClosed()));

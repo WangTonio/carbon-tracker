@@ -34,7 +34,7 @@ public class MockMeasurementSubsystem implements AsynchronousSubsystem{
 	}
 
 	@Override
-	public void addStatusListener(SubsystemStatusListener listener) {
+	public void setStatusListener(SubsystemStatusListener listener) {
 		this.listener = listener;
 	}
 
@@ -87,12 +87,7 @@ public class MockMeasurementSubsystem implements AsynchronousSubsystem{
 				listener.notify(new SubsystemStatus(SubsystemStatus.States.STOPPED_BY_USER), MockMeasurementSubsystem.this);
 			}
 		});
-		try {
-			this.exec.awaitTermination(3, TimeUnit.SECONDS);
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		this.exec.shutdown();
 	}
 
 }

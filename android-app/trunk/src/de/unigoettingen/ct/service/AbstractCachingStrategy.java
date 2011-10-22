@@ -1,12 +1,12 @@
 package de.unigoettingen.ct.service;
 
+import static de.unigoettingen.ct.service.SubsystemStatus.States.*;
+
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import android.util.Log;
-
 import de.unigoettingen.ct.container.Logg;
 import de.unigoettingen.ct.container.TrackCache;
 import de.unigoettingen.ct.data.GenericObserver;
@@ -25,32 +25,37 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 	private TrackPart currentlyUploadedTrackPart;
 	private int currentlyUploadedIndex;
 	private SubsystemStatusListener statusListener;
+	private volatile boolean running;
 	
 	public AbstractCachingStrategy(TrackCache cache){
 		this.cache = cache;
-		this.cache.addObserver(this);
+		this.running = false;
 		this.executor = Executors.newSingleThreadExecutor();
 	}
 	
 	@Override
 	public void setUp() {
-		// TODO Auto-generated method stub
-		
+		this.cache.addObserver(this);
+		this.statusListener.notify(new SubsystemStatus(SET_UP), this);
 	}
 	
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
-		
+		this.running = true;
+		this.statusListener.notify(new SubsystemStatus(IN_PROGRESS), this);
 	}
 	
 	@Override
-	public void addStatusListener(SubsystemStatusListener listener) {
+	public void setStatusListener(SubsystemStatusListener listener) {
 		this.statusListener = listener;
 	}
 	
 	@Override
 	public void update(final List<TrackSummary> observable) {
+		if(!this.running){
+			//if this is not activated, do not respond to events
+			return;
+		}
 		this.executor.execute(new Runnable() {	
 			@Override
 			public void run() {
@@ -71,6 +76,7 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 								Logg.log(Log.ERROR, LOG_TAG, "Can not upload measurements due to misconfiguration. Still "+
 										currentlyUploadedTrackPart.getMeasurements().length+" measurements in the pipe.");
 								Logg.log(Log.ERROR, LOG_TAG, "Persistence is not yet implemented and data will be lost.");
+								statusListener.notify(new SubsystemStatus(ERROR_BUT_ONGOING, "Upload not possible, data will be lost."), AbstractCachingStrategy.this);
 								//TODO time to use the persistence features !
 							}
 						}
@@ -94,8 +100,10 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 	}
 	
 	public void stop(){
+		//make sure not to respond to cache events anymore
+		this.running = false;
 		//submit a job waiting for a possible pending upload to finish
-		//give that job a few seconds using executor.awaitTermination(...)
+		//the upload will either succeed or fail, it has a timeout on it's own (AT LEAST I HOPE SO)
 		executor.execute(new Runnable() {	
 			@Override
 			public void run() {
@@ -106,29 +114,23 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 							Thread.sleep(500);
 						}
 						catch (InterruptedException e) {
-							//awaitTermination() kicked in => out of time
-							Logg.log(Log.WARN, LOG_TAG, "Upload has not finished within limits. As no persistence is implemented yet, a loss "+
-									"of data is possible.");
-							return;
+							Log.wtf(LOG_TAG, "Thread caught in interrupt that was not expected.");
 						}
 					}
-					handleSuccessfulUpload();
+					if(!currentUpload.hasErrorOccurred()){
+						handleSuccessfulUpload();
+					}
 				}
+				//check, if there is still data in the pipe
+				//TODO if so, try to upload it
+				List<TrackSummary> currentCacheState = cache.getSummary();
+				if(currentCacheState.size() > 0){
+					Logg.log(Log.WARN, LOG_TAG, "Application terminates allthough there are still measurements in RAM, which are not yet uploaded.");
+				}
+				statusListener.notify(new SubsystemStatus(STOPPED_BY_USER), AbstractCachingStrategy.this);
 			}
 		});
-		//let the client thread wait a bit, then force stop
-		try {
-			executor.awaitTermination(4, TimeUnit.SECONDS);
-		}
-		catch (InterruptedException e) {
-			Log.e(null, "Unexpected interrupt.");
-			e.printStackTrace();
-			Thread.currentThread().interrupt();
-		}
-		List<TrackSummary> currentCacheState = cache.generateSummary();
-		if(currentCacheState.size() > 0){
-			Logg.log(Log.WARN, LOG_TAG, "Application terminates allthough there are still measurements in RAM, which are not yet uploaded.");
-		}
+		this.executor.shutdown(); //make sure the thread is getting terminated after the jobs are through
 	}
 	
 	protected void invokeUpload(int trackIndex){

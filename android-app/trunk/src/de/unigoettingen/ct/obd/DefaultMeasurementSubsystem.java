@@ -54,7 +54,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 	/* (non-Javadoc)
 	 * @see de.unigoettingen.ct.obd.MeasurementSubsystem#addStatusListener(de.unigoettingen.ct.obd.MeasurementStatusListener)
 	 */
-	public void addStatusListener(SubsystemStatusListener listener){
+	public void setStatusListener(SubsystemStatusListener listener){
 		this.listeners.add(listener);
 	}
 	

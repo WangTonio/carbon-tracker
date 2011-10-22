@@ -4,7 +4,7 @@ package de.unigoettingen.ct.service;
 
 public interface AsynchronousSubsystem {
 
-	public abstract void addStatusListener(SubsystemStatusListener listener);
+	public abstract void setStatusListener(SubsystemStatusListener listener);
 
 	public abstract void setUp();
 

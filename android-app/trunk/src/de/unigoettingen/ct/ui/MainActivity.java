@@ -141,6 +141,7 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
 		}
 		else if(!loading && this.loadingDialog != null){
 			this.loadingDialog.dismiss();
+			this.loadingDialog = null;
 		}
 	}
 	
