@@ -50,4 +50,12 @@ public class OngoingTrack {
 		return this.wrappedTrackPart.isLastPart();
 	}
 
+	public String getVin() {
+		return wrappedTrackPart.getVin();
+	}
+
+	public void setVin(String vin) {
+		wrappedTrackPart.setVin(vin);
+	}
+	
 }

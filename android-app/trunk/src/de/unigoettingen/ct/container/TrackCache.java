@@ -59,6 +59,23 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 		return this.generateSummary();
 	}
 	
+	/**
+	 * Attempts to set the VIN of the currently active track. If a VIN is already present
+	 * and it differs from the passed-in one, false is returned and the vin is not changed.
+	 * @param vin VIN to set
+	 * @return true, if set successfully
+	 */
+	public synchronized boolean matchVinOfActiveTrack(String vin){
+		OngoingTrack activeTrack = this.tracks.get(this.tracks.size()-1);
+		if(activeTrack.getVin() == null || activeTrack.getVin().equals(vin)){
+			activeTrack.setVin(vin);
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
 	private List<TrackSummary> generateSummary(){
 		List<TrackSummary> retVal = new ArrayList<TrackSummary>(tracks.size());
 		for(OngoingTrack ot: this.tracks){
