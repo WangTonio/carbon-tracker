@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="Settings">
- 
-        <EditTextPreference android:title="Name"
-                android:inputType="text" android:summary="Set your login name here"
-                android:key="name" android:persistent="true" android:defaultValue=""></EditTextPreference>
-               
-        <EditTextPreference android:title="Password"
-                android:summary=""
-                android:key="password" android:persistent="true" android:defaultValue="" android:inputType="textPassword"></EditTextPreference>
- 
-        <CheckBoxPreference android:summary="Auto login on phone boot" android:title="Auto login"
-         android:key="autostart" android:defaultValue="true"></CheckBoxPreference>
-        <CheckBoxPreference android:key="gps" android:title="GPS" android:summary="Activate GPS"></CheckBoxPreference>
-        <CheckBoxPreference android:title="Bluetooth" android:key="bluetooth" android:summary="Activate Bluetooth"></CheckBoxPreference>
+        <EditTextPreference android:persistent="true" android:order="1" android:summary="Your first name." android:key="forename" android:title="Forename" android:defaultValue="UNKNOWN" android:inputType="text"></EditTextPreference>    
+        <EditTextPreference android:persistent="true" android:order="2" android:summary="Your last name." android:key="lastname" android:title="Lastname" android:defaultValue="DRIVER" android:inputType="text"></EditTextPreference>
+        <CheckBoxPreference android:key="rpm" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Engine Rounds per Minute" android:order="3"></CheckBoxPreference>
+        <CheckBoxPreference android:key="speed" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Driving Speed" android:order="4"></CheckBoxPreference>
+        <CheckBoxPreference android:key="eot" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Engine Oil Temperature" android:order="5"></CheckBoxPreference>
+        <CheckBoxPreference android:key="ert" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Engine Run Time" android:order="6"></CheckBoxPreference>
+        <EditTextPreference android:order="7" android:summary="URL (without suffixes) of the server your data will be uploaded to." android:key="serverurl" android:title="Server URL" android:defaultValue="http://134.76.20.156/CarbonTrackerWS3/"></EditTextPreference>
 </PreferenceScreen>

@@ -1,22 +1,23 @@
 package de.unigoettingen.ct.obd.cmd;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.SharedPreferences;
 
 
 public class CommandProvider {
 	
-	private static final Map<String, ObdCommand> commandMap = initializeCommandMap();
-	
-	public static synchronized ObdCommand getCommand(String commandName){
-		return commandMap.get(commandName);
-	}
-
-	private static Map<String, ObdCommand> initializeCommandMap() {
-		Map<String, ObdCommand> ret = new HashMap<String, ObdCommand>();
-		ret.put("DISABLE_ELM_ECHO", new DisableElmEchoCmd());
-		ret.put("MASS_AIR_FLOW", new MassAirFlowCmd());
-		return ret;
+	public static List<ObdCommand> getDesiredObdCommands(SharedPreferences prefs){
+		List<ObdCommand> retVal = new ArrayList<ObdCommand>();
+		retVal.add(new MassAirFlowCmd());
+		//TODO other obligatory commands go here
+		
+		if(prefs.getBoolean("rpm", false)){
+			retVal.add(new EngineRpmCmd());
+		}
+		//TODO other optional commands go here
+		return retVal;
 	}
 
 }

@@ -18,6 +18,7 @@ import android.os.Bundle;
 import de.unigoettingen.ct.container.TrackCache;
 import de.unigoettingen.ct.data.Measurement;
 import de.unigoettingen.ct.obd.cmd.CommandProvider;
+import de.unigoettingen.ct.obd.cmd.DisableElmEchoCmd;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
 import de.unigoettingen.ct.obd.cmd.UnsupportedObdCommandException;
 import de.unigoettingen.ct.service.AsynchronousSubsystem;
@@ -75,7 +76,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 					DefaultMeasurementSubsystem.this.socket.connect();
 					DefaultMeasurementSubsystem.this.inStream = DefaultMeasurementSubsystem.this.socket.getInputStream();
 					DefaultMeasurementSubsystem.this.outStream = DefaultMeasurementSubsystem.this.socket.getOutputStream();
-					CommandProvider.getCommand("DISABLE_ELM_ECHO").queryResult(null, DefaultMeasurementSubsystem.this.inStream, DefaultMeasurementSubsystem.this.outStream);
+					new DisableElmEchoCmd().queryResult(null, DefaultMeasurementSubsystem.this.inStream, DefaultMeasurementSubsystem.this.outStream);
 					//if no exception is thrown, the link is established and the command is accepted
 					DefaultMeasurementSubsystem.this.informListeners(new SubsystemStatus(SubsystemStatus.States.SET_UP));
 				}
