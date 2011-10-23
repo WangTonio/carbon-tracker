@@ -28,4 +28,9 @@ public class DebugMessage {
 		this.message = message;
 	}
 	
+	@Override
+	public String toString() {
+		return DateUtils.calendarToString(pointOfTime)+": "+message;
+	}
+	
 }

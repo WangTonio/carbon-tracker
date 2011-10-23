@@ -5,6 +5,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import android.util.Log;
+
+import de.unigoettingen.ct.container.Logg;
 import de.unigoettingen.ct.container.TrackCache;
 import de.unigoettingen.ct.data.Measurement;
 import de.unigoettingen.ct.service.AsynchronousSubsystem;
@@ -72,6 +75,7 @@ public class MockMeasurementSubsystem implements AsynchronousSubsystem{
 				m.setLambda(1);
 				m.setPointOfTime(Calendar.getInstance());
 				dataCache.addMeasurementToActiveRoute(m);
+				Logg.log(Log.DEBUG, "MockMeasurementSS", "Added a tuple");
 			}
 		};
 		this.exec.scheduleAtFixedRate(mockLogic, 3, 1, TimeUnit.SECONDS);

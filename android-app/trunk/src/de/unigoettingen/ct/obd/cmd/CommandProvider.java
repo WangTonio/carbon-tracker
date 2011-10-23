@@ -5,9 +5,19 @@ import java.util.List;
 
 import android.content.SharedPreferences;
 
-
+/**
+ * Utility class to determine, which OBD commands should be used.
+ * @author Fabian Sudau
+ *
+ */
 public class CommandProvider {
 	
+	/**
+	 * Returns a list of all OBD commands that must be used periodically.
+	 * This includes the obligatory OBD commands and enabled optional commands as well.
+	 * @param prefs the preferences to load the user choice from
+	 * @return 
+	 */
 	public static List<ObdCommand> getDesiredObdCommands(SharedPreferences prefs){
 		List<ObdCommand> retVal = new ArrayList<ObdCommand>();
 		retVal.add(new MassAirFlowCmd());

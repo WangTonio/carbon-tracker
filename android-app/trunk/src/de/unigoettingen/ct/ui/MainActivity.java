@@ -88,6 +88,11 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
     	startActivity(configIntent);
     }
     
+    private void goToLoggActivity(){
+    	Intent configIntent = new Intent(this,LoggActivity.class);
+    	startActivity(configIntent);
+    }
+    
 	private void startAndBindService(){
         Intent intent = new Intent(this, TrackerService.class);
 		startService(intent);
@@ -110,7 +115,7 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
 			this.updateConfig();
 		}
 		else if(v == this.viewLogBtn){
-			
+			this.goToLoggActivity();
 		}
 	}
 
