@@ -14,6 +14,7 @@ public class CalendarTransformer extends AbstractTransformer implements ObjectFa
 		this.getContext().writeQuoted(de.unigoettingen.ct.data.DateUtils.calendarToString((Calendar) object));
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {
 		try{
 			return de.unigoettingen.ct.data.DateUtils.parseTimestamp((String) value);

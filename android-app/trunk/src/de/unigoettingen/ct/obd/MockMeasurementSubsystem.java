@@ -93,5 +93,10 @@ public class MockMeasurementSubsystem implements AsynchronousSubsystem{
 		});
 		this.exec.shutdown();
 	}
+	
+	@Override
+	public String toString() {
+		return "MockMeasurementSys";
+	}
 
 }

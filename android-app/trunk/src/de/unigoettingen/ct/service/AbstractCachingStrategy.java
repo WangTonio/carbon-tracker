@@ -146,4 +146,8 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 	
 	protected abstract void handleCacheChange(List<TrackSummary> tracks);
 	
+	@Override
+	public String toString() {
+		return "CachingSys";
+	}
 }

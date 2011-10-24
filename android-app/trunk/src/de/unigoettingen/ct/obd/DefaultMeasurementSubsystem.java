@@ -240,5 +240,10 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public String toString() {
+		return "MeasurementSys";
+	}
 
 }
