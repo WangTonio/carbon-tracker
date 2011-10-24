@@ -30,7 +30,7 @@ public class Logg extends GenericObservable<Logg>{
 		return new DebugLog(android.os.Build.MODEL != null ? android.os.Build.MODEL : "UNKNOWN DEVICE", this.getMessagesAsArray());
 	}
 	
-	public DebugMessage[] getMessagesAsArray(){
+	public synchronized DebugMessage[] getMessagesAsArray(){
 		DebugMessage[] msgArray = new DebugMessage[messages.size()];
 		msgArray = messages.toArray(msgArray);
 		return msgArray;
@@ -39,13 +39,17 @@ public class Logg extends GenericObservable<Logg>{
 	public static void log(int loglevel,String tag, String msg, Throwable th){
 		Log.println(loglevel, tag, msg);
 		Log.println(loglevel, tag, Log.getStackTraceString(th));
-		INSTANCE.messages.add(new DebugMessage(Calendar.getInstance(), msg+" \n "+th.getClass().getName()+" "+th.getMessage()));
-		INSTANCE.fireUpdates(INSTANCE);
+		synchronized (INSTANCE) {
+			INSTANCE.messages.add(new DebugMessage(Calendar.getInstance(), msg+" \n "+th.getClass().getName()+" "+th.getMessage()));
+			INSTANCE.fireUpdates(INSTANCE);
+		}
 	}
 
 	public static void log(int loglevel,String tag, String msg){
 		Log.println(loglevel, tag, msg);
-		INSTANCE.messages.add(new DebugMessage(Calendar.getInstance(), msg));
-		INSTANCE.fireUpdates(INSTANCE);
+		synchronized (INSTANCE) {
+			INSTANCE.messages.add(new DebugMessage(Calendar.getInstance(), msg));
+			INSTANCE.fireUpdates(INSTANCE);
+		}
 	}
 }
