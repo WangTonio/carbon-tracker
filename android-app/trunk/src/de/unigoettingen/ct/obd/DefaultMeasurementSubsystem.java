@@ -91,10 +91,12 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 				}
 				catch(IOException e){
 					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "Could not establish connection to the ELM bluetooth adapter.");
+					cleanUp();
 					return;
 				}		
 				catch(UnsupportedObdCommandException e){
 					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "ELM adapter did not respond to DISABLE_ECHO command.");
+					cleanUp();
 					return;
 				}
 				//if no exception is thrown, the link is established and the command is accepted
@@ -107,6 +109,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 				}
 				catch (IOException e) {
 					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "Vin Command caused an IOException: "+e.getMessage());
+					cleanUp();
 					return;
 				}
 				catch (UnsupportedObdCommandException e) {
@@ -116,6 +119,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 				if(!dataCache.matchVinOfActiveTrack(retrievedVin)){
 					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "The stored Track has a different VIN than the current vehicle. "+
 							"Start a new Track or use the original vehicle again.");
+					cleanUp();
 					return;
 				}
 				//at this point everything went fine, the periodic measurement can be turned on using the start() method
@@ -144,6 +148,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 				}
 				catch(IOException e){
 					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "Command "+currentCmd+" caused an IOException: "+e.getMessage());
+					cleanUp();
 					return;
 				}
 				catch(UnsupportedObdCommandException e2){
@@ -189,31 +194,55 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 		this.exec.execute(new Runnable() {
 			@Override
 			public void run() {
-				locationMgr.removeUpdates(DefaultMeasurementSubsystem.this);
-				try {
-					outStream.close();
-				}
-				catch (IOException e) {
-					//we do not care
-				}
-				try {
-					inStream.close();
-				}
-				catch (IOException e) {
-					//we do not care
-				}
-				try {
-					socket.close();
-				}
-				catch (IOException e) {
-					//we do not care
-				}
-				inStream=null;
-				outStream = null;
+				cleanUp();
 				notifyListener(SubsystemStatus.States.STOPPED_BY_USER);
 			}
 		});
 		this.exec.shutdown();
+	}
+	
+	/**
+	 * Performs fail-safe clean up to prevent any resources from leaking.
+	 * That means, all bluetooth / gps related stuff is turned off / released.
+	 */
+	private void cleanUp() {
+		if (locationMgr != null) {
+			try {
+				locationMgr.removeUpdates(this);
+				locationMgr = null;
+			}
+			catch (IllegalArgumentException e) {
+				// this occurs, if this object is not registered. we do not care
+			}
+		}
+		if (outStream != null) {
+			try {
+				outStream.close();
+				outStream = null;
+			}
+			catch (IOException e) {
+				// we do not care
+			}
+		}
+		if (inStream != null) {
+			try {
+				inStream.close();
+				inStream = null;
+			}
+			catch (IOException e) {
+				// we do not care
+			}
+		}
+		if (socket != null) {
+			try {
+				socket.close();
+				socket = null;
+			}
+			catch (IOException e) {
+				// we do not care
+			}
+		}
+
 	}
 
 	@Override
