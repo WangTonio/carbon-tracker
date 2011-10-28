@@ -10,14 +10,13 @@ public class VehicleIdentificationNumberCmd extends ObdCommand {
 
 	@Override
 	public String getCommandString() {
-		// TODO Auto-generated method stub
-		return null;
+		return "0902";
 	}
 
 	@Override
 	public void processResponse(String response, Measurement measure) throws IOException {
 		// TODO Auto-generated method stub
-
+		//this is complicated, see the elm document
 	}
 	
 	/**

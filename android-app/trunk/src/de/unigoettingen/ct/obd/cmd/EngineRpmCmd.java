@@ -12,16 +12,7 @@ public class EngineRpmCmd extends ObdCommand{
 	@Override
 	public void processResponse(String response, Measurement measure) throws IOException {
 		//TODO i hope this is right but can not guarantee anything
-		String[] values = response.split("\r");
-		response = values[0].replace(" ", "");
-        String byteStrOne = response.substring(4,6);
-        String byteStrTwo = response.substring(6,8);
-        int a = Integer.parseInt(byteStrOne,16);
-        int b = Integer.parseInt(byteStrTwo,16);
-
-		int rpm = ((a*256)+b)/4;
-		
-		measure.setRpm(rpm);
-		
+		double floatingResult = Integer.parseInt(response, 16) / 4D;
+		measure.setRpm((int) Math.round(floatingResult)); //int overflow is not possible here, as the max value is 16384
 	}
 }
