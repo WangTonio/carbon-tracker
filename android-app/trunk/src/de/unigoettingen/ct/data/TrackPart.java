@@ -4,7 +4,12 @@ import java.util.Calendar;
 
 import flexjson.JSON;
 
-
+/**
+ * These objects play the role of 'export' objects as they will directly be marshalled and uploaded to the server.
+ * DO NOT TOUCH.
+ * @author Fabian Sudau
+ *
+ */
 public class TrackPart {
 
 	private Calendar startedAt;

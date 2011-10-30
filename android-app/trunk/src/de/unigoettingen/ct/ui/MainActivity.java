@@ -1,7 +1,5 @@
 package de.unigoettingen.ct.ui;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -24,6 +22,13 @@ import de.unigoettingen.ct.R;
 import de.unigoettingen.ct.service.TrackerService;
 import de.unigoettingen.ct.service.TrackerService.TrackerServiceBinder;
 
+/**
+ * Represents the starting Activity of the app which is also the most important one for any user interaction.
+ * The {@link TrackerService} will use the methods described in the interface {@link CallbackUI} to communicate
+ * events from deep down the system to the user via this Activity.
+ * @author Fabian Sudau
+ *
+ */
 public class MainActivity extends Activity implements OnClickListener, CallbackUI{
 
     private static final int SETTINGS = 3;

@@ -168,7 +168,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 			currentMeasurement.setAltitude((lastAltitude+altBeforeMeasurement)/2);
 			//push the new populated measurement object into the cache
 			//the caching strategy will handle the event
-			dataCache.addMeasurementToActiveRoute(currentMeasurement);
+			dataCache.addMeasurementToActiveTrack(currentMeasurement);
 		}
 	};
 	

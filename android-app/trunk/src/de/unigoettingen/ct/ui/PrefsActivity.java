@@ -4,6 +4,11 @@ import de.unigoettingen.ct.R;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
+/**
+ * Represents the preferences Activity which lets the user configure anything available in the DefaultSharedPreferences.
+ * @author Fabian Sudau
+ *
+ */
 public class PrefsActivity extends PreferenceActivity {
 	
 	@Override

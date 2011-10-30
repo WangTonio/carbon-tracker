@@ -9,7 +9,13 @@ import de.unigoettingen.ct.data.OngoingTrack;
 import de.unigoettingen.ct.data.TrackPart;
 import de.unigoettingen.ct.data.TrackSummary;
 
-
+/**
+ * Represents a container for {@link OngoingTrack}s. The container is a Thread-safe inter-Thread-gateway, which
+ * lets one client add data to it (PRODUCE). Another client can register for updates, which will lead to callbacks
+ * whenever this object recieves new data. The thread can then retrieve & remove (CONSUME) some of the data. 
+ * @author Fabian Sudau
+ *
+ */
 public class TrackCache extends GenericObservable<List<TrackSummary>>{
 
 	private List<OngoingTrack> tracks; //the last track will always be the active one (by convention)
@@ -21,7 +27,12 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 		this.tracks.add(activeTrack);
 	}
 	
-	public void addMeasurementToActiveRoute(Measurement m){
+	/**
+	 * Adds one tuple of measurement data to the currently active Track.
+	 * Listener(s) will be informed about this.
+	 * @param m tuple to add
+	 */
+	public void addMeasurementToActiveTrack(Measurement m){
 		List<TrackSummary> summary;
 		synchronized (this) {
 			this.tracks.get(this.tracks.size()-1).addMeasurement(m);
@@ -30,10 +41,19 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 		this.fireUpdates(summary);
 	}
 	
+	/**
+	 * Retrieves all data that is present in the specified Track as a {@link TrackPart} object.
+	 * @param index index of the target Track, use size-1 for the active Track
+	 * @return an object 'export'
+	 */
 	public synchronized TrackPart getTrackPart(int index){
 		return this.tracks.get(index).getTrackPart();
 	}
 	
+	/**
+	 * Does the same as {@link #getTrackPart(int)} except all possible Tracks are targeted.
+	 * @return all TrackParts for all Tracks in the same order
+	 */
 	public synchronized List<TrackPart> getAllPossibleTrackParts(){
 		List<TrackPart> retVal = new ArrayList<TrackPart>();
 		for(OngoingTrack og: this.tracks){
@@ -42,10 +62,20 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 		return retVal;
 	}
 	
+	/**
+	 * Sets the specified Track to closed meaning that no more tuples can be added.
+	 * @param index index of the target Track, use size-1 for the active Track
+	 */
 	public synchronized void setTrackToClosed(int index){
 		this.tracks.get(index).setClosed();
 	}
 	
+	/**
+	 * Removes the first x measurement tuples of the specified Track from the cache (they will be subject to
+	 * garbage collection). If the Track is closed and now empty, the whole Track information will be erased.
+	 * @param trackIndex index of the target Track, use size-1 for the active Track
+	 * @param measurementCount the number of elements to remove
+	 */
 	public synchronized void markMeasurementsAsUploaded(int trackIndex, int measurementCount){
 		OngoingTrack targetTrack = this.tracks.get(trackIndex);
 		targetTrack.removeFirstMeasurements(measurementCount);
@@ -55,6 +85,10 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 		}
 	}
 	
+	/**
+	 * Returns a summary describing the current cache state.
+	 * @return a list of which each element describes the state of the Track at the same index
+	 */
 	public synchronized List<TrackSummary> getSummary(){
 		return this.generateSummary();
 	}

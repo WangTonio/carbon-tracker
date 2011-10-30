@@ -1,5 +1,11 @@
 package de.unigoettingen.ct.data;
 
+/**
+ * These objects play the role of 'export' objects as they will directly be marshalled and uploaded to the server.
+ * DO NOT TOUCH.
+ * @author Fabian Sudau
+ *
+ */
 public class Person {
 
 	private String forename;

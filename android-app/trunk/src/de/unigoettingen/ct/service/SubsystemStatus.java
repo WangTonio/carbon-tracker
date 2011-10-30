@@ -1,6 +1,12 @@
 package de.unigoettingen.ct.service;
 
-
+/**
+ * Represents a message send by {@link AsynchronousSubsystem}s indicating the current state of the subsystem.
+ * The state is defined by the enum {@link States} but can optionally include a string containing some
+ * non-machine-readable additional information.
+ * @author Fabian Sudau
+ *
+ */
 public class SubsystemStatus {
 	public enum States{SETTING_UP, SET_UP, IN_PROGRESS, ERROR_BUT_ONGOING, STOPPED_BY_USER, FATAL_ERROR_STOPPED};
 	

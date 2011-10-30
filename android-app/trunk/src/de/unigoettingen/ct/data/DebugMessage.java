@@ -2,6 +2,12 @@ package de.unigoettingen.ct.data;
 
 import java.util.Calendar;
 
+/**
+ * These objects play the role of 'export' objects as they will directly be marshalled and uploaded to the server.
+ * DO NOT TOUCH.
+ * @author Fabian Sudau
+ *
+ */
 public class DebugMessage {
 	
 	private Calendar pointOfTime;

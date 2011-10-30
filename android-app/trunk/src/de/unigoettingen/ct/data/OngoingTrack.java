@@ -4,8 +4,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-
+/**
+ * A 'dynamic' Track intended to grow and change as measurement is being performed. Note that both, this class and {@link TrackPart}, 
+ * somehow represent a Track. However, the TrackPart class is solely used for data export and can be retrieved from objects of this class
+ * by calling {@link #getTrackPart()}. 
+ * @author Fabian Sudau
+ *
+ */
 public class OngoingTrack {
+	
+	//internally, this class wraps a TrackPart object to save some redundancy
 	
 	private TrackPart wrappedTrackPart;
 	private List<Measurement> measurementList;
