@@ -1,18 +1,33 @@
 package de.unigoettingen.ct.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
 
+import android.app.Activity;
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import de.unigoettingen.ct.container.Logg;
 import de.unigoettingen.ct.container.TrackCache;
 import de.unigoettingen.ct.data.OngoingTrack;
 import de.unigoettingen.ct.data.Person;
-import de.unigoettingen.ct.obd.MockMeasurementSubsystem;
+import de.unigoettingen.ct.obd.DefaultMeasurementSubsystem;
+import de.unigoettingen.ct.obd.cmd.CommandProvider;
+import de.unigoettingen.ct.obd.cmd.ObdCommand;
 import de.unigoettingen.ct.ui.CallbackUI;
 
 public class TrackerService extends Service implements SubsystemStatusListener{
@@ -21,6 +36,9 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	private CallbackUI ui;
 	private Handler mainThread;
 	
+	private BluetoothAdapter btAdapter;
+	private List<BluetoothDevice> btDevices;
+	
 	private AsynchronousSubsystem cachingStrat;
 	private AsynchronousSubsystem measurementSystem;
 	
@@ -28,6 +46,9 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	private SubsystemStatus.States measurementState;
 	
 	private static final String LOG_TAG = "TrackerService";
+	private static final String MY_UUID_STRING = "00001101-0000-1000-8000-00805F9B34FB"; //api documentation says this uuid must match the one of the
+	//bt server (the adapter). however, i can not find it out and this random one seems to work !
+	private static final int REQUESTCODE_ENABLE_BT = 1000;
 	
 	@Override
 	public void onCreate() {
@@ -35,13 +56,98 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		this.mainThread = new Handler();
 	}
 	
-	private void setUpAndMeasure() {
+	// Create a BroadcastReceiver for asynchronous call backs indicating bluetooth events.
+	// this will be called, when a new bluetooth device is discovered while scanning and also when scanning is done
+	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			// When discovery finds a device
+			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+				// Get the BluetoothDevice object from the Intent and remember it
+				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+				btDevices.add(device);
+			}
+			else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)){
+				unregisterReceiver(mReceiver);  // ==this
+				ui.indicateLoading(false);
+				presentAvailableBluetoothDevices();
+			}
+		}
+	};
+	
+	private void setUpBluetooth(){
+		// check adapter presence
+		btAdapter = BluetoothAdapter.getDefaultAdapter();
+		if (btAdapter == null) {
+			logAndShowError("Device does not have a Bluetooth Adapter!");
+			return;
+		}
+		// check, if bluetooth is turned on
+		// if not, prompt the user to do so
+		if (!btAdapter.isEnabled()) {
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			ui.startActivityForResult(enableBtIntent, REQUESTCODE_ENABLE_BT);
+			// returns to onActivityResult
+		}
+		else {
+			scanForBluetoothDevices();
+		}
+	}
+	
+	private void scanForBluetoothDevices(){
+		// Register the BroadcastReceiver for asynchronous call backs
+		registerReceiver(mReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND)); // Don't forget to unregister after scanning is done
+		registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+		btDevices = new ArrayList<BluetoothDevice>();
+		
+		ui.indicateLoading(true);
+		if(!btAdapter.startDiscovery()){
+			ui.indicateLoading(false);
+			logAndShowError("Device discovery could not be started for unknown reasons.");
+			unregisterReceiver(mReceiver);
+			cleanUp();
+		}
+	}
+	
+	private void presentAvailableBluetoothDevices(){
+		//note that it is not queried for already paired devices.
+		//TODO as we hope, that they are included in the scanning process
+		if(btDevices.isEmpty()){
+			logAndShowError("No Bluetooth devices found!");
+			cleanUp();
+			return;
+		}
+		String[] userChoices = new String[btDevices.size()];
+		userChoices = btDevices.toArray(userChoices);
+		//the following will result in a call back to returnUserHasSelected(int index) of the service binder
+		ui.promptUserToChooseFrom("Connect to Bluetooth device", userChoices);
+	}
+	
+	private void connectToSelectedDevice(BluetoothDevice device){
+		BluetoothSocket btSocket = null;
+		try {
+			btSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(MY_UUID_STRING));
+		}
+		catch (IOException e) {
+			logAndShowError("Can not create Bluetooth socket.");
+			e.printStackTrace();
+			cleanUp();
+			return;
+		}
+		Log.d(LOG_TAG, "Created Bluetooth socket for device "+device.toString());
+		Log.d(LOG_TAG, "Attempt to connect will be performed by the subsystem...");
+		setUpSubsystems(btSocket);
+	}
+	
+	private void setUpSubsystems(BluetoothSocket btSocket) {
 		if (!active) {
 			Log.d(LOG_TAG, "Creating subsystems");
 			TrackCache cache = new TrackCache(new OngoingTrack(Calendar.getInstance(), "SAMPLEVIN", "Some description", new Person("Heinz", "Harald")));
 			this.cachingStrat = new SimpleCachingStratgey(cache);
 			this.cachingStrat.setStatusListener(this);
-			this.measurementSystem = new MockMeasurementSubsystem(cache, 0xDEADCAFE);
+			List<ObdCommand> commands = CommandProvider.getDesiredObdCommands(PreferenceManager.getDefaultSharedPreferences(this));
+			LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			this.measurementSystem = new DefaultMeasurementSubsystem(cache, 2000, btSocket, locationManager, commands);
 			this.measurementSystem.setStatusListener(this);
 			this.active = true;
 			this.cachingStrat.setUp();
@@ -50,9 +156,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	}
 	
 	private void terminate(){
-		this.cachingStrat.stop(); 
-		this.measurementSystem.stop();
-		this.active = false;
+		cleanUp();
 	}
 	
 	@Override
@@ -115,23 +219,19 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 						//fine
 						break;
 					case STOPPED_BY_USER:
-						//TODO think about clean up later
-						if(bothStatesAre(SubsystemStatus.States.STOPPED_BY_USER)){
+						if(sender == measurementSystem){
+							measurementSystem = null;
+							measurementState = null;
+						}
+						else{
+							cachingStrat = null;
 							cachingState=null;
-							cachingStrat=null;
-							measurementSystem=null;
-							measurementState=null;
 						}
 						break;
 					case ERROR_BUT_ONGOING:
 						break;
 					case FATAL_ERROR_STOPPED:
-						if(sender == measurementSystem){
-							cachingStrat.stop();
-						}
-						else if(sender == cachingStrat){
-							measurementSystem.stop();
-						}
+						cleanUp();
 						break;
 					default:
 						break;		
@@ -140,15 +240,48 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		});
 	}
 	
+	//helper methods (for convenience) below -------------------------------------
+	
 	private boolean oneStateIs(SubsystemStatus.States state){
 		return cachingState == state || measurementState == state;
 	}
 	
 	private boolean bothStatesAre(SubsystemStatus.States state){
-		return cachingState == state && measurementState == state;
+		return cachingState == state && measurementState == state; 
 	}
 	
+	private void logAndShowError(String msg){
+		Logg.log(Log.ERROR, LOG_TAG, msg);
+		if(ui != null){
+			ui.diplayText(msg);
+		}
+	}
 	
+	/**
+	 * Stops every subsystem, that is not already stopped and nulls everything in order to bind as few resources as possible.
+	 * The service will be in the idle state again, the system keeps it in that state.
+	 */
+	private void cleanUp(){
+		btAdapter = null;
+		active = false;
+		btDevices = null;
+		if(measurementState != null && measurementState!=SubsystemStatus.States.FATAL_ERROR_STOPPED &&
+				measurementState != SubsystemStatus.States.STOPPED_BY_USER && measurementSystem!=null){
+			measurementSystem.stop(); //nulling will happen in the notify method
+		}
+		else{
+			measurementSystem=null;
+			measurementState=null;
+		}
+		if(cachingState != null && cachingState != SubsystemStatus.States.FATAL_ERROR_STOPPED &&
+				cachingState != SubsystemStatus.States.STOPPED_BY_USER && cachingStrat != null){
+			cachingStrat.stop(); //nulling will happen in the notify method
+		}
+		else{
+			cachingStrat=null;
+			cachingStrat=null;
+		}
+	}
 	
 	//binder below ---------------------------------------------------------------
 	
@@ -162,7 +295,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	public class TrackerServiceBinder extends Binder{
 		
 		public void start(){
-			setUpAndMeasure();
+			setUpBluetooth();
 		}
 		
 		public void stop(){
@@ -172,6 +305,22 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		
 		public void setUIforCallbacks(CallbackUI ui){
 			TrackerService.this.ui = ui;
+		}
+		
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+			if (requestCode == REQUESTCODE_ENABLE_BT) {
+				if (resultCode == Activity.RESULT_OK) {
+					scanForBluetoothDevices();
+				}
+				else {
+					Logg.log(Log.ERROR, LOG_TAG, "You did not enable bluetooth.");
+					ui.diplayText("You did not enable bluetooth.");
+				}
+			}
+		}
+		
+		public void returnUserHasSelected(int index){
+			connectToSelectedDevice(btDevices.get(index));
 		}
 	}
 

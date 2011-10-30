@@ -1,9 +1,13 @@
 package de.unigoettingen.ct.ui;
 
+import java.util.List;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -100,6 +104,13 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
         //the service will be bound and created
 	}
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(this.serviceBinder!=null){
+			this.serviceBinder.onActivityResult(requestCode, resultCode, data);
+		}
+	}
     
 	
 	public void onClick(View v) {
@@ -148,6 +159,21 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
 			this.loadingDialog.dismiss();
 			this.loadingDialog = null;
 		}
+	}
+
+	@Override
+	public void promptUserToChooseFrom(String title, String[] options) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(title);
+		builder.setItems(options, new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int item) {
+		        if(serviceBinder != null){
+		        	serviceBinder.returnUserHasSelected(item);
+		        }
+		    }
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 	
 	
