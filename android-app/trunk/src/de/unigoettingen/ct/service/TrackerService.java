@@ -118,7 +118,9 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 			return;
 		}
 		String[] userChoices = new String[btDevices.size()];
-		userChoices = btDevices.toArray(userChoices);
+		for(int i=0; i<userChoices.length; i++){
+			userChoices[i]=btDevices.get(i).toString();
+		}
 		//the following will result in a call back to returnUserHasSelected(int index) of the service binder
 		ui.promptUserToChooseFrom("Connect to Bluetooth device", userChoices);
 	}
