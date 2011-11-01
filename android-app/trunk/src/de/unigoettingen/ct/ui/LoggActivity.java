@@ -7,6 +7,7 @@ import de.unigoettingen.ct.data.GenericObserver;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -40,6 +41,7 @@ public class LoggActivity extends Activity implements OnClickListener, GenericOb
 		super.onResume();
 		//the activity is becoming visible, register for live log updates
 		Logg.INSTANCE.addObserver(this);
+		this.update(Logg.INSTANCE); //cause an update manually to display any up-to-now messages
 	}
 	
 	@Override

@@ -124,7 +124,13 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 				//check, if there is still data in the pipe
 				//TODO if so, try to upload it
 				List<TrackSummary> currentCacheState = cache.getSummary();
-				if(currentCacheState.size() > 0){
+				boolean cacheEmpty = true;
+				for(TrackSummary currSummary: currentCacheState){
+					if(currSummary.getMeasurementCount() > 0){
+						cacheEmpty = false;
+					}
+				}
+				if(!cacheEmpty){
 					Logg.log(Log.WARN, LOG_TAG, "Application terminates allthough there are still measurements in RAM, which are not yet uploaded.");
 				}
 				statusListener.notify(new SubsystemStatus(STOPPED_BY_USER), AbstractCachingStrategy.this);

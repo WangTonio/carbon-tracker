@@ -41,15 +41,15 @@ public class Logg extends GenericObservable<Logg>{
 		Log.println(loglevel, tag, Log.getStackTraceString(th));
 		synchronized (INSTANCE) {
 			INSTANCE.messages.add(new DebugMessage(Calendar.getInstance(), msg+" \n "+th.getClass().getName()+" "+th.getMessage()));
-			INSTANCE.fireUpdates(INSTANCE);
 		}
+		INSTANCE.fireUpdates(INSTANCE);
 	}
 
 	public static void log(int loglevel,String tag, String msg){
 		Log.println(loglevel, tag, msg);
 		synchronized (INSTANCE) {
 			INSTANCE.messages.add(new DebugMessage(Calendar.getInstance(), msg));
-			INSTANCE.fireUpdates(INSTANCE);
 		}
+		INSTANCE.fireUpdates(INSTANCE);
 	}
 }

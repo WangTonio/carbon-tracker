@@ -73,20 +73,20 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 	
 	@Override
 	public void setUp(){
-		if(!this.exec.isTerminated())
-			throw new IllegalStateException();
-		
 		this.exec.execute(new Runnable() {		
 			public void run() {
+				Log.d(LOG_TAG, "setUp executing in worker thread.");
 				//register for gps positioning signals
 				//two updates every measurement interval are good enough; the frequency restriction saves power
 				//the updates are probably invoked from the main thread
+				//TODO the following line blocks forever on my phone, need to figure this out
 				locationMgr.requestLocationUpdates( LocationManager.GPS_PROVIDER, measurementInterval/2, 0, DefaultMeasurementSubsystem.this);
 				//establish the bluetooth connection and try to send the obligatory (and always supported) ELM system command
 				try{
 					DefaultMeasurementSubsystem.this.socket.connect();
 					DefaultMeasurementSubsystem.this.inStream = DefaultMeasurementSubsystem.this.socket.getInputStream();
 					DefaultMeasurementSubsystem.this.outStream = DefaultMeasurementSubsystem.this.socket.getOutputStream();
+					Log.i(LOG_TAG, "Connected successfully to th Bluetooth socket.");
 					new DisableElmEchoCmd().queryResult(null, DefaultMeasurementSubsystem.this.inStream, DefaultMeasurementSubsystem.this.outStream);
 				}
 				catch(IOException e){
