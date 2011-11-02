@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import android.util.Log;
+
 import de.unigoettingen.ct.data.Measurement;
 
 /**
@@ -76,6 +78,7 @@ public abstract class ObdCommand {
 				index++;
 			}
 		}
+		Log.d(this.getClass().getName(), "OBD Output after filtering is:"+new String(this.buffer,0,index));
 		//check, if the ELM 'error code' for an unsupported command was returned
 		if(index == 6 && new String(this.buffer,0,index).equalsIgnoreCase("NODATA")){
 			throw new UnsupportedObdCommandException("Command "+this.getCommandString()+" returns NODATA and is not supported by the vehicle.");
@@ -91,6 +94,7 @@ public abstract class ObdCommand {
 		else{
 			ret = new String(this.buffer,0,index);
 		}
+		Log.d(this.getClass().getName(), "Processing OBD String:"+ret);
 		return ret;
 	}
 	
