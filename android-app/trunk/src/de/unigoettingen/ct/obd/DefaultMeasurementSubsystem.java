@@ -80,7 +80,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 				//two updates every measurement interval are good enough; the frequency restriction saves power
 				//the updates are probably invoked from the main thread
 				//TODO the following line blocks forever on my phone, need to figure this out
-				locationMgr.requestLocationUpdates( LocationManager.GPS_PROVIDER, measurementInterval/2, 0, DefaultMeasurementSubsystem.this);
+				//locationMgr.requestLocationUpdates( LocationManager.GPS_PROVIDER, measurementInterval/2, 0, DefaultMeasurementSubsystem.this);
 				//establish the bluetooth connection and try to send the obligatory (and always supported) ELM system command
 				try{
 					DefaultMeasurementSubsystem.this.socket.connect();
