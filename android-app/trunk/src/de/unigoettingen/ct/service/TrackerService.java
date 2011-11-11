@@ -65,7 +65,9 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 				// Get the BluetoothDevice object from the Intent and remember it
 				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-				btDevices.add(device);
+				if(!btDevices.contains(device)){
+					btDevices.add(device);
+				}
 			}
 			else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)){
 				unregisterReceiver(mReceiver);  // ==this
@@ -119,7 +121,12 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		}
 		String[] userChoices = new String[btDevices.size()];
 		for(int i=0; i<userChoices.length; i++){
-			userChoices[i]=btDevices.get(i).toString();
+			String stringForUi = "";
+			if(btDevices.get(i).getBondState() == BluetoothDevice.BOND_BONDED){
+				stringForUi += "P: "; //paired devices will get this prefix
+			}
+			stringForUi += btDevices.get(i).getName();
+			userChoices[i]= stringForUi;
 		}
 		//the following will result in a call back to returnUserHasSelected(int index) of the service binder
 		ui.promptUserToChooseFrom("Connect to Bluetooth device", userChoices);
