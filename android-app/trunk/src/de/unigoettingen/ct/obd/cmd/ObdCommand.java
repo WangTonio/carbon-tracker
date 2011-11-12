@@ -31,7 +31,9 @@ public abstract class ObdCommand {
 	 * @throws UnsupportedObdCommandException 
 	 */
 	public void queryResult(Measurement measure, InputStream in, OutputStream out) throws IOException, UnsupportedObdCommandException{
-		out.write((getCommandString()+"\r").getBytes(CHARSET_USED)); //a carriage return terminates a command. line feed not necessary.
+		if(getCommandString() != null){
+			out.write((getCommandString()+"\r").getBytes(CHARSET_USED)); //a carriage return terminates a command. line feed not necessary.
+		}
 		out.flush();
 		processResponse(readResultBackIn(in), measure);
 	}
@@ -52,7 +54,7 @@ public abstract class ObdCommand {
 	 * @param measure
 	 * @throws IOException if the result could not be interpreted / was invalid
 	 */
-	public abstract void processResponse(String response, Measurement measure) throws IOException;
+	public abstract void processResponse(String response, Measurement measure) throws IOException, UnsupportedObdCommandException;
 	
 	/**
 	 * Utility method, that reads as many ASCII characters from the stream until the command prompt has returned.
@@ -71,31 +73,37 @@ public abstract class ObdCommand {
 				//end of stream reached, before the answer could be read => connection lost
 				throw new IOException("Lost connection to the adapter.");
 			}
-			if(read != 0 && read != ' ' && read != '\r'){ 
+			if(read != 0 && read != ' ' && read != '\r' && read !='\n'){ 
 				//bytes with value 0 must be filtered out. see the ELM documentation p. 8
 				//white spaces are also filtered out to simplify further processing
 				this.buffer[index]=read;
 				index++;
 			}
 		}
-		Log.d(this.getClass().getName(), "OBD Output after filtering is:"+new String(this.buffer,0,index));
+		String rawString = new String(this.buffer,0,index);
+		Log.d(this.getClass().getSimpleName(), "OBD Output after filtering is:"+rawString);
+		
+		//in the initialization phase, SEARCHING... is sometimes part of the output
+		//TODO figure out why and get rid of this hack
+		if(rawString.startsWith("SEARCHING...")){
+			rawString = rawString.substring(12);
+			Log.d(this.getClass().getSimpleName(), "Output contained SEARCHING an was truncated to:"+rawString);
+		}
+		
 		//check, if the ELM 'error code' for an unsupported command was returned
-		if(index == 6 && new String(this.buffer,0,index).equalsIgnoreCase("NODATA")){
+		if(rawString.equalsIgnoreCase("NODATA")){
 			throw new UnsupportedObdCommandException("Command "+this.getCommandString()+" returns NODATA and is not supported by the vehicle.");
 		}
 		
-		String ret;
 		//when obd commands were issued, the first 4 returned bytes echo the command itself back
 		//in that case, there are already removed from the result
 		//commands directed at the ELM chip however, do not echo the command; their length is < 4 and will not be touched
-		if(index > 4){
-			ret = new String(this.buffer,4,index-4);
+		if(rawString.length() > 4){
+			rawString = rawString.substring(4);
 		}
-		else{
-			ret = new String(this.buffer,0,index);
-		}
-		Log.d(this.getClass().getName(), "Processing OBD String:"+ret);
-		return ret;
+
+		Log.d(this.getClass().getSimpleName(), "Processing OBD String:"+rawString);
+		return rawString;
 	}
 	
 

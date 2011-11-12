@@ -26,6 +26,15 @@ public class CommandProvider {
 		if(prefs.getBoolean("rpm", false)){
 			retVal.add(new EngineRpmCmd());
 		}
+		if(prefs.getBoolean("eot", false)){
+			retVal.add(new EngineOilTemperatureCmd());
+		}
+		if(prefs.getBoolean("speed", false)){
+			retVal.add(new VehicleSpeedCmd());
+		}
+		if(prefs.getBoolean("ert", false)){
+			//TODO add engine runtime command here
+		}
 		//TODO other optional commands go here
 		return retVal;
 	}

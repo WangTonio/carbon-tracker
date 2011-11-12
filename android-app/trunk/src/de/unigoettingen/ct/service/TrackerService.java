@@ -151,7 +151,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	private void setUpSubsystems(BluetoothSocket btSocket) {
 		if (!active) {
 			Log.d(LOG_TAG, "Creating subsystems");
-			TrackCache cache = new TrackCache(new OngoingTrack(Calendar.getInstance(), "SAMPLEVIN", "Some description", new Person("Heinz", "Harald")));
+			TrackCache cache = new TrackCache(new OngoingTrack(Calendar.getInstance(), null, "Some description", new Person("Heinz", "Harald")));
 			this.cachingStrat = new SimpleCachingStratgey(cache);
 			this.cachingStrat.setStatusListener(this);
 			List<ObdCommand> commands = CommandProvider.getDesiredObdCommands(PreferenceManager.getDefaultSharedPreferences(this));

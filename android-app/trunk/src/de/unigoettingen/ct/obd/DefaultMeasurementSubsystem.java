@@ -21,6 +21,7 @@ import de.unigoettingen.ct.container.Logg;
 import de.unigoettingen.ct.container.TrackCache;
 import de.unigoettingen.ct.data.Measurement;
 import de.unigoettingen.ct.obd.cmd.DisableElmEchoCmd;
+import de.unigoettingen.ct.obd.cmd.EmptyCmd;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
 import de.unigoettingen.ct.obd.cmd.UnsupportedObdCommandException;
 import de.unigoettingen.ct.obd.cmd.VehicleIdentificationNumberCmd;
@@ -87,6 +88,9 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 					DefaultMeasurementSubsystem.this.inStream = DefaultMeasurementSubsystem.this.socket.getInputStream();
 					DefaultMeasurementSubsystem.this.outStream = DefaultMeasurementSubsystem.this.socket.getOutputStream();
 					Log.i(LOG_TAG, "Connected successfully to th Bluetooth socket.");
+					//this hack is required, because the elm adapter says it's name right after startup
+					new EmptyCmd().queryResult(null, DefaultMeasurementSubsystem.this.inStream, DefaultMeasurementSubsystem.this.outStream);
+					Log.i(LOG_TAG, "Empty Command finished successfully.");
 					new DisableElmEchoCmd().queryResult(null, DefaultMeasurementSubsystem.this.inStream, DefaultMeasurementSubsystem.this.outStream);
 				}
 				catch(IOException e){
@@ -147,11 +151,13 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 					currentCmd.queryResult(currentMeasurement, inStream, outStream);
 				}
 				catch(IOException e){
+					Log.e(LOG_TAG,"IOException by periodic Command:", e);
 					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "Command "+currentCmd+" caused an IOException: "+e.getMessage());
 					cleanUp();
 					return;
 				}
 				catch(UnsupportedObdCommandException e2){
+					Log.e(LOG_TAG, "Command not supported:"+currentCmd.getClass().getSimpleName());
 					notifyListener(SubsystemStatus.States.ERROR_BUT_ONGOING, "Command "+currentCmd+" is not supported an will be turned off.");
 					iterator.remove();
 				}
