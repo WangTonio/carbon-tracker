@@ -20,9 +20,11 @@ public class CommandProvider {
 	 */
 	public static List<ObdCommand> getDesiredObdCommands(SharedPreferences prefs){
 		List<ObdCommand> retVal = new ArrayList<ObdCommand>();
+		//obligatory commands:
 		retVal.add(new MassAirFlowCmd());
-		//TODO other obligatory commands go here
-		
+		retVal.add(new LambdaCmd());
+
+		//optional commands:
 		if(prefs.getBoolean("rpm", false)){
 			retVal.add(new EngineRpmCmd());
 		}
@@ -33,9 +35,9 @@ public class CommandProvider {
 			retVal.add(new VehicleSpeedCmd());
 		}
 		if(prefs.getBoolean("ert", false)){
-			//TODO add engine runtime command here
+			retVal.add(new EngineRunTimeCmd());
 		}
-		//TODO other optional commands go here
+
 		return retVal;
 	}
 
