@@ -188,7 +188,8 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 				
 				//2. decide on the interaction with the ui
 				ui.indicateLoading(oneStateIs(SubsystemStatus.States.SETTING_UP) || oneStateIs(SubsystemStatus.States.SET_UP));
-				ui.indicateRunning(bothStatesAre(SubsystemStatus.States.IN_PROGRESS));
+				ui.indicateRunning( (cachingState==SubsystemStatus.States.IN_PROGRESS || cachingState==SubsystemStatus.States.ERROR_BUT_ONGOING) &&
+						(measurementState==SubsystemStatus.States.IN_PROGRESS || measurementState==SubsystemStatus.States.ERROR_BUT_ONGOING) );
 
 				switch(status.getState()){
 					case SETTING_UP:
@@ -200,12 +201,13 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 							ui.diplayText("Data is beeing retrieved.");
 						}
 						else{
-							ui.diplayText("Caching mechanism is active.");
+							//this is not interesting so far as this is just a mock implementation
+							//ui.diplayText("Caching mechanism is active.");
 						}
 						break;
 					case STOPPED_BY_USER:
 						break;
-					case ERROR_BUT_ONGOING: //both type of error cause the same message so far
+					case ERROR_BUT_ONGOING: //both types of error cause the same message so far
 					case FATAL_ERROR_STOPPED:
 						Logg.log(Log.ERROR, sender.toString(), sender.toString()+" says: "+status.getAdditionalInfo());
 						ui.diplayText(sender.toString()+" says: "+status.getAdditionalInfo());
@@ -255,9 +257,6 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		return cachingState == state || measurementState == state;
 	}
 	
-	private boolean bothStatesAre(SubsystemStatus.States state){
-		return cachingState == state && measurementState == state; 
-	}
 	
 	private void logAndShowError(String msg){
 		Logg.log(Log.ERROR, LOG_TAG, msg);

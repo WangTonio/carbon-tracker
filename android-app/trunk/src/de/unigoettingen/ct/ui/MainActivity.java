@@ -137,7 +137,7 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
 
 	@Override
 	public void diplayText(String text) {
-		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 	}
 
 	@Override
