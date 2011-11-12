@@ -1,19 +1,20 @@
 package de.unigoettingen.ct.ui;
 
-import de.unigoettingen.ct.R;
-import de.unigoettingen.ct.container.Logg;
-import de.unigoettingen.ct.data.DebugMessage;
-import de.unigoettingen.ct.data.GenericObserver;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+import de.unigoettingen.ct.R;
+import de.unigoettingen.ct.container.Logg;
+import de.unigoettingen.ct.data.DebugMessage;
+import de.unigoettingen.ct.data.GenericObserver;
+import de.unigoettingen.ct.upload.AbstractUploader;
+import de.unigoettingen.ct.upload.DebugLogUploader;
 
 /**
  * Displays the custom log ({@link Logg}) in real time.
@@ -25,6 +26,7 @@ public class LoggActivity extends Activity implements OnClickListener, GenericOb
 	private Button uploadBtn;
 	private ListView logListView;
 	private Handler mainThread;
+	private AbstractUploader logUploader;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,25 @@ public class LoggActivity extends Activity implements OnClickListener, GenericOb
 	
 	@Override
 	public void onClick(View v) {
-		Toast.makeText(this, "Upload not yet implemented", Toast.LENGTH_SHORT).show();
+		if(logUploader == null){
+			logUploader = new DebugLogUploader(Logg.INSTANCE.getLogDump());
+			logUploader.startUpload();
+			Toast.makeText(this, "Uploading ...", Toast.LENGTH_SHORT).show();
+		}
+		else{
+			if(!logUploader.isDone()){
+				Toast.makeText(this, "Upload still in progress ! ", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				if(logUploader.hasErrorOccurred()){
+					Toast.makeText(this, "Upload failed! Click again to retry.", Toast.LENGTH_SHORT).show();
+				}
+				else{
+					Toast.makeText(this, "Upload successful! Clicking again will repeat this.", Toast.LENGTH_SHORT).show();
+				}
+				logUploader=null;
+			}
+		}
 	}
 
 	@Override
