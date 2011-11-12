@@ -1,0 +1,188 @@
+11-12 12:38:10.887: I/ActivityManager(1417): Starting: Intent { act=com.android.launcher.action.launcheraction flg=0x10000000 cmp=com.android.launcher/.CustomShirtcutActivity bnds=[128,428][192,480] (has extras) } from pid 1531
+11-12 12:38:10.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:11.067: I/dalvikvm(1531): Jit: resizing JitTable from 512 to 1024
+11-12 12:38:11.097: W/InputManagerService(1417): Window already focused, ignoring focus gain of: com.android.internal.view.IInputMethodClient$Stub$Proxy@405161d8
+11-12 12:38:12.347: I/ActivityManager(1417): Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=de.unigoettingen.ct/.ui.MainActivity } from pid 1531
+11-12 12:38:12.427: I/ActivityManager(1417): Start proc de.unigoettingen.ct for activity de.unigoettingen.ct/.ui.MainActivity: pid=2649 uid=10064 gids={3003, 3002, 3001}
+11-12 12:38:12.717: D/dalvikvm(2649): GC_EXTERNAL_ALLOC freed 52K, 51% free 2680K/5379K, external 0K/0K, paused 127ms
+11-12 12:38:12.897: I/MainActivity(2649): Service bound
+11-12 12:38:12.967: I/ActivityManager(1417): Displayed de.unigoettingen.ct/.ui.MainActivity: +539ms (total +2s54ms)
+11-12 12:38:12.997: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:13.147: D/dalvikvm(1417): GC_CONCURRENT freed 1244K, 39% free 5902K/9671K, external 1374K/1879K, paused 7ms+12ms
+11-12 12:38:14.997: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:15.317: I/ActivityManager(1417): Starting: Intent { cmp=de.unigoettingen.ct/.ui.PrefsActivity } from pid 2649
+11-12 12:38:15.817: I/ActivityManager(1417): Displayed de.unigoettingen.ct/.ui.PrefsActivity: +483ms
+11-12 12:38:16.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:18.997: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:21.007: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:21.297: I/wpa_supplicant(1548): CTRL-EVENT-SCAN-RESULTS  Ready
+11-12 12:38:21.777: D/dalvikvm(2649): GC_CONCURRENT freed 249K, 50% free 2855K/5639K, external 432K/514K, paused 6ms+5ms
+11-12 12:38:22.997: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:23.007: I/dalvikvm(1527): Jit: resizing JitTable from 512 to 1024
+11-12 12:38:23.617: W/GTalkService(2397): [GTalkConnection.12] doConnect: caught Could not connect to mtalk.google.com:5228.: (404)
+11-12 12:38:23.617: W/GTalkService(2397):   -- caused by: java.net.UnknownHostException: mtalk.google.com
+11-12 12:38:24.997: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:26.927: E/BluetoothEventLoop.cpp(1417): event_filter: Received signal org.bluez.Adapter:PropertyChanged from /org/bluez/2507/hci0
+11-12 12:38:26.927: V/BluetoothEventRedirector(1980): Received android.bluetooth.adapter.action.DISCOVERY_STARTED
+11-12 12:38:26.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:27.037: E/BluetoothEventLoop.cpp(1417): event_filter: Received signal org.bluez.Adapter:DeviceFound from /org/bluez/2507/hci0
+11-12 12:38:27.037: D/BluetoothService(1417): updateDeviceServiceChannelCache(00:04:3E:3A:4B:7A)
+11-12 12:38:27.057: V/BluetoothEventRedirector(1980): Received android.bluetooth.device.action.FOUND
+11-12 12:38:28.997: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:30.997: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:32.997: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:34.997: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:36.997: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:37.187: E/BluetoothEventLoop.cpp(1417): event_filter: Received signal org.bluez.Adapter:PropertyChanged from /org/bluez/2507/hci0
+11-12 12:38:37.207: V/BluetoothEventRedirector(1980): Received android.bluetooth.adapter.action.DISCOVERY_FINISHED
+11-12 12:38:38.607: D/TrackerService(2649): Created Bluetooth socket for device 00:04:3E:3A:4B:7A
+11-12 12:38:38.607: D/TrackerService(2649): Attempt to connect will be performed by the subsystem...
+11-12 12:38:38.607: D/TrackerService(2649): Creating subsystems
+11-12 12:38:38.627: D/MeasurementSubsystem(2649): setUp executing in worker thread.
+11-12 12:38:38.627: D/TrackerService(2649): SET_UP from CachingSys
+11-12 12:38:38.627: D/TrackerService(2649): Caching: null  Measurement: null
+11-12 12:38:38.717: D/TrackerService(2649): IN_PROGRESS from CachingSys
+11-12 12:38:38.717: D/TrackerService(2649): Caching: SET_UP  Measurement: null
+11-12 12:38:38.807: W/InputManagerService(1417): Window already focused, ignoring focus gain of: com.android.internal.view.IInputMethodClient$Stub$Proxy@408b20e8
+11-12 12:38:38.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:39.337: E/BluetoothEventLoop.cpp(1417): event_filter: Received signal org.bluez.Device:PropertyChanged from /org/bluez/2507/hci0/dev_00_04_3E_3A_4B_7A
+11-12 12:38:39.337: D/BluetoothService(1417): setRemoteDeviceProperty addr = 00:04:3E:3A:4B:7A name = Connected value = true
+11-12 12:38:39.587: D/BluetoothService(1417): updateDeviceServiceChannelCache(00:04:3E:3A:4B:7A)
+11-12 12:38:39.597: D/BluetoothService(1417): 	uuid(application): 00001101-0000-1000-8000-00805f9b34fb 1
+11-12 12:38:39.597: D/BluetoothService(1417): Making callback for 00001101-0000-1000-8000-00805f9b34fb with result 1
+11-12 12:38:39.597: V/BluetoothEventRedirector(1980): Received android.bleutooth.device.action.UUID
+11-12 12:38:39.607: E/CachedBluetoothDevice(1980): updating profiles for Diamex DX70 : 4B7A
+11-12 12:38:39.607: V/CachedBluetoothDevice(1980): Class: 0
+11-12 12:38:39.607: V/CachedBluetoothDevice(1980): UUID:
+11-12 12:38:39.607: V/CachedBluetoothDevice(1980):   00001101-0000-1000-8000-00805f9b34fb
+11-12 12:38:39.607: E/CachedBluetoothDevice(1980): onUuidChanged: Time since last connect4527870
+11-12 12:38:40.047: I/MeasurementSubsystem(2649): Connected successfully to th Bluetooth socket.
+11-12 12:38:40.547: D/EmptyCmd(2649): OBD Output after filtering is:DIAMEXDX70v1.0
+11-12 12:38:40.547: D/EmptyCmd(2649): Processing OBD String:EXDX70v1.0
+11-12 12:38:40.547: D/EmptyCmd(2649): Initial messag from the adapter after strip is :EXDX70v1.0
+11-12 12:38:40.547: I/MeasurementSubsystem(2649): Empty Command finished successfully.
+11-12 12:38:40.637: D/DisableElmEchoCmd(2649): OBD Output after filtering is:ate0OK
+11-12 12:38:40.637: D/DisableElmEchoCmd(2649): Processing OBD String:OK
+11-12 12:38:40.637: D/DisableEchoCmd(2649): Processing response length:2 str:OK
+11-12 12:38:41.007: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:41.687: I/wpa_supplicant(1548): CTRL-EVENT-SCAN-RESULTS  Ready
+11-12 12:38:44.377: D/VehicleIdentificationNumberCmd(2649): OBD Output after filtering is:SEARCHING...NODATA
+11-12 12:38:44.377: D/VehicleIdentificationNumberCmd(2649): Output contained SEARCHING an was truncated to:NODATA
+11-12 12:38:44.377: W/MeasurementSubsystem(2649): Vehicle does not privde vin. Using default value 'UNKNOWNVIN'
+11-12 12:38:44.377: D/TrackerService(2649): SET_UP from MeasurementSys
+11-12 12:38:44.377: D/TrackerService(2649): Caching: IN_PROGRESS  Measurement: null
+11-12 12:38:44.647: V/BluetoothEventRedirector(1980): Received android.bleutooth.device.action.UUID
+11-12 12:38:44.647: E/CachedBluetoothDevice(1980): updating profiles for Diamex DX70 : 4B7A
+11-12 12:38:44.647: V/CachedBluetoothDevice(1980): Class: 0
+11-12 12:38:44.647: V/CachedBluetoothDevice(1980): UUID:
+11-12 12:38:44.647: V/CachedBluetoothDevice(1980):   00001101-0000-1000-8000-00805f9b34fb
+11-12 12:38:44.657: E/CachedBluetoothDevice(1980): onUuidChanged: Time since last connect4532916
+11-12 12:38:44.787: D/MassAirFlowCmd(2649): OBD Output after filtering is:NODATA
+11-12 12:38:44.787: E/MeasurementSubsystem(2649): Command not supported:MassAirFlowCmd
+11-12 12:38:44.787: D/TrackerService(2649): ERROR_BUT_ONGOING : Command de.unigoettingen.ct.obd.cmd.MassAirFlowCmd@40566300 is not supported an will be turned off. from MeasurementSys
+11-12 12:38:44.787: D/TrackerService(2649): Caching: IN_PROGRESS  Measurement: SET_UP
+11-12 12:38:44.787: E/MeasurementSys(2649): MeasurementSys says: Command de.unigoettingen.ct.obd.cmd.MassAirFlowCmd@40566300 is not supported an will be turned off.
+11-12 12:38:44.827: W/InputManagerService(1417): Window already focused, ignoring focus gain of: com.android.internal.view.IInputMethodClient$Stub$Proxy@407ea998
+11-12 12:38:44.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:45.037: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:38:45.037: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:38:45.197: D/EngineOilTemperatureCmd(2649): OBD Output after filtering is:NODATA
+11-12 12:38:45.197: E/MeasurementSubsystem(2649): Command not supported:EngineOilTemperatureCmd
+11-12 12:38:45.197: D/TrackerService(2649): ERROR_BUT_ONGOING : Command de.unigoettingen.ct.obd.cmd.EngineOilTemperatureCmd@40566a60 is not supported an will be turned off. from MeasurementSys
+11-12 12:38:45.197: D/TrackerService(2649): Caching: IN_PROGRESS  Measurement: ERROR_BUT_ONGOING
+11-12 12:38:45.197: E/MeasurementSys(2649): MeasurementSys says: Command de.unigoettingen.ct.obd.cmd.EngineOilTemperatureCmd@40566a60 is not supported an will be turned off.
+11-12 12:38:45.447: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:38:45.447: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:38:46.907: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:38:46.907: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:38:46.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:47.137: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:38:47.137: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:38:48.927: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:38:48.927: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:38:48.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:49.177: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:38:49.177: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:38:50.937: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:38:50.937: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:38:50.997: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:51.187: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:38:51.187: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:38:51.617: D/dalvikvm(1527): GC_CONCURRENT freed 442K, 49% free 3127K/6087K, external 0K/0K, paused 15ms+5ms
+11-12 12:38:52.937: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:38:52.937: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:38:52.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:53.167: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:38:53.167: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:38:54.917: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:38:54.917: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:38:54.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:55.077: D/dalvikvm(1502): GC_CONCURRENT freed 464K, 50% free 3084K/6087K, external 501K/1006K, paused 4ms+6ms
+11-12 12:38:55.187: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:38:55.187: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:38:56.927: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:38:56.927: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:38:56.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:57.187: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:38:57.187: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:38:58.897: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:38:58.897: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:38:58.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:38:59.127: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:38:59.127: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:39:00.917: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:39:00.917: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:39:01.177: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:39:01.177: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:39:01.657: I/ActivityManager(1417): Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10200000 cmp=com.android.launcher/.Launcher } from pid 1417
+11-12 12:39:02.087: I/wpa_supplicant(1548): CTRL-EVENT-SCAN-RESULTS  Ready
+11-12 12:39:02.717: I/ActivityManager(1417): Starting: Intent { act=com.android.launcher.action.launcheraction flg=0x10000000 cmp=com.android.launcher/.CustomShirtcutActivity bnds=[128,428][192,480] (has extras) } from pid 1531
+11-12 12:39:02.877: W/InputManagerService(1417): Window already focused, ignoring focus gain of: com.android.internal.view.IInputMethodClient$Stub$Proxy@4094e498
+11-12 12:39:02.977: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:39:02.977: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:39:02.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:39:03.297: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:39:03.317: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:39:04.917: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:39:04.927: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:39:04.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:39:05.207: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:39:05.207: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:39:05.297: I/ActivityManager(1417): Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.android.settings/.Settings } from pid 1531
+11-12 12:39:06.907: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:39:06.907: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:39:06.977: I/ActivityManager(1417): Starting: Intent { act=android.intent.action.MAIN cmp=com.android.settings/.ApplicationSettings } from pid 1980
+11-12 12:39:06.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:39:07.157: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:39:07.157: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:39:07.287: I/ActivityManager(1417): Displayed com.android.settings/.ApplicationSettings: +285ms (total +4s551ms)
+11-12 12:39:08.597: I/ActivityManager(1417): Starting: Intent { act=android.intent.action.MAIN cmp=com.android.settings/.ManageApplications } from pid 1980
+11-12 12:39:08.957: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:39:08.967: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:39:08.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:39:09.227: I/ActivityManager(1417): Displayed com.android.settings/.ManageApplications: +625ms
+11-12 12:39:09.237: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:39:09.237: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:39:09.727: I/dalvikvm(1980): Jit: resizing JitTable from 512 to 1024
+11-12 12:39:10.097: D/dalvikvm(1417): GC_CONCURRENT freed 1050K, 39% free 5901K/9671K, external 1371K/1879K, paused 6ms+11ms
+11-12 12:39:10.147: I/ActivityManager(1417): Starting: Intent { act=android.settings.APPLICATION_DETAILS_SETTINGS dat=package:de.unigoettingen.ct cmp=com.android.settings/.applications.InstalledAppDetails } from pid 1980
+11-12 12:39:10.527: D/dalvikvm(1980): GC_CONCURRENT freed 372K, 44% free 3782K/6663K, external 1166K/1358K, paused 4ms+11ms
+11-12 12:39:10.917: D/EngineRpmCmd(2649): OBD Output after filtering is:410C0000
+11-12 12:39:10.917: I/ActivityManager(1417): Displayed com.android.settings/.applications.InstalledAppDetails: +745ms
+11-12 12:39:10.927: D/EngineRpmCmd(2649): Processing OBD String:0000
+11-12 12:39:10.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:39:11.187: D/VehicleSpeedCmd(2649): OBD Output after filtering is:410D00
+11-12 12:39:11.187: D/VehicleSpeedCmd(2649): Processing OBD String:00
+11-12 12:39:12.707: I/Process(1417): Sending signal. PID: 2649 SIG: 9
+11-12 12:39:12.707: I/ActivityManager(1417): Force stopping package de.unigoettingen.ct uid=10064
+11-12 12:39:12.707: W/ActivityManager(1417): Scheduling restart of crashed service de.unigoettingen.ct/.service.TrackerService in 5000ms
+11-12 12:39:12.707: I/ActivityManager(1417):   Force finishing activity HistoryRecord{40964258 de.unigoettingen.ct/.ui.MainActivity}
+11-12 12:39:12.707: I/ActivityManager(1417):   Force stopping service ServiceRecord{4096b630 de.unigoettingen.ct/.service.TrackerService}
+11-12 12:39:12.747: W/InputManagerService(1417): Window already focused, ignoring focus gain of: com.android.internal.view.IInputMethodClient$Stub$Proxy@408dd2d0
+11-12 12:39:12.837: I/WindowManager(1417): WIN DEATH: Window{4096ce70 de.unigoettingen.ct/de.unigoettingen.ct.ui.MainActivity paused=true}
+11-12 12:39:12.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:39:14.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
+11-12 12:39:15.017: I/ActivityManager(1417): Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10200000 cmp=com.android.launcher/.Launcher } from pid 1417
+11-12 12:39:15.137: E/BluetoothEventLoop.cpp(1417): event_filter: Received signal org.bluez.Device:PropertyChanged from /org/bluez/2507/hci0/dev_00_04_3E_3A_4B_7A
+11-12 12:39:15.147: D/BluetoothService(1417): setRemoteDeviceProperty addr = 00:04:3E:3A:4B:7A name = Connected value = false
+11-12 12:39:16.987: D/WifiService(1417): ACTION_BATTERY_CHANGED pluggedType: 2
