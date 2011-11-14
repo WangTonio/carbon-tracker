@@ -175,7 +175,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		this.mainThread.post(new Runnable() {	
 			@Override
 			public void run() {
-				Log.d(LOG_TAG, status.toString()+ " from "+sender);
+				Log.d(LOG_TAG, status.getState()+ " from "+sender);
 				Log.d(LOG_TAG, "Caching: "+cachingState+"  Measurement: "+measurementState);
 				
 				//1. remember the subsystem states for future decision making
