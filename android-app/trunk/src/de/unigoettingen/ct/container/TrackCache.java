@@ -21,9 +21,15 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 	private List<OngoingTrack> tracks; //the last track will always be the active one (by convention)
 									// having another field for it would introduce unnecessary complexity
 
+	public TrackCache(){
+		this.tracks = new ArrayList<OngoingTrack>(0);
+	}
 	
-	public TrackCache(OngoingTrack activeTrack){
-		this.tracks = new ArrayList<OngoingTrack>(); //later, this will be read from sqlite
+	public void setTracks(List<OngoingTrack> storedTracks, OngoingTrack activeTrack){
+		if(storedTracks == null){
+			storedTracks = new ArrayList<OngoingTrack>(1);
+		}
+		this.tracks = storedTracks;
 		this.tracks.add(activeTrack);
 	}
 	

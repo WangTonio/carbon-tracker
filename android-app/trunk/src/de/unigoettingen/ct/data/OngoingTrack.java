@@ -50,6 +50,10 @@ public class OngoingTrack {
 		return retVal;
 	}
 	
+	public TrackPart getEmptyTrackPart(){
+		return this.wrappedTrackPart.getCloneWithoutMeasurements();
+	}
+	
 	public void setClosed(){
 		this.wrappedTrackPart.setLastPart(true);
 	}

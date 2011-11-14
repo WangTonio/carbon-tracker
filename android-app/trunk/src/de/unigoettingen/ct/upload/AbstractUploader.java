@@ -27,8 +27,7 @@ public abstract class AbstractUploader {
 	private Thread uploadingThread;
 	private Exception caughtException;
 
-	//private static final String WEB_SERVICE_URL = "http://134.76.20.156/CarbonTrackerWs/"; old war-file
-	private static final String WEB_SERVICE_URL = "http://134.76.20.156/CarbonTrackerWS3/";
+	private static final String WEB_SERVICE_URL = "http://134.76.21.30/CarbonTrackerWS/"; 
 	
 	private static final String LOG_TAG = "AbstractUploader";
 	

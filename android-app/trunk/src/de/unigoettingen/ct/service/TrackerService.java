@@ -2,7 +2,6 @@ package de.unigoettingen.ct.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +14,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Handler;
@@ -23,8 +23,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import de.unigoettingen.ct.container.Logg;
 import de.unigoettingen.ct.container.TrackCache;
-import de.unigoettingen.ct.data.OngoingTrack;
-import de.unigoettingen.ct.data.Person;
 import de.unigoettingen.ct.obd.DefaultMeasurementSubsystem;
 import de.unigoettingen.ct.obd.cmd.CommandProvider;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
@@ -150,14 +148,20 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	
 	private void setUpSubsystems(BluetoothSocket btSocket) {
 		if (!active) {
+			//this mock implementation starts a new track on every service start so far
 			Log.d(LOG_TAG, "Creating subsystems");
-			TrackCache cache = new TrackCache(new OngoingTrack(Calendar.getInstance(), null, "Some description", new Person("Heinz", "Harald")));
-			this.cachingStrat = new SimpleCachingStratgey(cache);
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			TrackCache cache = new TrackCache();
+			
+			this.cachingStrat = new SimpleCachingStratgey(cache, new PersistenceBinder(getApplicationContext()),
+					prefs.getString("forename", "Unknown"), prefs.getString("lastname", "Driver"));
 			this.cachingStrat.setStatusListener(this);
-			List<ObdCommand> commands = CommandProvider.getDesiredObdCommands(PreferenceManager.getDefaultSharedPreferences(this));
+			
+			List<ObdCommand> commands = CommandProvider.getDesiredObdCommands(prefs);
 			LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 			this.measurementSystem = new DefaultMeasurementSubsystem(cache, 2000, btSocket, locationManager, commands);
 			this.measurementSystem.setStatusListener(this);
+			
 			this.active = true;
 			this.cachingStrat.setUp();
 			this.measurementSystem.setUp();
@@ -165,6 +169,11 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	}
 	
 	private void terminate(){
+		cleanUp();
+	}
+	
+	@Override
+	public void onDestroy() {
 		cleanUp();
 	}
 	
