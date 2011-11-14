@@ -1,0 +1,214 @@
+11-14 12:59:42.319: D/TrackerService(5948): Created Bluetooth socket for device 00:04:3E:3A:4B:7A
+11-14 12:59:42.319: D/TrackerService(5948): Attempt to connect will be performed by the subsystem...
+11-14 12:59:42.319: D/TrackerService(5948): Creating subsystems
+11-14 12:59:42.329: D/TrackerService(5948): SET_UP from CachingSys
+11-14 12:59:42.329: D/TrackerService(5948): Caching: null  Measurement: null
+11-14 12:59:42.329: D/MeasurementSubsystem(5948): setUp executing in worker thread.
+11-14 12:59:42.459: D/TrackerService(5948): IN_PROGRESS from CachingSys
+11-14 12:59:42.459: D/TrackerService(5948): Caching: SET_UP  Measurement: null
+11-14 12:59:42.519: D/dalvikvm(5948): GC_CONCURRENT freed 363K, 49% free 3011K/5895K, external 297K/514K, paused 6ms+17ms
+11-14 12:59:43.389: I/MeasurementSubsystem(5948): Connected successfully to th Bluetooth socket.
+11-14 12:59:43.819: D/EmptyCmd(5948): OBD Output after filtering is:DIAMEXDX70v1.0
+11-14 12:59:43.819: D/EmptyCmd(5948): Processing OBD String:EXDX70v1.0
+11-14 12:59:43.819: D/EmptyCmd(5948): Initial messag from the adapter after strip is :EXDX70v1.0
+11-14 12:59:43.839: I/MeasurementSubsystem(5948): Empty Command finished successfully.
+11-14 12:59:43.909: D/DisableElmEchoCmd(5948): OBD Output after filtering is:ate0OK
+11-14 12:59:43.909: D/DisableElmEchoCmd(5948): Processing OBD String:OK
+11-14 12:59:47.709: D/VehicleIdentificationNumberCmd(5948): OBD Output after filtering is:SEARCHING...NODATA
+11-14 12:59:47.709: D/VehicleIdentificationNumberCmd(5948): Output contained SEARCHING an was truncated to:NODATA
+11-14 12:59:47.709: W/MeasurementSubsystem(5948): Vehicle does not privde vin. Using default value 'UNKNOWNVIN'
+11-14 12:59:47.709: D/TrackerService(5948): SET_UP from MeasurementSys
+11-14 12:59:47.709: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: null
+11-14 12:59:48.119: D/MassAirFlowCmd(5948): OBD Output after filtering is:NODATA
+11-14 12:59:48.119: D/TrackerService(5948): ERROR_BUT_ONGOING from MeasurementSys
+11-14 12:59:48.119: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: SET_UP
+11-14 12:59:48.119: E/MeasurementSys(5948): MeasurementSys says: Command MassAirFlowCmd is not supported an will be turned off.
+11-14 12:59:48.279: D/LambdaCmd(5948): OBD Output after filtering is:NODATA
+11-14 12:59:48.279: D/TrackerService(5948): ERROR_BUT_ONGOING from MeasurementSys
+11-14 12:59:48.279: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: ERROR_BUT_ONGOING
+11-14 12:59:48.279: E/MeasurementSys(5948): MeasurementSys says: Command LambdaCmd is not supported an will be turned off.
+11-14 12:59:48.579: D/EngineRpmCmd(5948): OBD Output after filtering is:410C1348
+11-14 12:59:48.579: D/EngineRpmCmd(5948): Processing OBD String:1348
+11-14 12:59:48.739: D/EngineOilTemperatureCmd(5948): OBD Output after filtering is:NODATA
+11-14 12:59:48.739: D/TrackerService(5948): ERROR_BUT_ONGOING from MeasurementSys
+11-14 12:59:48.739: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: ERROR_BUT_ONGOING
+11-14 12:59:48.739: E/MeasurementSys(5948): MeasurementSys says: Command EngineOilTemperatureCmd is not supported an will be turned off.
+11-14 12:59:48.989: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D00
+11-14 12:59:48.989: D/VehicleSpeedCmd(5948): Processing OBD String:00
+11-14 12:59:49.129: D/EngineRunTimeCmd(5948): OBD Output after filtering is:NODATA
+11-14 12:59:49.129: D/TrackerService(5948): ERROR_BUT_ONGOING from MeasurementSys
+11-14 12:59:49.129: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: ERROR_BUT_ONGOING
+11-14 12:59:49.129: E/MeasurementSys(5948): MeasurementSys says: Command EngineRunTimeCmd is not supported an will be turned off.
+11-14 12:59:50.239: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0F1C
+11-14 12:59:50.239: D/EngineRpmCmd(5948): Processing OBD String:0F1C
+11-14 12:59:50.469: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D00
+11-14 12:59:50.469: D/VehicleSpeedCmd(5948): Processing OBD String:00
+11-14 12:59:52.259: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0DC4
+11-14 12:59:52.259: D/EngineRpmCmd(5948): Processing OBD String:0DC4
+11-14 12:59:52.509: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D01
+11-14 12:59:52.509: D/VehicleSpeedCmd(5948): Processing OBD String:01
+11-14 12:59:54.229: D/EngineRpmCmd(5948): OBD Output after filtering is:410C1248
+11-14 12:59:54.229: D/EngineRpmCmd(5948): Processing OBD String:1248
+11-14 12:59:54.489: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D03
+11-14 12:59:54.489: D/VehicleSpeedCmd(5948): Processing OBD String:03
+11-14 12:59:56.259: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0DB4
+11-14 12:59:56.259: D/EngineRpmCmd(5948): Processing OBD String:0DB4
+11-14 12:59:56.509: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D03
+11-14 12:59:56.509: D/VehicleSpeedCmd(5948): Processing OBD String:03
+11-14 12:59:58.259: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0E08
+11-14 12:59:58.259: D/EngineRpmCmd(5948): Processing OBD String:0E08
+11-14 12:59:58.529: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D03
+11-14 12:59:58.529: D/VehicleSpeedCmd(5948): Processing OBD String:03
+11-14 12:59:59.379: E/ActivityThread(5948): Activity de.unigoettingen.ct.ui.MainActivity has leaked ServiceConnection de.unigoettingen.ct.ui.MainActivity$1@4051c328 that was originally bound here
+11-14 12:59:59.379: E/ActivityThread(5948): android.app.ServiceConnectionLeaked: Activity de.unigoettingen.ct.ui.MainActivity has leaked ServiceConnection de.unigoettingen.ct.ui.MainActivity$1@4051c328 that was originally bound here
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.app.LoadedApk$ServiceDispatcher.<init>(LoadedApk.java:938)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.app.LoadedApk.getServiceDispatcher(LoadedApk.java:833)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.app.ContextImpl.bindService(ContextImpl.java:895)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.content.ContextWrapper.bindService(ContextWrapper.java:347)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at de.unigoettingen.ct.ui.MainActivity.startAndBindService(MainActivity.java:108)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at de.unigoettingen.ct.ui.MainActivity.onCreate(MainActivity.java:78)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1047)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:1722)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:1784)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.app.ActivityThread.access$1500(ActivityThread.java:123)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:939)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.os.Handler.dispatchMessage(Handler.java:99)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.os.Looper.loop(Looper.java:130)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at android.app.ActivityThread.main(ActivityThread.java:3835)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at java.lang.reflect.Method.invokeNative(Native Method)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at java.lang.reflect.Method.invoke(Method.java:507)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:847)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:605)
+11-14 12:59:59.379: E/ActivityThread(5948): 	at dalvik.system.NativeStart.main(Native Method)
+11-14 12:59:59.389: I/MainActivity(5948): Service bound
+11-14 13:00:00.259: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0DBC
+11-14 13:00:00.259: D/EngineRpmCmd(5948): Processing OBD String:0DBC
+11-14 13:00:00.489: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D00
+11-14 13:00:00.489: D/VehicleSpeedCmd(5948): Processing OBD String:00
+11-14 13:00:02.239: D/EngineRpmCmd(5948): OBD Output after filtering is:410C206C
+11-14 13:00:02.239: D/EngineRpmCmd(5948): Processing OBD String:206C
+11-14 13:00:02.509: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D04
+11-14 13:00:02.509: D/VehicleSpeedCmd(5948): Processing OBD String:04
+11-14 13:00:04.249: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0ED4
+11-14 13:00:04.249: D/EngineRpmCmd(5948): Processing OBD String:0ED4
+11-14 13:00:04.519: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D09
+11-14 13:00:04.519: D/VehicleSpeedCmd(5948): Processing OBD String:09
+11-14 13:00:06.249: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0E64
+11-14 13:00:06.249: D/EngineRpmCmd(5948): Processing OBD String:0E64
+11-14 13:00:06.499: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D09
+11-14 13:00:06.499: D/VehicleSpeedCmd(5948): Processing OBD String:09
+11-14 13:00:08.249: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0E78
+11-14 13:00:08.249: D/EngineRpmCmd(5948): Processing OBD String:0E78
+11-14 13:00:08.499: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D0C
+11-14 13:00:08.499: D/VehicleSpeedCmd(5948): Processing OBD String:0C
+11-14 13:00:10.249: D/EngineRpmCmd(5948): OBD Output after filtering is:410C131C
+11-14 13:00:10.249: D/EngineRpmCmd(5948): Processing OBD String:131C
+11-14 13:00:10.499: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D10
+11-14 13:00:10.499: D/VehicleSpeedCmd(5948): Processing OBD String:10
+11-14 13:00:12.259: D/EngineRpmCmd(5948): OBD Output after filtering is:410C18EC
+11-14 13:00:12.259: D/EngineRpmCmd(5948): Processing OBD String:18EC
+11-14 13:00:12.509: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D15
+11-14 13:00:12.509: D/VehicleSpeedCmd(5948): Processing OBD String:15
+11-14 13:00:14.239: D/EngineRpmCmd(5948): OBD Output after filtering is:410C1D34
+11-14 13:00:14.239: D/EngineRpmCmd(5948): Processing OBD String:1D34
+11-14 13:00:14.499: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D19
+11-14 13:00:14.499: D/VehicleSpeedCmd(5948): Processing OBD String:19
+11-14 13:00:16.249: D/EngineRpmCmd(5948): OBD Output after filtering is:410C2204
+11-14 13:00:16.249: D/EngineRpmCmd(5948): Processing OBD String:2204
+11-14 13:00:16.479: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D1C
+11-14 13:00:16.479: D/VehicleSpeedCmd(5948): Processing OBD String:1C
+11-14 13:00:18.229: D/EngineRpmCmd(5948): OBD Output after filtering is:410C1C60
+11-14 13:00:18.229: D/EngineRpmCmd(5948): Processing OBD String:1C60
+11-14 13:00:18.479: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D17
+11-14 13:00:18.479: D/VehicleSpeedCmd(5948): Processing OBD String:17
+11-14 13:00:20.279: D/EngineRpmCmd(5948): OBD Output after filtering is:410C1A48
+11-14 13:00:20.279: D/EngineRpmCmd(5948): Processing OBD String:1A48
+11-14 13:00:20.549: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D16
+11-14 13:00:20.549: D/VehicleSpeedCmd(5948): Processing OBD String:16
+11-14 13:00:22.279: D/EngineRpmCmd(5948): OBD Output after filtering is:410C1AA4
+11-14 13:00:22.279: D/EngineRpmCmd(5948): Processing OBD String:1AA4
+11-14 13:00:22.509: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D16
+11-14 13:00:22.509: D/VehicleSpeedCmd(5948): Processing OBD String:16
+11-14 13:00:24.259: D/EngineRpmCmd(5948): OBD Output after filtering is:410C1A64
+11-14 13:00:24.259: D/EngineRpmCmd(5948): Processing OBD String:1A64
+11-14 13:00:24.529: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D16
+11-14 13:00:24.529: D/VehicleSpeedCmd(5948): Processing OBD String:16
+11-14 13:00:26.259: D/EngineRpmCmd(5948): OBD Output after filtering is:410C1B24
+11-14 13:00:26.259: D/EngineRpmCmd(5948): Processing OBD String:1B24
+11-14 13:00:26.489: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D16
+11-14 13:00:26.489: D/VehicleSpeedCmd(5948): Processing OBD String:16
+11-14 13:00:28.239: D/EngineRpmCmd(5948): OBD Output after filtering is:410C20B0
+11-14 13:00:28.239: D/EngineRpmCmd(5948): Processing OBD String:20B0
+11-14 13:00:28.469: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D1B
+11-14 13:00:28.469: D/VehicleSpeedCmd(5948): Processing OBD String:1B
+11-14 13:00:30.259: D/EngineRpmCmd(5948): OBD Output after filtering is:410C2254
+11-14 13:00:30.259: D/EngineRpmCmd(5948): Processing OBD String:2254
+11-14 13:00:30.519: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D1C
+11-14 13:00:30.519: D/VehicleSpeedCmd(5948): Processing OBD String:1C
+11-14 13:00:32.269: D/EngineRpmCmd(5948): OBD Output after filtering is:410C2084
+11-14 13:00:32.269: D/EngineRpmCmd(5948): Processing OBD String:2084
+11-14 13:00:32.519: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D1A
+11-14 13:00:32.519: D/VehicleSpeedCmd(5948): Processing OBD String:1A
+11-14 13:00:34.259: D/EngineRpmCmd(5948): OBD Output after filtering is:410C1A84
+11-14 13:00:34.259: D/EngineRpmCmd(5948): Processing OBD String:1A84
+11-14 13:00:34.549: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D15
+11-14 13:00:34.549: D/VehicleSpeedCmd(5948): Processing OBD String:15
+11-14 13:00:36.259: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0EBC
+11-14 13:00:36.259: D/EngineRpmCmd(5948): Processing OBD String:0EBC
+11-14 13:00:36.509: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D0E
+11-14 13:00:36.509: D/VehicleSpeedCmd(5948): Processing OBD String:0E
+11-14 13:00:38.239: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0DD8
+11-14 13:00:38.239: D/EngineRpmCmd(5948): Processing OBD String:0DD8
+11-14 13:00:38.489: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D06
+11-14 13:00:38.489: D/VehicleSpeedCmd(5948): Processing OBD String:06
+11-14 13:00:40.239: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0D48
+11-14 13:00:40.239: D/EngineRpmCmd(5948): Processing OBD String:0D48
+11-14 13:00:40.499: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D01
+11-14 13:00:40.499: D/VehicleSpeedCmd(5948): Processing OBD String:01
+11-14 13:00:42.249: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0DDC
+11-14 13:00:42.249: D/EngineRpmCmd(5948): Processing OBD String:0DDC
+11-14 13:00:42.499: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D00
+11-14 13:00:42.499: D/VehicleSpeedCmd(5948): Processing OBD String:00
+11-14 13:00:44.229: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0D98
+11-14 13:00:44.229: D/EngineRpmCmd(5948): Processing OBD String:0D98
+11-14 13:00:44.499: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D00
+11-14 13:00:44.499: D/VehicleSpeedCmd(5948): Processing OBD String:00
+11-14 13:00:46.269: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0000
+11-14 13:00:46.269: D/EngineRpmCmd(5948): Processing OBD String:0000
+11-14 13:00:46.499: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D00
+11-14 13:00:46.499: D/VehicleSpeedCmd(5948): Processing OBD String:00
+11-14 13:00:48.279: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0000
+11-14 13:00:48.279: D/EngineRpmCmd(5948): Processing OBD String:0000
+11-14 13:00:48.549: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D00
+11-14 13:00:48.549: D/VehicleSpeedCmd(5948): Processing OBD String:00
+11-14 13:00:50.139: D/EngineRpmCmd(5948): OBD Output after filtering is:NODATA
+11-14 13:00:50.139: D/TrackerService(5948): ERROR_BUT_ONGOING from MeasurementSys
+11-14 13:00:50.139: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: ERROR_BUT_ONGOING
+11-14 13:00:50.139: E/MeasurementSys(5948): MeasurementSys says: Command EngineRpmCmd is not supported an will be turned off.
+11-14 13:00:50.279: D/VehicleSpeedCmd(5948): OBD Output after filtering is:NODATA
+11-14 13:00:50.279: D/TrackerService(5948): ERROR_BUT_ONGOING from MeasurementSys
+11-14 13:00:50.279: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: ERROR_BUT_ONGOING
+11-14 13:00:50.279: E/MeasurementSys(5948): MeasurementSys says: Command VehicleSpeedCmd is not supported an will be turned off.
+11-14 13:00:53.129: E/ActivityThread(5948): Activity de.unigoettingen.ct.ui.MainActivity has leaked ServiceConnection de.unigoettingen.ct.ui.MainActivity$1@40589f78 that was originally bound here
+11-14 13:00:53.129: E/ActivityThread(5948): android.app.ServiceConnectionLeaked: Activity de.unigoettingen.ct.ui.MainActivity has leaked ServiceConnection de.unigoettingen.ct.ui.MainActivity$1@40589f78 that was originally bound here
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.app.LoadedApk$ServiceDispatcher.<init>(LoadedApk.java:938)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.app.LoadedApk.getServiceDispatcher(LoadedApk.java:833)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.app.ContextImpl.bindService(ContextImpl.java:895)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.content.ContextWrapper.bindService(ContextWrapper.java:347)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at de.unigoettingen.ct.ui.MainActivity.startAndBindService(MainActivity.java:108)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at de.unigoettingen.ct.ui.MainActivity.onCreate(MainActivity.java:78)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1047)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:1722)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:1784)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.app.ActivityThread.handleRelaunchActivity(ActivityThread.java:2953)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.app.ActivityThread.access$1600(ActivityThread.java:123)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:943)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.os.Handler.dispatchMessage(Handler.java:99)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.os.Looper.loop(Looper.java:130)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at android.app.ActivityThread.main(ActivityThread.java:3835)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at java.lang.reflect.Method.invokeNative(Native Method)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at java.lang.reflect.Method.invoke(Method.java:507)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:847)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:605)
+11-14 13:00:53.129: E/ActivityThread(5948): 	at dalvik.system.NativeStart.main(Native Method)
+11-14 13:00:53.139: I/MainActivity(5948): Service bound

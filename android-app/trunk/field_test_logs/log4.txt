@@ -1,0 +1,73 @@
+11-14 12:47:03.071: D/dalvikvm(5948): GC_EXTERNAL_ALLOC freed 45K, 51% free 2680K/5379K, external 0K/0K, paused 212ms
+11-14 12:47:03.181: I/MainActivity(5948): Service bound
+11-14 12:48:53.351: D/dalvikvm(5948): Debugger has detached; object registry had 1 entries
+11-14 12:54:20.069: D/TrackerService(5948): Created Bluetooth socket for device 00:04:3E:3A:4B:7A
+11-14 12:54:20.069: D/TrackerService(5948): Attempt to connect will be performed by the subsystem...
+11-14 12:54:20.069: D/TrackerService(5948): Creating subsystems
+11-14 12:54:20.109: D/TrackerService(5948): SET_UP from CachingSys
+11-14 12:54:20.109: D/TrackerService(5948): Caching: null  Measurement: null
+11-14 12:54:20.119: D/MeasurementSubsystem(5948): setUp executing in worker thread.
+11-14 12:54:20.209: D/TrackerService(5948): IN_PROGRESS from CachingSys
+11-14 12:54:20.209: D/TrackerService(5948): Caching: SET_UP  Measurement: null
+11-14 12:54:21.679: I/MeasurementSubsystem(5948): Connected successfully to th Bluetooth socket.
+11-14 12:54:22.139: D/EmptyCmd(5948): OBD Output after filtering is:DIAMEXDX70v1.0
+11-14 12:54:22.139: D/EmptyCmd(5948): Processing OBD String:EXDX70v1.0
+11-14 12:54:22.139: D/EmptyCmd(5948): Initial messag from the adapter after strip is :EXDX70v1.0
+11-14 12:54:22.139: I/MeasurementSubsystem(5948): Empty Command finished successfully.
+11-14 12:54:22.229: D/DisableElmEchoCmd(5948): OBD Output after filtering is:ate0OK
+11-14 12:54:22.229: D/DisableElmEchoCmd(5948): Processing OBD String:OK
+11-14 12:54:25.989: D/VehicleIdentificationNumberCmd(5948): OBD Output after filtering is:SEARCHING...NODATA
+11-14 12:54:25.989: D/VehicleIdentificationNumberCmd(5948): Output contained SEARCHING an was truncated to:NODATA
+11-14 12:54:25.989: W/MeasurementSubsystem(5948): Vehicle does not privde vin. Using default value 'UNKNOWNVIN'
+11-14 12:54:25.989: D/TrackerService(5948): SET_UP from MeasurementSys
+11-14 12:54:25.989: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: null
+11-14 12:54:26.409: D/MassAirFlowCmd(5948): OBD Output after filtering is:NODATA
+11-14 12:54:26.409: D/TrackerService(5948): ERROR_BUT_ONGOING from MeasurementSys
+11-14 12:54:26.409: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: SET_UP
+11-14 12:54:26.409: E/MeasurementSys(5948): MeasurementSys says: Command MassAirFlowCmd is not supported an will be turned off.
+11-14 12:54:26.549: D/LambdaCmd(5948): OBD Output after filtering is:NODATA
+11-14 12:54:26.599: D/TrackerService(5948): ERROR_BUT_ONGOING from MeasurementSys
+11-14 12:54:26.599: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: ERROR_BUT_ONGOING
+11-14 12:54:26.599: E/MeasurementSys(5948): MeasurementSys says: Command LambdaCmd is not supported an will be turned off.
+11-14 12:54:26.809: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0000
+11-14 12:54:26.809: D/EngineRpmCmd(5948): Processing OBD String:0000
+11-14 12:54:26.939: D/EngineOilTemperatureCmd(5948): OBD Output after filtering is:NODATA
+11-14 12:54:26.939: D/TrackerService(5948): ERROR_BUT_ONGOING from MeasurementSys
+11-14 12:54:26.939: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: ERROR_BUT_ONGOING
+11-14 12:54:26.939: E/MeasurementSys(5948): MeasurementSys says: Command EngineOilTemperatureCmd is not supported an will be turned off.
+11-14 12:54:27.189: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D00
+11-14 12:54:27.189: D/VehicleSpeedCmd(5948): Processing OBD String:00
+11-14 12:54:27.349: D/EngineRunTimeCmd(5948): OBD Output after filtering is:NODATA
+11-14 12:54:27.349: D/TrackerService(5948): ERROR_BUT_ONGOING from MeasurementSys
+11-14 12:54:27.349: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: ERROR_BUT_ONGOING
+11-14 12:54:27.349: E/MeasurementSys(5948): MeasurementSys says: Command EngineRunTimeCmd is not supported an will be turned off.
+11-14 12:54:28.529: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0000
+11-14 12:54:28.539: D/EngineRpmCmd(5948): Processing OBD String:0000
+11-14 12:54:28.829: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D00
+11-14 12:54:28.829: D/VehicleSpeedCmd(5948): Processing OBD String:00
+11-14 12:54:30.099: D/dalvikvm(5948): GC_CONCURRENT freed 187K, 48% free 2911K/5575K, external 297K/514K, paused 13ms+12ms
+11-14 12:54:30.539: D/EngineRpmCmd(5948): OBD Output after filtering is:410C0000
+11-14 12:54:30.539: D/EngineRpmCmd(5948): Processing OBD String:0000
+11-14 12:54:30.809: D/VehicleSpeedCmd(5948): OBD Output after filtering is:410D00
+11-14 12:54:30.809: D/VehicleSpeedCmd(5948): Processing OBD String:00
+11-14 12:54:32.279: D/EngineRpmCmd(5948): OBD Output after filtering is:?
+11-14 12:54:32.279: D/EngineRpmCmd(5948): Processing OBD String:?
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): IOException by periodic Command:
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): java.io.IOException: Engine RPM command expected 2 bytes, but 1 hex digits were returned.
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): 	at de.unigoettingen.ct.obd.cmd.EngineRpmCmd.processResponse(EngineRpmCmd.java:15)
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): 	at de.unigoettingen.ct.obd.cmd.ObdCommand.queryResult(ObdCommand.java:38)
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): 	at de.unigoettingen.ct.obd.DefaultMeasurementSubsystem$1.run(DefaultMeasurementSubsystem.java:151)
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:444)
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): 	at java.util.concurrent.FutureTask$Sync.innerRunAndReset(FutureTask.java:323)
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): 	at java.util.concurrent.FutureTask.runAndReset(FutureTask.java:150)
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): 	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:153)
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): 	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:268)
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1088)
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:581)
+11-14 12:54:32.279: E/MeasurementSubsystem(5948): 	at java.lang.Thread.run(Thread.java:1019)
+11-14 12:54:32.279: D/TrackerService(5948): FATAL_ERROR_STOPPED from MeasurementSys
+11-14 12:54:32.279: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: ERROR_BUT_ONGOING
+11-14 12:54:32.289: E/MeasurementSys(5948): MeasurementSys says: Command EngineRpmCmd caused an IOException: Engine RPM command expected 2 bytes, but 1 hex digits were returned.
+11-14 12:54:32.309: W/Caching(5948): Application terminates allthough there are still measurements in RAM, which are not yet uploaded.
+11-14 12:54:32.319: D/TrackerService(5948): STOPPED_BY_USER from CachingSys
+11-14 12:54:32.319: D/TrackerService(5948): Caching: IN_PROGRESS  Measurement: null
