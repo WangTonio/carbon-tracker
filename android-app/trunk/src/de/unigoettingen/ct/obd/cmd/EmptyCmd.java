@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import android.util.Log;
 
-import de.unigoettingen.ct.data.Measurement;
+import de.unigoettingen.ct.data.io.Measurement;
 
 public class EmptyCmd extends ObdCommand{
 

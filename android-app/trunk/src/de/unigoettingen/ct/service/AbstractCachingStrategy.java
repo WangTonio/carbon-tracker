@@ -12,9 +12,9 @@ import de.unigoettingen.ct.container.Logg;
 import de.unigoettingen.ct.container.TrackCache;
 import de.unigoettingen.ct.data.GenericObserver;
 import de.unigoettingen.ct.data.OngoingTrack;
-import de.unigoettingen.ct.data.Person;
-import de.unigoettingen.ct.data.TrackPart;
 import de.unigoettingen.ct.data.TrackSummary;
+import de.unigoettingen.ct.data.io.Person;
+import de.unigoettingen.ct.data.io.TrackPart;
 import de.unigoettingen.ct.upload.AbstractUploader;
 import de.unigoettingen.ct.upload.TrackPartUploader;
 
@@ -27,9 +27,9 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 	private String currentForename;
 	private String currentLastname;
 	private TrackCache cache;
-	private AbstractUploader currentUpload;
-	private TrackPart currentlyUploadedTrackPart;
-	private int currentlyUploadedIndex;
+	private volatile AbstractUploader currentUpload;
+	private volatile TrackPart currentlyUploadedTrackPart;
+	private volatile int currentlyUploadedIndex;
 	private SubsystemStatusListener statusListener;
 	private volatile boolean running; //indicates, whether this must react to changes in cache status
 	
@@ -108,7 +108,7 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 						else{
 							//upload just finished successfully. remove uploaded data from ram, then ask subclass what to do
 							handleSuccessfulUpload();
-							handleCacheChange(observable);
+							handleCacheChange(cache.getSummary());
 						}
 					}
 					//if the upload is still in progress, do not ask the subclass anything yet
@@ -127,6 +127,8 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 	public void stop(){
 		//make sure not to respond to cache events anymore
 		this.running = false;
+		//TODO: the following is a mock-line:
+		this.cache.setTrackToClosed(cache.getSummary().size()-1);
 		//the rest involves I/O and is performed asynchronously
 		executor.execute(new Runnable() {	
 			@Override
@@ -145,6 +147,9 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 					}
 					if(!currentUpload.hasErrorOccurred()){
 						handleSuccessfulUpload();
+					}
+					else{
+						currentUpload = null;
 					}
 				}
 				
@@ -176,7 +181,7 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 				}
 				
 				//now store the non-active tracks
-				Log.i(LOG_TAG, (activeTrackIndex-1)+" non-active Tracks are stored persistently.");
+				Log.i(LOG_TAG, (activeTrackIndex)+" non-active Tracks are stored persistently.");
 				for(int i=0; i<activeTrackIndex; i++){
 					//TODO so far, open tracks without any remaining data will not be stored
 					if(currentCacheState.get(i).getMeasurementCount() > 0){

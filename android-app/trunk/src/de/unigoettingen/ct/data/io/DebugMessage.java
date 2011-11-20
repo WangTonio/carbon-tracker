@@ -1,6 +1,8 @@
-package de.unigoettingen.ct.data;
+package de.unigoettingen.ct.data.io;
 
 import java.util.Calendar;
+
+import de.unigoettingen.ct.data.DateUtils;
 
 /**
  * These objects play the role of 'export' objects as they will directly be marshalled and uploaded to the server.

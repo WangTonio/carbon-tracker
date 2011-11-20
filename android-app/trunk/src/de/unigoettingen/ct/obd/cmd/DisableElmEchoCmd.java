@@ -2,7 +2,7 @@ package de.unigoettingen.ct.obd.cmd;
 
 import java.io.IOException;
 
-import de.unigoettingen.ct.data.Measurement;
+import de.unigoettingen.ct.data.io.Measurement;
 
 /**
  * Disables the echo function of the ELM adapter (not part of the obd system). This means, that all following

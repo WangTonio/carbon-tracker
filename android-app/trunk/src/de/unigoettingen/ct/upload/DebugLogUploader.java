@@ -1,6 +1,6 @@
 package de.unigoettingen.ct.upload;
 
-import de.unigoettingen.ct.data.DebugLog;
+import de.unigoettingen.ct.data.io.DebugLog;
 import de.unigoettingen.ct.json.JSONMarshaller;
 
 /**

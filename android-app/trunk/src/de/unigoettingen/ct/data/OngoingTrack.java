@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import de.unigoettingen.ct.data.io.Measurement;
+import de.unigoettingen.ct.data.io.Person;
+import de.unigoettingen.ct.data.io.TrackPart;
+
 /**
  * A 'dynamic' Track intended to grow and change as measurement is being performed. Note that both, this class and {@link TrackPart}, 
  * somehow represent a Track. However, the TrackPart class is solely used for data export and can be retrieved from objects of this class

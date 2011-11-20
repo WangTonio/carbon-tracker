@@ -2,8 +2,8 @@ package de.unigoettingen.ct.json;
 
 import java.util.Calendar;
 
-import de.unigoettingen.ct.data.DebugLog;
-import de.unigoettingen.ct.data.TrackPart;
+import de.unigoettingen.ct.data.io.DebugLog;
+import de.unigoettingen.ct.data.io.TrackPart;
 import flexjson.JSONSerializer;
 
 public class JSONMarshaller {

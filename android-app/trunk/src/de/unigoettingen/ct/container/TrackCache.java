@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.unigoettingen.ct.data.GenericObservable;
-import de.unigoettingen.ct.data.Measurement;
 import de.unigoettingen.ct.data.OngoingTrack;
-import de.unigoettingen.ct.data.TrackPart;
 import de.unigoettingen.ct.data.TrackSummary;
+import de.unigoettingen.ct.data.io.Measurement;
+import de.unigoettingen.ct.data.io.TrackPart;
 
 /**
  * Represents a container for {@link OngoingTrack}s. The container is a Thread-safe inter-Thread-gateway, which

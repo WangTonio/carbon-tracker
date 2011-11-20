@@ -19,7 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import de.unigoettingen.ct.container.Logg;
 import de.unigoettingen.ct.container.TrackCache;
-import de.unigoettingen.ct.data.Measurement;
+import de.unigoettingen.ct.data.io.Measurement;
 import de.unigoettingen.ct.obd.cmd.DisableElmEchoCmd;
 import de.unigoettingen.ct.obd.cmd.EmptyCmd;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;

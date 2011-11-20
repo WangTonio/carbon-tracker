@@ -9,7 +9,7 @@ import android.util.Log;
 
 import de.unigoettingen.ct.container.Logg;
 import de.unigoettingen.ct.container.TrackCache;
-import de.unigoettingen.ct.data.Measurement;
+import de.unigoettingen.ct.data.io.Measurement;
 import de.unigoettingen.ct.service.AsynchronousSubsystem;
 import de.unigoettingen.ct.service.SubsystemStatus;
 import de.unigoettingen.ct.service.SubsystemStatusListener;
@@ -47,6 +47,7 @@ public class MockMeasurementSubsystem implements AsynchronousSubsystem{
 		Runnable mockLogic = new Runnable() {		
 			@Override
 			public void run() {
+				dataCache.matchVinOfActiveTrack("UNKNOWNVIN");
 				listener.notify(new SubsystemStatus(SubsystemStatus.States.SET_UP), MockMeasurementSubsystem.this);
 			}
 		};

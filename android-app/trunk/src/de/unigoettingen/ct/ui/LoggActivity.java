@@ -11,8 +11,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 import de.unigoettingen.ct.R;
 import de.unigoettingen.ct.container.Logg;
-import de.unigoettingen.ct.data.DebugMessage;
 import de.unigoettingen.ct.data.GenericObserver;
+import de.unigoettingen.ct.data.io.DebugMessage;
 import de.unigoettingen.ct.upload.AbstractUploader;
 import de.unigoettingen.ct.upload.DebugLogUploader;
 

@@ -2,7 +2,7 @@ package de.unigoettingen.ct.obd.cmd;
 
 import java.io.IOException;
 
-import de.unigoettingen.ct.data.Measurement;
+import de.unigoettingen.ct.data.io.Measurement;
 
 public class EngineOilTemperatureCmd extends ObdCommand{
 

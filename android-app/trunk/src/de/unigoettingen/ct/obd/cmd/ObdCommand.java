@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 import android.util.Log;
 
-import de.unigoettingen.ct.data.Measurement;
+import de.unigoettingen.ct.data.io.Measurement;
 
 /**
  * Abstract superclass for all odb-command-encapsulating classes. The template method pattern is used here, as this class

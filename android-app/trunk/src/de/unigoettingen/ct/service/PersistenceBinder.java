@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import de.unigoettingen.ct.data.Measurement;
 import de.unigoettingen.ct.data.OngoingTrack;
-import de.unigoettingen.ct.data.Person;
-import de.unigoettingen.ct.data.TrackPart;
+import de.unigoettingen.ct.data.io.Measurement;
+import de.unigoettingen.ct.data.io.Person;
+import de.unigoettingen.ct.data.io.TrackPart;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -38,28 +38,28 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 		// note that vin and person information also have to be stored, because the phone
 		// can be taken into another vehicle and the person information can be changed.
 		// in those cases, the tracks must not be confused.
-		 db.execSQL("CREATE TABLE T_Track ( "+
-				 	"_id INTEGER PRIMARY KEY AUTOINCREMENT, "+
+		 db.execSQL("CREATE TABLE T_Track( "+
+				 	"_id INTEGER PRIMARY KEY AUTOINCREMENT , "+
 				    "started_at INTEGER , "+
 				    "closed INTEGER , "+
 				    "forename TEXT , "+
 				    "lastname TEXT , "+
-				    "vin TEXT , "+
-				    "description TEXT, "+
+				    "vin TEXT  , "+
+				    "description TEXT "+
 				    ")");
 		 db.execSQL("CREATE TABLE T_Measurement ( "+
-				 	"_id INTEGER PRIMARY KEY AUTOINCREMENT, "+
+				 	"_id INTEGER PRIMARY KEY AUTOINCREMENT , "+
 				 	"id_T_Track INTEGER , "+ //foreign reference
 				    "point_of_time INTEGER , "+
 				    "longitude REAL , "+
 				    "latitude REAL , "+
 				    "altitude REAL , "+
 				    "rpm INTEGER , "+
-				    "maf REAL, "+
-				    "speed INTEGER, "+
-				    "eot INTEGER, "+
-				    "ert INTEGER, "+
-				    "lambda REAL, "+
+				    "maf REAL , "+
+				    "speed INTEGER , "+
+				    "eot INTEGER , "+
+				    "ert INTEGER , "+
+				    "lambda REAL "+
 				    ")");
 		
 	}
@@ -73,8 +73,9 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 			//TODO throw exception
 		}
 		if(cur.moveToFirst()){
+			int retVal = cur.getInt(cur.getColumnIndex("_id"));
 			cur.close();
-			return cur.getInt(cur.getColumnIndex("_id"));
+			return retVal;
 		}
 		else{
 			cur.close();

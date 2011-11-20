@@ -9,6 +9,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
@@ -28,7 +30,6 @@ public abstract class AbstractUploader {
 	private Exception caughtException;
 
 	private static final String WEB_SERVICE_URL = "http://134.76.21.30/CarbonTrackerWS/"; 
-	
 	private static final String LOG_TAG = "AbstractUploader";
 	
 	public AbstractUploader(){
@@ -59,6 +60,9 @@ public abstract class AbstractUploader {
 				httppost.setEntity(se);  
 
 				HttpClient httpclient = new DefaultHttpClient();
+				HttpParams params = httpclient.getParams();
+				HttpConnectionParams.setConnectionTimeout(params, 10000);
+				HttpConnectionParams.setSoTimeout(params, 10000);
 				HttpResponse httpResponse;
 				try {
 					httpResponse = httpclient.execute(httppost); 
