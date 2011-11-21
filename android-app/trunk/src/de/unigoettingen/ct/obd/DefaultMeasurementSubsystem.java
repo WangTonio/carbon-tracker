@@ -147,17 +147,24 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 			Measurement currentMeasurement = new Measurement();
 			for(Iterator<ObdCommand> iterator = obdCmds.iterator(); iterator.hasNext(); ){
 				ObdCommand currentCmd = iterator.next();
+				boolean success;
 				try{
 					currentCmd.queryResult(currentMeasurement, inStream, outStream);
+					success = true;
 				}
 				catch(IOException e){
 					Log.e(LOG_TAG,"IOException by periodic Command:", e);
-					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "Command "+currentCmd.getClass().getSimpleName()+" caused an IOException: "+e.getMessage());
-					cleanUp();
-					return;
+					notifyListener(SubsystemStatus.States.ERROR_BUT_ONGOING, "Command "+currentCmd.getClass().getSimpleName()+" caused an IOException: "+e.getMessage());
+					success=false;
+//					cleanUp();
+//					return;
 				}
 				catch(UnsupportedObdCommandException e2){
 					notifyListener(SubsystemStatus.States.ERROR_BUT_ONGOING, "Command "+currentCmd.getClass().getSimpleName()+" is not supported an will be turned off.");
+					success = false;
+//					iterator.remove();
+				}
+				if(!currentCmd.useAgainRegardingOutcome(success)){
 					iterator.remove();
 				}
 			}

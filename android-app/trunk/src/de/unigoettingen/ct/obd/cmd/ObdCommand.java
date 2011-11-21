@@ -20,6 +20,8 @@ public abstract class ObdCommand {
 	private static final String CHARSET_USED = "ASCII";
 	private final byte[] buffer = new byte[30]; //will be used temporarily, when bytes are read from input streams. 
 										//this is not located in the method scope to avoid allocation costs in every call.
+	private static final int MAX_NUMBER_OF_FAILS = 3;
+	private int failures = 0;
 
 	/**
 	 * Sends the command to the ELM adapter, retrieves the result, interprets the result and then stores
@@ -106,6 +108,20 @@ public abstract class ObdCommand {
 		return rawString;
 	}
 	
-
+	/**
+	 * Robustness mechanism: This method returns, whether it is advisable to use this OBD command again.
+	 * The decision is based on the last outcome provided by the caller and historical data.
+	 * @param success use true, if the actual command use was successful. Use false, if it threw an exception.
+	 * @return true, if it is advisable to use the command again. false otherwise.
+	 */
+	public boolean useAgainRegardingOutcome(boolean success){
+		if(success){
+			this.failures = this.failures == 0 ? 0 : this.failures -1;
+		}
+		else{
+			this.failures++;
+		}
+		return this.failures <= MAX_NUMBER_OF_FAILS;
+	}
 
 }

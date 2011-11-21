@@ -61,8 +61,8 @@ public abstract class AbstractUploader {
 
 				HttpClient httpclient = new DefaultHttpClient();
 				HttpParams params = httpclient.getParams();
-				HttpConnectionParams.setConnectionTimeout(params, 10000);
-				HttpConnectionParams.setSoTimeout(params, 10000);
+				HttpConnectionParams.setConnectionTimeout(params, 20000);
+				HttpConnectionParams.setSoTimeout(params, 20000);
 				HttpResponse httpResponse;
 				try {
 					httpResponse = httpclient.execute(httppost); 
