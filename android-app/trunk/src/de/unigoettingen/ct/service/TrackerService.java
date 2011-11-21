@@ -159,7 +159,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 			
 			List<ObdCommand> commands = CommandProvider.getDesiredObdCommands(prefs);
 			LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-			this.measurementSystem = new DefaultMeasurementSubsystem(cache, 2000, btSocket, locationManager, commands);
+			this.measurementSystem = new DefaultMeasurementSubsystem(cache, 1000, btSocket, locationManager, commands);
 			this.measurementSystem.setStatusListener(this);
 			
 			this.active = true;

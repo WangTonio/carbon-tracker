@@ -16,7 +16,7 @@ public class VehicleSpeedCmd extends ObdCommand{
 		if(response.length() != 2){
 			throw new IOException("Vehicle speed command expected only 1 byte, but "+response.length()+" hex digits were returned.");
 		}
-		measure.setEot(Integer.parseInt(response, 16)); //this is in km/h. 255 is max ( poor ghost rider :( )
+		measure.setSpeed(Integer.parseInt(response, 16)); //this is in km/h. 255 is max ( poor ghost rider :( )
 	}
 
 }
