@@ -6,7 +6,7 @@ import de.unigoettingen.ct.data.io.Measurement;
 
 public class VehicleIdentificationNumberCmd extends ObdCommand {
 	
-	private String vin = "VIN_NOT_FOUND";
+	private String vin = "UNKNOWNVIN";
 
 	@Override
 	public String getCommandString() {
