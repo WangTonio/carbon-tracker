@@ -72,8 +72,10 @@ public class MockMeasurementSubsystem implements AsynchronousSubsystem{
 				m.setAltitude(10D);
 				m.setLongitude(lng++);
 				m.setLatitude(lat++);
-				m.setMaf(Math.random()*100);
-				m.setLambda(1);
+				m.setSpeed(50);
+				m.setRpm(1000);
+//				m.setMaf(Math.random()*100);
+//				m.setLambda(1);
 				m.setPointOfTime(Calendar.getInstance());
 				dataCache.addMeasurementToActiveTrack(m);
 				Logg.log(Log.DEBUG, "MockMeasurementSS", "Added a tuple");

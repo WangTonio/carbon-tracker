@@ -1,6 +1,9 @@
 package de.unigoettingen.ct.service;
 
-import static de.unigoettingen.ct.service.SubsystemStatus.States.*;
+import static de.unigoettingen.ct.service.SubsystemStatus.States.ERROR_BUT_ONGOING;
+import static de.unigoettingen.ct.service.SubsystemStatus.States.IN_PROGRESS;
+import static de.unigoettingen.ct.service.SubsystemStatus.States.SET_UP;
+import static de.unigoettingen.ct.service.SubsystemStatus.States.STOPPED_BY_USER;
 
 import java.util.Calendar;
 import java.util.List;
@@ -50,6 +53,7 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 				List<OngoingTrack> storedTracks = persistence.loadAllTracksEmpty();
 				//so far, everything gets loaded into ram as a whole
 				for(OngoingTrack currTrack: storedTracks){
+					Logg.log(Log.INFO, LOG_TAG, "Loaded a track stored on the local device.");
 					persistence.loadMeasurementsIntoTrack(currTrack, Integer.MAX_VALUE);
 					persistence.deleteTrackCompletely(currTrack.getEmptyTrackPart());
 				}
@@ -94,19 +98,20 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 						if(currentUpload.hasErrorOccurred()){
 							if(currentUpload.isRetryingPossible()){
 								//retry the upload, do not ask the subclass yet
+								Logg.log(Log.INFO, LOG_TAG, "Last upload failed. Retrying..");
 								currentUpload = new TrackPartUploader(currentlyUploadedTrackPart);
 								currentUpload.startUpload();
 							}
 							else{
 								Logg.log(Log.ERROR, LOG_TAG, "Can not upload measurements due to misconfiguration. Still "+
 										currentlyUploadedTrackPart.getMeasurements().length+" measurements in the pipe.");
-								Logg.log(Log.ERROR, LOG_TAG, "Persistence is not yet implemented and data will be lost.");
-								statusListener.notify(new SubsystemStatus(ERROR_BUT_ONGOING, "Upload not possible, data will be lost."), AbstractCachingStrategy.this);
-								//TODO time to use the persistence features !
+								statusListener.notify(new SubsystemStatus(ERROR_BUT_ONGOING, "Upload not possible, data will be stored persistently upon termination."), AbstractCachingStrategy.this);
+								//TODO use persistence right now (not just when terminating the app) to reduce RAM impact
 							}
 						}
 						else{
 							//upload just finished successfully. remove uploaded data from ram, then ask subclass what to do
+							Logg.log(Log.INFO, LOG_TAG, "Last upload was successful !");
 							handleSuccessfulUpload();
 							handleCacheChange(cache.getSummary());
 						}
@@ -161,7 +166,7 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 				int activeTrackIndex = currentCacheState.size()-1;
 				if(currentCacheState.get(activeTrackIndex).getMeasurementCount() > 0){
 					//active track has data
-					Log.i(LOG_TAG, "Active Track still has data in RAM, trying to upload it.");
+					Logg.log(Log.INFO, LOG_TAG, "Active Track still has data in RAM, trying to upload it.");
 					invokeUpload(activeTrackIndex);
 					while(!currentUpload.isDone()){
 						try {
@@ -172,7 +177,7 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 						}
 					}
 					if(currentUpload.hasErrorOccurred()){
-						Log.i(LOG_TAG, "Active Track could not be uploaded and is stored persistently.");
+						Logg.log(Log.INFO, LOG_TAG, "Active Track could not be uploaded and is stored persistently.");
 						persistence.writeFullTrack(currentlyUploadedTrackPart); //this is the whole active track
 					}
 					//the following line does the right thing in both cases:
@@ -188,6 +193,7 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 						persistence.writeFullTrack(cache.getTrackPart(i));
 					}
 				}
+				persistence.close();
 				statusListener.notify(new SubsystemStatus(STOPPED_BY_USER), AbstractCachingStrategy.this);
 			}
 		});
@@ -198,9 +204,9 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 		if(currentUpload != null){
 			throw new IllegalStateException("Can not start another upload while one is still in progress.");
 		}
-		Logg.log(Log.INFO, LOG_TAG, "Starting an upload to the server.");
 		currentlyUploadedIndex = trackIndex;
 		currentlyUploadedTrackPart = cache.getTrackPart(trackIndex);
+		Logg.log(Log.INFO, LOG_TAG, "Starting an upload to the server with "+currentlyUploadedTrackPart.getMeasurements().length+" measurements.");
 		currentUpload = new TrackPartUploader(currentlyUploadedTrackPart);
 		currentUpload.startUpload();
 	}

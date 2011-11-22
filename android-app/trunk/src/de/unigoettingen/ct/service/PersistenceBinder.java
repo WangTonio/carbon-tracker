@@ -70,6 +70,7 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 				trackPart.getDriver().getForename(), trackPart.getDriver().getLastname()});
 		if(cur.getCount() > 1){
 			Log.e(LOG_TAG, "Corrupted db: Multiple track entries found for track "+trackPart);
+			cur.close();
 			//TODO throw exception
 		}
 		if(cur.moveToFirst()){

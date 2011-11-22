@@ -74,14 +74,15 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 	
 	@Override
 	public void setUp(){
+		//register for gps positioning signals
+		//two updates every measurement interval are good enough; the frequency restriction saves power
+		//the updates are probably invoked from the main thread
+		//NOTE: the following call has to be performed from thread main, otherwise it will block for ever
+		this.locationMgr.requestLocationUpdates( LocationManager.GPS_PROVIDER, measurementInterval/2, 0, this);
+		Logg.log(Log.DEBUG, LOG_TAG, "Successfully enabled GPS.");
 		this.exec.execute(new Runnable() {		
 			public void run() {
 				Log.d(LOG_TAG, "setUp executing in worker thread.");
-				//register for gps positioning signals
-				//two updates every measurement interval are good enough; the frequency restriction saves power
-				//the updates are probably invoked from the main thread
-				//TODO the following line blocks forever on my phone, need to figure this out
-				//locationMgr.requestLocationUpdates( LocationManager.GPS_PROVIDER, measurementInterval/2, 0, DefaultMeasurementSubsystem.this);
 				//establish the bluetooth connection and try to send the obligatory (and always supported) ELM system command
 				try{
 					DefaultMeasurementSubsystem.this.socket.connect();
@@ -160,11 +161,12 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 //					return;
 				}
 				catch(UnsupportedObdCommandException e2){
-					notifyListener(SubsystemStatus.States.ERROR_BUT_ONGOING, "Command "+currentCmd.getClass().getSimpleName()+" is not supported an will be turned off.");
+					notifyListener(SubsystemStatus.States.ERROR_BUT_ONGOING, "Command "+currentCmd.getClass().getSimpleName()+" is not supported.");
 					success = false;
 //					iterator.remove();
 				}
 				if(!currentCmd.useAgainRegardingOutcome(success)){
+					Logg.log(Log.ERROR, LOG_TAG, "Command "+currentCmd.getClass().getSimpleName()+" failed too many times and is turned off.");
 					iterator.remove();
 				}
 			}
@@ -203,6 +205,8 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 		//this will hopefully be the last job
 		//TODO there is a possible race condition that another periodic task gets executed after the clean up job
 		//it happens, if after the execute call below and before the shutDown call the scheduler prefers other threads
+		
+		this.locationMgr.removeUpdates(this); //it is possible this works from thread main only
 		this.exec.execute(new Runnable() {
 			@Override
 			public void run() {

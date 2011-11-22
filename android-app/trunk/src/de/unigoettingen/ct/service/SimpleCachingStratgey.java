@@ -21,7 +21,7 @@ public class SimpleCachingStratgey extends AbstractCachingStrategy{
 
 	@Override
 	protected void handleCacheChange(List<TrackSummary> tracks) {
-		if(tracks.size() > 1){
+		if(tracks.size() > 1 && tracks.get(0).getMeasurementCount() > 0){
 			this.invokeUpload(0);
 		}
 		else if (tracks.get(0).getMeasurementCount() > MEASUREMENT_THRESHOLD){
