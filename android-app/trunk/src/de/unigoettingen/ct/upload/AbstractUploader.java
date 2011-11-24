@@ -77,7 +77,7 @@ public abstract class AbstractUploader {
 					preserveError(e);
 					return;
 				}
-				int responseCode = +httpResponse.getStatusLine().getStatusCode();
+				int responseCode = httpResponse.getStatusLine().getStatusCode();
 				if(responseCode != 200){
 					Exception notOkExc = new ClientProtocolException("Server Response was not '200 OK'. Server said: "+responseCode+" : "
 							+httpResponse.getStatusLine().getReasonPhrase());

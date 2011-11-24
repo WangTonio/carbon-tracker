@@ -27,6 +27,7 @@ import de.unigoettingen.ct.obd.DefaultMeasurementSubsystem;
 import de.unigoettingen.ct.obd.cmd.CommandProvider;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
 import de.unigoettingen.ct.ui.CallbackUI;
+import de.unigoettingen.ct.upload.ManualUploadSystem;
 
 public class TrackerService extends Service implements SubsystemStatusListener{
 
@@ -39,6 +40,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	
 	private AsynchronousSubsystem cachingStrat;
 	private AsynchronousSubsystem measurementSystem;
+	private AsynchronousSubsystem manualUploadSystem;
 	
 	private SubsystemStatus.States cachingState;
 	private SubsystemStatus.States measurementState;
@@ -185,6 +187,9 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 			@Override
 			public void run() {
 				Log.d(LOG_TAG, status.getState()+ " from "+sender);
+				if(sender == manualUploadSystem){
+					handleManualUploaderUpdate(status);
+				}
 				Log.d(LOG_TAG, "Caching: "+cachingState+"  Measurement: "+measurementState);
 				
 				//1. remember the subsystem states for future decision making
@@ -260,6 +265,38 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		});
 	}
 	
+	public void startManualUpload(){
+		this.manualUploadSystem = new ManualUploadSystem(new PersistenceBinder(getApplicationContext()));
+		this.manualUploadSystem.setStatusListener(this);
+		this.manualUploadSystem.setUp();
+		this.ui.indicateLoading(true);
+		//this object will receive asynchronous callbacks
+	}
+	
+	private void handleManualUploaderUpdate(SubsystemStatus state){
+		Log.d(LOG_TAG, "Update from ManualUploader: "+state);
+		switch(state.getState()){
+			case SETTING_UP:
+				ui.indicateLoading(true);
+				break;
+			case SET_UP:
+				ui.diplayText(state.getAdditionalInfo());
+				ui.indicateLoading(true);
+				break;
+			case IN_PROGRESS:
+				ui.indicateLoading(true);
+				break;
+			case FATAL_ERROR_STOPPED:
+			case STOPPED_BY_USER:
+				this.manualUploadSystem = null;
+				ui.indicateLoading(false);
+				ui.diplayText(state.getAdditionalInfo());
+				break;
+			default:
+				Log.wtf(LOG_TAG, "Can not handle state "+state+".");
+		}
+	}
+	
 	//helper methods (for convenience) below -------------------------------------
 	
 	private boolean oneStateIs(SubsystemStatus.States state){
@@ -313,6 +350,12 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		
 		public void start(){
 			setUpBluetooth();
+		}
+		
+		public void uploadCachedData(){
+			if(manualUploadSystem == null){
+				startManualUpload();
+			}
 		}
 		
 		public void stop(){

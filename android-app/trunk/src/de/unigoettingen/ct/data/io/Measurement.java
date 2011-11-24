@@ -42,12 +42,12 @@ public class Measurement {
 		this.longitude=Double.NaN;
 		this.latitude = Double.NaN;
 		this.altitude = Double.NaN;
-		this.rpm = -1;
 		this.maf= Double.NaN;
+		this.lambda=Double.NaN;
+		this.rpm = -1;
 		this.speed=-1;
 		this.eot=-1;
 		this.ert=-1;
-		this.lambda=-1;
 	}
 	
 	public Calendar getPointOfTime() {

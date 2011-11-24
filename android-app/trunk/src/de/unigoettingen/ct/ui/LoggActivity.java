@@ -59,13 +59,16 @@ public class LoggActivity extends Activity implements OnClickListener, GenericOb
 		if(logUploader == null){
 			logUploader = new DebugLogUploader(Logg.INSTANCE.getLogDump());
 			logUploader.startUpload();
+			uploadBtn.setText("Uploading... Click again");
 			Toast.makeText(this, "Uploading ...", Toast.LENGTH_SHORT).show();
 		}
 		else{
 			if(!logUploader.isDone()){
+				uploadBtn.setText("Uploading... Click again");
 				Toast.makeText(this, "Upload still in progress ! ", Toast.LENGTH_SHORT).show();
 			}
 			else{
+				uploadBtn.setText("Upload Log to Server");
 				if(logUploader.hasErrorOccurred()){
 					Toast.makeText(this, "Upload failed! Click again to retry.", Toast.LENGTH_SHORT).show();
 				}

@@ -37,6 +37,7 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
     private Button startMeasurementBtn;
     private Button preferencesBtn;
     private Button viewLogBtn;
+    private Button uploadCacheBtn;
     private TextView statusLine;
     private ProgressDialog loadingDialog;
     
@@ -74,6 +75,8 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
         this.preferencesBtn.setOnClickListener(this);
         this.viewLogBtn = (Button) findViewById(R.id.logBtn);
         this.viewLogBtn.setOnClickListener(this);	
+        this.uploadCacheBtn= (Button) findViewById(R.id.uploadCacheBtn);
+        this.uploadCacheBtn.setOnClickListener(this);
         this.statusLine = (TextView) findViewById(R.id.statusLineTextView);
         this.startAndBindService();
     }
@@ -132,6 +135,11 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
 		}
 		else if(v == this.viewLogBtn){
 			this.goToLoggActivity();
+		}
+		else if(v == this.uploadCacheBtn){
+			if(!hasRunningService){
+				this.serviceBinder.uploadCachedData();
+			}
 		}
 	}
 
