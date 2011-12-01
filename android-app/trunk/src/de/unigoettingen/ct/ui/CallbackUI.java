@@ -45,10 +45,32 @@ public interface CallbackUI {
 	
 	/**
 	 * Displays a pop up forcing the user to choose one of the presented options.
-	 * The GUI will call the method {@link TrackerServiceBinder#returnUserHasSelected(int)} with the selected
+	 * The GUI will call the method {@link TrackerServiceBinder#returnUserHasSelected(int,int)} with the selected
 	 * index after the user has made his/her choice.
+	 * @param promptCode a request code, that will be used again, when the callback mentioned above is performed. 
+	 * 			Can be used to match requests to responses.
 	 * @param title title of the pop up
 	 * @param options the options to display
 	 */
-	public void promptUserToChooseFrom(String title, String[] options);
+	public void promptUserToChooseFrom(int promptCode, String title, String[] options);
+	
+	/**
+	 * Displays a pop up asking the provided question. The will be presented the options
+	 * 'yes' or 'no'. The GUI will call the method {@link TrackerServiceBinder#returnUserHasSelected(int,int)}
+	 * with 1 as the second argument, if the user chose 'yes', otherwise 0.
+	 * @param promptCode  a request code, that will be used again, when the callback mentioned above is performed. 
+	 * 			Can be used to match requests to responses.
+	 * @param question the question to display
+	 */
+	public void promptUserToChooseYesOrNo(int promptCode, String question);
+	
+	/**
+	 * Displays a pop up showing the specified message and prompting the user to enter text into a free text field.
+	 * The GUI will call {@link TrackerServiceBinder#returnUserHasEntered(int, String)}} returning the user input.
+	 * If the user has clicked 'cancel', null is returned.
+	 * @param promptCode a request code, that will be used again, when the callback mentioned above is performed. 
+	 * Can be used to match requests to responses.
+	 * @param message will be displayed
+	 */
+	public void promtUserToEnterText(int promptCode, String message);
 }

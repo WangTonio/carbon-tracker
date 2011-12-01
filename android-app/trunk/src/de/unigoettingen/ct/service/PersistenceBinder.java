@@ -2,6 +2,7 @@ package de.unigoettingen.ct.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import de.unigoettingen.ct.data.OngoingTrack;
@@ -124,11 +125,24 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 		return retVal;
 	}
 	
+	public List<OngoingTrack> loadOpenTracksEmpty(){
+		List<OngoingTrack> retVal = this.loadAllTracksEmpty();
+		for(Iterator<OngoingTrack> it = retVal.iterator(); it.hasNext();){
+			OngoingTrack currTrack = it.next();
+			if(currTrack.isClosed()){
+				it.remove();
+			}
+		}
+		return retVal;
+	}
+	
 	public void deleteTrackCompletely(TrackPart track){
 		int primaryKeyTrack = this.getPrimaryKeyOfTrack(track);
-		SQLiteDatabase db = this.getReadableDatabase();
-		db.delete("T_Track", "_id = ?", new String[]{String.valueOf(primaryKeyTrack)});
-		db.delete("T_Measurement", "id_T_Track = ?", new String[]{String.valueOf(primaryKeyTrack)});
+		if(primaryKeyTrack != -1){
+			SQLiteDatabase db = this.getReadableDatabase();
+			db.delete("T_Track", "_id = ?", new String[]{String.valueOf(primaryKeyTrack)});
+			db.delete("T_Measurement", "id_T_Track = ?", new String[]{String.valueOf(primaryKeyTrack)});
+		}
 	}
 
 	public void writeFullTrack(TrackPart track){

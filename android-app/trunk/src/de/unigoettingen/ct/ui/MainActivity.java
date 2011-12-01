@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.unigoettingen.ct.R;
@@ -175,19 +176,62 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
 	}
 
 	@Override
-	public void promptUserToChooseFrom(String title, String[] options) {
+	public void promptUserToChooseFrom(final int promptCode, String title, String[] options) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(title);
 		builder.setItems(options, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int item) {
 		        if(serviceBinder != null){
-		        	serviceBinder.returnUserHasSelected(item);
+		        	serviceBinder.returnUserHasSelected(promptCode, item);
 		        }
 		    }
 		});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
-	
+
+	@Override
+	public void promptUserToChooseYesOrNo(final int promptCode, String question) {
+		new AlertDialog.Builder(this).
+		setMessage(question).
+		setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if(serviceBinder != null){
+		        	serviceBinder.returnUserHasSelected(promptCode, 1);
+		        }
+			}
+		})
+		.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if(serviceBinder != null){
+		        	serviceBinder.returnUserHasSelected(promptCode, 0);
+		        }
+			}
+		}).
+		show();
+	}
+
+	@Override
+	public void promtUserToEnterText(final int promptCode, String message) {
+		final EditText input = new EditText(this);
+		new AlertDialog.Builder(this).
+		setMessage(message).
+		setView(input).
+		setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				serviceBinder.returnUserHasEntered(promptCode, input.getText().toString());
+			}
+		}).
+		setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				serviceBinder.returnUserHasEntered(promptCode, null);
+			}
+		}).
+		show();
+
+		
+	}
 	
 }

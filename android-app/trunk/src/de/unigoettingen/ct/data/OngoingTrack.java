@@ -58,6 +58,23 @@ public class OngoingTrack {
 		return this.wrappedTrackPart.getCloneWithoutMeasurements();
 	}
 	
+	public String toDescription(){
+		return DateUtils.calendarToString(this.wrappedTrackPart.getStartedAt())+" ("+this.wrappedTrackPart.getDescription()+")";
+	}
+	
+	public boolean equalsIgnoringMeasurements(OngoingTrack other){
+		if(other==null){
+			return false;
+		}
+		//the following looks like data envy; however we want to keep modifications of the upload-related classed to a minimum
+		TrackPart otherTp = other.getEmptyTrackPart();
+		return this.wrappedTrackPart.getStartedAt().equals(otherTp.getStartedAt()) &&
+			this.wrappedTrackPart.getDescription().equals(otherTp.getDescription()) &&
+			this.wrappedTrackPart.getDriver().equals(otherTp.getDriver()) &&
+			this.wrappedTrackPart.getVin().equals(otherTp.getVin()) &&
+			this.wrappedTrackPart.isLastPart() == otherTp.isLastPart();
+	}
+	
 	public void setClosed(){
 		this.wrappedTrackPart.setLastPart(true);
 	}

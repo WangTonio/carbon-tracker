@@ -5,7 +5,7 @@ import static de.unigoettingen.ct.service.SubsystemStatus.States.IN_PROGRESS;
 import static de.unigoettingen.ct.service.SubsystemStatus.States.SET_UP;
 import static de.unigoettingen.ct.service.SubsystemStatus.States.STOPPED_BY_USER;
 
-import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,7 +16,6 @@ import de.unigoettingen.ct.container.TrackCache;
 import de.unigoettingen.ct.data.GenericObserver;
 import de.unigoettingen.ct.data.OngoingTrack;
 import de.unigoettingen.ct.data.TrackSummary;
-import de.unigoettingen.ct.data.io.Person;
 import de.unigoettingen.ct.data.io.TrackPart;
 import de.unigoettingen.ct.upload.AbstractUploader;
 import de.unigoettingen.ct.upload.TrackPartUploader;
@@ -26,21 +25,22 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 	private static final String LOG_TAG = "Caching";
 	
 	private ExecutorService executor;
-	private PersistenceBinder persistence;
-	private String currentForename;
-	private String currentLastname;
-	private TrackCache cache;
+	private PersistenceBinder persistence; //'disk' part of the cache
+	private TrackCache cache; //'ram' part
+	private OngoingTrack activeTrack; //needed only temporary for setUp()
+	private SubsystemStatusListener statusListener;
+	
+	//the following three fields keep track if ongoing uploads
 	private volatile AbstractUploader currentUpload;
 	private volatile TrackPart currentlyUploadedTrackPart;
 	private volatile int currentlyUploadedIndex;
-	private SubsystemStatusListener statusListener;
+
 	private volatile boolean running; //indicates, whether this must react to changes in cache status
 	
-	public AbstractCachingStrategy(TrackCache cache, PersistenceBinder persistence, String currentForename, String currentLastname){
+	public AbstractCachingStrategy(TrackCache cache, OngoingTrack activeTrack, PersistenceBinder persistence){
 		this.cache = cache;
+		this.activeTrack=activeTrack;
 		this.persistence= persistence;
-		this.currentForename = currentForename;
-		this.currentLastname = currentLastname;
 		this.running = false;
 		this.executor = Executors.newSingleThreadExecutor();
 	}
@@ -57,11 +57,18 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 					persistence.loadMeasurementsIntoTrack(currTrack, Integer.MAX_VALUE);
 					persistence.deleteTrackCompletely(currTrack.getEmptyTrackPart());
 				}
+				//find out, if the active track assigned in the constructor is contained in these loaded tracks
+				//if so, make sure it keeps it's measurements but is not added twice to the cache
+				for(Iterator<OngoingTrack> it=storedTracks.iterator(); it.hasNext(); ){
+					OngoingTrack currTrack = it.next();
+					if(currTrack.equalsIgnoringMeasurements(activeTrack)){
+						activeTrack = currTrack; //the track in the list has it's measurement, activeTrack has not
+						it.remove();
+					}
+				}
 				
-				//this half-way mock implementation just starts a new track on every service restart
-				//TODO later, the user will have the choice to resume a stored track
-				OngoingTrack activeTrack = new OngoingTrack(Calendar.getInstance(), null, "Dummy description", new Person(currentForename, currentLastname));
 				cache.setTracks(storedTracks, activeTrack);
+				activeTrack=null;
 				cache.addObserver(AbstractCachingStrategy.this);
 				statusListener.notify(new SubsystemStatus(SET_UP), AbstractCachingStrategy.this);
 			}

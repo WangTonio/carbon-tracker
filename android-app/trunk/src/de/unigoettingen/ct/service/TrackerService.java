@@ -2,6 +2,7 @@ package de.unigoettingen.ct.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +24,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import de.unigoettingen.ct.container.Logg;
 import de.unigoettingen.ct.container.TrackCache;
+import de.unigoettingen.ct.data.OngoingTrack;
+import de.unigoettingen.ct.data.io.Person;
 import de.unigoettingen.ct.obd.DefaultMeasurementSubsystem;
 import de.unigoettingen.ct.obd.cmd.CommandProvider;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
@@ -36,7 +39,9 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	private Handler mainThread;
 	
 	private BluetoothAdapter btAdapter;
+	private BluetoothSocket btSocket;
 	private List<BluetoothDevice> btDevices;
+	private List<OngoingTrack> tracksToChooseFrom;
 	
 	private AsynchronousSubsystem cachingStrat;
 	private AsynchronousSubsystem measurementSystem;
@@ -49,6 +54,10 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	private static final String MY_UUID_STRING = "00001101-0000-1000-8000-00805F9B34FB"; //api documentation says this uuid must match the one of the
 	//bt server (the adapter). however, i can not find it out and this random one seems to work !
 	private static final int REQUESTCODE_ENABLE_BT = 1000;
+	private static final int PROMPT_CODE_SELECT_BT_DEVICE = 60001;
+	private static final int PROMPT_CODE_SELECT_TRACK = 60002;
+	private static final int PROMPT_CODE_CLOSE_TRACK = 60003;
+	private static final int PROMPT_CODE_NAME_NEW_TRACK = 60004;
 	
 	@Override
 	public void onCreate() {
@@ -112,8 +121,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	}
 	
 	private void presentAvailableBluetoothDevices(){
-		//note that it is not queried for already paired devices.
-		//TODO as we hope, that they are included in the scanning process
+		//paired devices will only be displayed, if they are in range
 		if(btDevices.isEmpty()){
 			logAndShowError("No Bluetooth devices found!");
 			cleanUp();
@@ -128,12 +136,11 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 			stringForUi += btDevices.get(i).getName();
 			userChoices[i]= stringForUi;
 		}
-		//the following will result in a call back to returnUserHasSelected(int index) of the service binder
-		ui.promptUserToChooseFrom("Connect to Bluetooth device", userChoices);
+		//the following will result in a call back to returnUserHasSelected(int promptCode, int index) of the service binder
+		ui.promptUserToChooseFrom(PROMPT_CODE_SELECT_BT_DEVICE,"Connect to Bluetooth device", userChoices);
 	}
 	
 	private void connectToSelectedDevice(BluetoothDevice device){
-		BluetoothSocket btSocket = null;
 		try {
 			btSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(MY_UUID_STRING));
 		}
@@ -145,18 +152,34 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		}
 		Log.d(LOG_TAG, "Created Bluetooth socket for device "+device.toString());
 		Log.d(LOG_TAG, "Attempt to connect will be performed by the subsystem...");
-		setUpSubsystems(btSocket);
+		Log.d(LOG_TAG, "Asking the user to select a track.");
+		btDevices=null;
+		presentAvailableTracks();
 	}
 	
-	private void setUpSubsystems(BluetoothSocket btSocket) {
+	private void presentAvailableTracks(){
+		PersistenceBinder persistence = new PersistenceBinder(getApplicationContext());
+		this.tracksToChooseFrom = persistence.loadOpenTracksEmpty();
+		persistence.close();
+		
+		//the choices will be all open tracks plus 'new track' as the last option
+		String[] options = new String[this.tracksToChooseFrom.size()+1];
+		for(int i=0; i<this.tracksToChooseFrom.size(); i++){
+			options[i]=this.tracksToChooseFrom.get(i).toDescription();
+		}
+		options[options.length-1]= "New Track";
+		ui.promptUserToChooseFrom(PROMPT_CODE_SELECT_TRACK, "Select a Track", options);
+		//will result in a call back to returnUserHasSelected
+	}
+	
+	private void setUpSubsystems(OngoingTrack activeTrack) {
 		if (!active) {
 			//this mock implementation starts a new track on every service start so far
 			Log.d(LOG_TAG, "Creating subsystems");
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			TrackCache cache = new TrackCache();
 			
-			this.cachingStrat = new SimpleCachingStratgey(cache, new PersistenceBinder(getApplicationContext()),
-					prefs.getString("forename", "Unknown"), prefs.getString("lastname", "Driver"));
+			this.cachingStrat = new SimpleCachingStratgey(cache,activeTrack, new PersistenceBinder(getApplicationContext()));
 			this.cachingStrat.setStatusListener(this);
 			
 			List<ObdCommand> commands = CommandProvider.getDesiredObdCommands(prefs);
@@ -166,7 +189,10 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 			
 			this.active = true;
 			this.cachingStrat.setUp();
-			this.measurementSystem.setUp();
+			//this.measurementSystem.setUp(); is done when the caching system is done settingUp to prevent race conditions
+			this.btSocket=null;
+			this.btAdapter=null;
+			this.ui.indicateLoading(true);
 		}
 	}
 	
@@ -239,6 +265,9 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 					case SET_UP: 
 						//ready? then go
 						sender.start();
+						if(sender==cachingStrat){
+							measurementSystem.setUp();
+						}
 						break;
 					case IN_PROGRESS:
 						//fine
@@ -273,28 +302,33 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		//this object will receive asynchronous callbacks
 	}
 	
-	private void handleManualUploaderUpdate(SubsystemStatus state){
-		Log.d(LOG_TAG, "Update from ManualUploader: "+state);
-		switch(state.getState()){
-			case SETTING_UP:
-				ui.indicateLoading(true);
-				break;
-			case SET_UP:
-				ui.diplayText(state.getAdditionalInfo());
-				ui.indicateLoading(true);
-				break;
-			case IN_PROGRESS:
-				ui.indicateLoading(true);
-				break;
-			case FATAL_ERROR_STOPPED:
-			case STOPPED_BY_USER:
-				this.manualUploadSystem = null;
-				ui.indicateLoading(false);
-				ui.diplayText(state.getAdditionalInfo());
-				break;
-			default:
-				Log.wtf(LOG_TAG, "Can not handle state "+state+".");
-		}
+	private void handleManualUploaderUpdate(final SubsystemStatus state){
+		mainThread.post(new Runnable() {
+			@Override
+			public void run() {
+				Log.d(LOG_TAG, "Update from ManualUploader: "+state);
+				switch(state.getState()){
+					case SETTING_UP:
+						ui.indicateLoading(true);
+						break;
+					case SET_UP:
+						ui.diplayText(state.getAdditionalInfo());
+						ui.indicateLoading(true);
+						break;
+					case IN_PROGRESS:
+						ui.indicateLoading(true);
+						break;
+					case FATAL_ERROR_STOPPED:
+					case STOPPED_BY_USER:
+						manualUploadSystem = null;
+						ui.indicateLoading(false);
+						ui.diplayText(state.getAdditionalInfo());
+						break;
+					default:
+						Log.wtf(LOG_TAG, "Can not handle state "+state+".");
+				}
+			}
+		});
 	}
 	
 	//helper methods (for convenience) below -------------------------------------
@@ -319,6 +353,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		btAdapter = null;
 		active = false;
 		btDevices = null;
+		tracksToChooseFrom = null;
 		if(measurementState != null && measurementState!=SubsystemStatus.States.FATAL_ERROR_STOPPED &&
 				measurementState != SubsystemStatus.States.STOPPED_BY_USER && measurementSystem!=null){
 			measurementSystem.stop(); //nulling will happen in the notify method
@@ -349,7 +384,12 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	public class TrackerServiceBinder extends Binder{
 		
 		public void start(){
-			setUpBluetooth();
+			if(!active){
+				setUpBluetooth();
+			}
+			else{
+				Log.e(LOG_TAG, "start() requested although the service is already running.");
+			}
 		}
 		
 		public void uploadCachedData(){
@@ -360,7 +400,12 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		
 		public void stop(){
 			Log.d(LOG_TAG, "Termination is requested.");
-			terminate();
+			if(active){
+				ui.promptUserToChooseYesOrNo(PROMPT_CODE_CLOSE_TRACK, "Mark Track as done?");
+			}
+			else{
+				Log.e(LOG_TAG, "Stop requested without anything running.");
+			}
 		}
 		
 		public void setUIforCallbacks(CallbackUI ui){
@@ -375,12 +420,55 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 				else {
 					Logg.log(Log.ERROR, LOG_TAG, "You did not enable bluetooth.");
 					ui.diplayText("You did not enable bluetooth.");
+					btAdapter=null;
 				}
 			}
 		}
 		
-		public void returnUserHasSelected(int index){
-			connectToSelectedDevice(btDevices.get(index));
+		public void returnUserHasSelected(int promptCode, int index){
+			switch(promptCode){
+				case PROMPT_CODE_SELECT_BT_DEVICE:
+					connectToSelectedDevice(btDevices.get(index));
+					break;
+				case PROMPT_CODE_CLOSE_TRACK:
+					terminate(); //TODO
+					break;
+				case PROMPT_CODE_SELECT_TRACK:
+					if(index == tracksToChooseFrom.size()){
+						//'New Track' was chosen
+						tracksToChooseFrom=null;
+						ui.promtUserToEnterText(PROMPT_CODE_NAME_NEW_TRACK, "Enter a Description:");
+					}
+					else{
+						//an existing track is continued
+						OngoingTrack wantedTrack = tracksToChooseFrom.get(index);
+						tracksToChooseFrom=null;
+						setUpSubsystems(wantedTrack);
+					}
+					break;
+				default: 
+					Log.wtf(LOG_TAG, "Unrecognized prompt code :"+promptCode);
+			}
+		}
+		
+		public void returnUserHasEntered(int promptCode, String text){
+			switch(promptCode){
+				case PROMPT_CODE_NAME_NEW_TRACK:
+					if(text == null){
+						//dialog was canceled
+						ui.diplayText("Canceled");
+						cleanUp();
+					}
+					else{
+						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(TrackerService.this);
+						OngoingTrack wantedTrack = new OngoingTrack(Calendar.getInstance(), null, text,
+								new Person(prefs.getString("forename", "Unknown"), prefs.getString("lastname", "Driver")));
+						setUpSubsystems(wantedTrack);
+					}
+					break;
+				default: 
+					Log.wtf(LOG_TAG, "Unrecognized prompt code :"+promptCode);
+			}
 		}
 	}
 

@@ -12,7 +12,7 @@ import de.unigoettingen.ct.data.io.TrackPart;
 /**
  * Represents a container for {@link OngoingTrack}s. The container is a Thread-safe inter-Thread-gateway, which
  * lets one client add data to it (PRODUCE). Another client can register for updates, which will lead to callbacks
- * whenever this object recieves new data. The thread can then retrieve & remove (CONSUME) some of the data. 
+ * whenever this object receives new data. The thread can then retrieve & remove (CONSUME) some of the data. 
  * @author Fabian Sudau
  *
  */
@@ -25,7 +25,7 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 		this.tracks = new ArrayList<OngoingTrack>(0);
 	}
 	
-	public void setTracks(List<OngoingTrack> storedTracks, OngoingTrack activeTrack){
+	public synchronized void setTracks(List<OngoingTrack> storedTracks, OngoingTrack activeTrack){
 		if(storedTracks == null){
 			storedTracks = new ArrayList<OngoingTrack>(1);
 		}
@@ -74,6 +74,13 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 	 */
 	public synchronized void setTrackToClosed(int index){
 		this.tracks.get(index).setClosed();
+	}
+	
+	/**
+	 * Sets the currently active Track to closed meaning that no more tuples can be added.
+	 */
+	public synchronized void setActiveTrackToClosed(){
+		this.tracks.get(tracks.size()-1).setClosed();
 	}
 	
 	/**

@@ -42,4 +42,29 @@ public class Person {
 		return "(Person: forename="+forename+" ,lastname="+lastname+")";
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Person other = (Person) obj;
+		if (forename == null) {
+			if (other.forename != null)
+				return false;
+		}
+		else if (!forename.equals(other.forename))
+			return false;
+		if (lastname == null) {
+			if (other.lastname != null)
+				return false;
+		}
+		else if (!lastname.equals(other.lastname))
+			return false;
+		return true;
+	}
+
+	
 }
