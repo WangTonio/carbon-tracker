@@ -34,6 +34,17 @@ import de.unigoettingen.ct.obd.cmd.ObdCommand;
 import de.unigoettingen.ct.ui.CallbackUI;
 import de.unigoettingen.ct.upload.ManualUploadSystem;
 
+/**
+ * Implemented as a local {@link Service}, this class is the bridge in between all the IO code running in different threads 
+ * and the one and only user interface. The job of this class is to keep the measurement running in the background and to allow
+ * the Activity to bind / unbind at any time; always being responsive. This service is intended to be permanently active, however,
+ * if no measurement is going on, no resources are bound or consumed. <br>
+ * All of code of this class runs in Thread Main. The UI can communicate with this service by calling the methods of the
+ * service binder ({@link TrackerServiceBinder}). This service, however, will take over the control flow occasionally and call
+ * methods of the UI interface described in {@link CallbackUI}.
+ * @author Fabian Sudau
+ *
+ */
 public class TrackerService extends Service implements SubsystemStatusListener{
 	
 	//Sadly, this class does a bit to much and has too many fields & dependencies.

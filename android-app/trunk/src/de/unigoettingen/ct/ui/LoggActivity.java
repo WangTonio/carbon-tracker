@@ -17,7 +17,7 @@ import de.unigoettingen.ct.upload.AbstractUploader;
 import de.unigoettingen.ct.upload.DebugLogUploader;
 
 /**
- * Displays the custom log ({@link Logg}) in real time.
+ * Displays the custom log ({@link Logg}) in real time. Provides a button to upload the log to the server.
  * @author Fabian Sudau
  *
  */

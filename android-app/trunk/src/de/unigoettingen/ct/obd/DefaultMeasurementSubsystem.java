@@ -38,25 +38,44 @@ import de.unigoettingen.ct.service.SubsystemStatusListener;
  */
 public class DefaultMeasurementSubsystem implements LocationListener, AsynchronousSubsystem{
 	
+	//sources of measurement data
 	private BluetoothSocket socket;
 	private InputStream inStream;
 	private OutputStream outStream;
 	private LocationManager locationMgr;
 	
+	//the 'outside' to send results to
 	private TrackCache dataCache;
 	private SubsystemStatusListener listener;
+	
+	//all of these are used periodically
 	private List<ObdCommand> obdCmds;
 	
+	//thread management
 	private ScheduledExecutorService exec;
 	private volatile boolean goOnWithPeriodic;
 	
+	//timing
 	private long measurementInterval;
+	
+	//these fields will be changed periodically by the GPS system in thread main
+	//they are used for location stampts of measurements
 	private double lastLongitude;
 	private double lastLatitude;
 	private double lastAltitude;
 	
 	private static final String LOG_TAG = "MeasurementSubsystem";
-		
+	
+	/**
+	 * Constructs an object, but does not perform any initialization yet. Call {@link #setUp()} to do so.
+	 * After the set up has been performed successfully and {@link #start()} has been called, this object will
+	 * periodically perform measurements and populate the data cache with those.
+	 * @param dataCache the container to populate with measurement data
+	 * @param measurementInterval every x milliseconds, a full tuple of measurements will be taken
+	 * @param btsock fresh socket to connect to
+	 * @param locationMgr the system object to request GPS updates from
+	 * @param obdCmds the commands that will be used during each measurement
+	 */
 	public DefaultMeasurementSubsystem(TrackCache dataCache, long measurementInterval, BluetoothSocket btsock, 
 			LocationManager locationMgr, List<ObdCommand> obdCmds){
 		this.dataCache = dataCache;

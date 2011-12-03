@@ -6,7 +6,7 @@ import android.content.Intent;
 /**
  * Describes a GUI offering some high level methods hiding concrete GUI code.
  * All of these methods must be called from Thread Main.
- * Some methods that are prompting the user for some input will return the result by using
+ * Some methods, that are prompting the user for some input, will return the result by using
  * a call back method of the {@link TrackerServiceBinder} object the GUI has a reference to.
  * @author Fabian Sudau
  *

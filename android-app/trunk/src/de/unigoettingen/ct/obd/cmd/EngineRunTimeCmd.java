@@ -5,11 +5,14 @@ import java.io.IOException;
 import de.unigoettingen.ct.data.io.Measurement;
 import de.unigoettingen.ct.obd.UnsupportedObdCommandException;
 
+/**
+ * This command is officially named 'Run Time since Engine Start' and says how long the engine is already running.
+ * It is not to be confused with command 0181 as that represents the time since the last DTC reset.
+ * @author Fabian Sudau
+ *
+ */
 public class EngineRunTimeCmd extends ObdCommand{
 
-	//this command is officially named 'run time since engine start'
-	//it is not to be confused with command 0181 as that represents the time since the last DTC reset
-	
 	@Override
 	public String getCommandString() {
 		return "011f";

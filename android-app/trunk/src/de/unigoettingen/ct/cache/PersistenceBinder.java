@@ -17,6 +17,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * Provides some high level access to the local SQLite data base. This is intended to be used for storing measurement related 
+ * data. Do not use the data base from different Threads at once. Call {@link #close()} when you are done using this object.
+ * @author Fabian Sudau
+ *
+ */
 public class PersistenceBinder extends SQLiteOpenHelper{
 
 	public static final String DB_NAME = "SavedMeasurements";
@@ -27,7 +33,10 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 	public static final String SELECT_FIRST_X_MEASUREMENTS = "SELECT * FROM T_Measurement WHERE id_T_Track = ? ORDER BY _id LIMIT ?";
 	public static final String SELECT_ALL_TRACKS_EMPTY = "SELECT * FROM T_Track";
 
-	
+	/**
+	 * Constructs an object; implicitly creating the physical data base if it is missing.
+	 * @param context the app context needed to locate the data base
+	 */
 	public PersistenceBinder(Context context) {
 		super(context, DB_NAME , null, 1);
 	}
@@ -65,6 +74,12 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 		
 	}
 	
+	/**
+	 * Returns the id of the Track with matching 'startedAt', 'vin' and 'person'. Note that the 'closed' attribute
+	 * and the measurements are not looked at.
+	 * @param trackPart Track representation to get the id of
+	 * @return the track id or -1 if not found
+	 */
 	private int getPrimaryKeyOfTrack(TrackPart trackPart){
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cur = db.rawQuery(SELECT_TRACK_ID_USING_PROPERTIES, new String[]{ String.valueOf(trackPart.getStartedAt().getTimeInMillis()), trackPart.getVin(), 
@@ -85,6 +100,14 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 		}
 	}
 	
+	/**
+	 * Searches for a matching track and if one is found, reads the first X {@link Measurement}s from the data base and appends
+	 * them to the provided track-representing object. This method does nothing if the Track is not found (always ignoring the
+	 * 'closed' attribute). This method does not check whether measurements are already present in the object; may insert
+	 * duplicates. 
+	 * @param track the track representation to fill with measurements
+	 * @param numberOfMeasurements max number of measurements to read; chronologically
+	 */
 	public void loadMeasurementsIntoTrack(OngoingTrack track, int numberOfMeasurements){
 		int trackPrimaryKey = this.getPrimaryKeyOfTrack(track.getEmptyTrackPart());
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -111,6 +134,10 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 		//the left-out else means the track is not present and this method simply becomes a no-op
 	}
 	
+	/**
+	 * Returns an unordered list of all found tracks containing NO measurements (yet).
+	 * @return all found tracks empty
+	 */
 	public List<OngoingTrack> loadAllTracksEmpty(){
 		SQLiteDatabase db = this.getReadableDatabase();
 		List<OngoingTrack> retVal = new ArrayList<OngoingTrack>();
@@ -125,6 +152,11 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 		return retVal;
 	}
 	
+	/**
+	 * Returns an unordered list of all found Tracks, that are still open. The Tracks do not have 
+	 * measurements associated (yet).
+	 * @return all open tracks empty
+	 */
 	public List<OngoingTrack> loadOpenTracksEmpty(){
 		List<OngoingTrack> retVal = this.loadAllTracksEmpty();
 		for(Iterator<OngoingTrack> it = retVal.iterator(); it.hasNext();){
@@ -136,6 +168,11 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 		return retVal;
 	}
 	
+	/**
+	 * Ignoring the 'closed' field and the measurements, this will look for a matching track in the data base.
+	 * If one is found, the track and all it's associated measurement data gets deleted.
+	 * @param track track to delete
+	 */
 	public void deleteTrackCompletely(TrackPart track){
 		int primaryKeyTrack = this.getPrimaryKeyOfTrack(track);
 		if(primaryKeyTrack != -1){
@@ -145,6 +182,11 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 		}
 	}
 
+	/**
+	 * Writes the specified track and all it's provided measurements to the data base. This does NOT check, whether the track
+	 * or any measurements are already present. Call this only, if you are sure, that the track is not yet present in the data base.
+	 * @param track track to store 
+	 */
 	public void writeFullTrack(TrackPart track){
 		SQLiteDatabase db = this.getReadableDatabase();
 		//the _id column is left out due to auto increment

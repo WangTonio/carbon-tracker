@@ -22,6 +22,17 @@ import de.unigoettingen.ct.service.SubsystemStatusListener;
 import de.unigoettingen.ct.upload.AbstractUploader;
 import de.unigoettingen.ct.upload.TrackPartUploader;
 
+/**
+ * This subsystem's job is to keep an eye on the amount of measurement data kept in the RAM (to be specific:
+ * in the {@link TrackCache} object). This subsystem will register itself as a listener to the {@code TrackCache} 
+ * and receive updates whenever something changes. Running in an encapsulated Thread, this subsystem will
+ * occasionally initiate uploads of cached data, keep track of those uploads and write and read from persistence in order
+ * not to lose anything. <br>
+ * This is an abstract class as the template method pattern is used. Concrete subclasses must implement the decision
+ * about when to keep what where.
+ * @author Fabian Sudau
+ *
+ */
 public abstract class AbstractCachingSystem implements AsynchronousSubsystem, GenericObserver<List<TrackSummary>>{
 
 	private static final String LOG_TAG = "Caching";
@@ -39,6 +50,12 @@ public abstract class AbstractCachingSystem implements AsynchronousSubsystem, Ge
 
 	private volatile boolean running; //indicates, whether this must react to changes in cache status
 	
+	/**
+	 * Constructs an object not responding to cache updates yet. Call {@link #setUp()} to do so.
+	 * @param cache the cache object EXPECTED TO BE EMPTY
+	 * @param activeTrack the track that is expected to be populated with data
+	 * @param persistence the persistence to load inactive tracks from and perform various read / write operations with
+	 */
 	public AbstractCachingSystem(TrackCache cache, OngoingTrack activeTrack, PersistenceBinder persistence){
 		this.cache = cache;
 		this.activeTrack=activeTrack;

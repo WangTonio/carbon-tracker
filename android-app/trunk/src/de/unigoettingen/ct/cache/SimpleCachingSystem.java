@@ -7,7 +7,7 @@ import de.unigoettingen.ct.data.TrackSummary;
 
 /**
  * This simple strategy uploads inactive tracks immediately (and with priority) and uploads active tracks when
- * they exceed 60 measurements. INTENDED TO BE A FIRST SHOT.
+ * they exceed 300 measurements. INTENDED TO BE A FIRST SHOT.
  * @author Fabian Sudau
  *
  */
@@ -15,6 +15,12 @@ public class SimpleCachingSystem extends AbstractCachingSystem{
 
 	private static final int MEASUREMENT_THRESHOLD = 300; //there is no sophisticated reason for this number, approx. one upload every 5 min so far
 	
+	/**
+	 * See {@link AbstractCachingSystem#AbstractCachingSystem(TrackCache, OngoingTrack, PersistenceBinder)}
+	 * @param cache
+	 * @param activeTrack
+	 * @param persistence
+	 */
 	public SimpleCachingSystem(TrackCache cache, OngoingTrack activeTrack, PersistenceBinder persistence) {
 		super(cache, activeTrack, persistence);
 	}
