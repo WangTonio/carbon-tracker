@@ -192,17 +192,17 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	
 	private void setUpSubsystems(OngoingTrack activeTrack) {
 		if (!active) {
-			//this mock implementation starts a new track on every service start so far
 			Log.d(LOG_TAG, "Creating subsystems");
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			this.trackCache = new TrackCache();
 			
-			this.cachingStrat = new SimpleCachingSystem(this.trackCache,activeTrack, new PersistenceBinder(getApplicationContext()));
+			this.cachingStrat = new SimpleCachingSystem(this.trackCache, activeTrack, new PersistenceBinder(getApplicationContext()));
 			this.cachingStrat.setStatusListener(this);
 			
 			List<ObdCommand> commands = CommandProvider.getDesiredObdCommands(prefs);
 			LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-			this.measurementSystem = new DefaultMeasurementSubsystem(this.trackCache, 1000, btSocket, locationManager, commands);
+			long measurementInterval = Integer.valueOf(prefs.getString("measurement_interval", "1000"));
+			this.measurementSystem = new DefaultMeasurementSubsystem(this.trackCache, measurementInterval, this.btSocket, locationManager, commands);
 			this.measurementSystem.setStatusListener(this);
 			
 			this.active = true;

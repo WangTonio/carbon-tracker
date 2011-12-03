@@ -5,6 +5,7 @@
         <CheckBoxPreference android:key="rpm" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Engine Rounds per Minute" android:order="3"></CheckBoxPreference>
         <CheckBoxPreference android:key="speed" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Driving Speed" android:order="4"></CheckBoxPreference>
         <CheckBoxPreference android:key="eot" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Engine Oil Temperature" android:order="5"></CheckBoxPreference>
-        <CheckBoxPreference android:key="ert" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Engine Run Time" android:order="6"></CheckBoxPreference>
+        <CheckBoxPreference android:key="ert" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Run Time since Engine Start" android:order="6"></CheckBoxPreference>
         <EditTextPreference android:order="7" android:summary="URL (without suffixes) of the server your data will be uploaded to." android:key="serverurl" android:title="Server URL" android:defaultValue="http://134.76.20.156/CarbonTrackerWS3/"></EditTextPreference>
+        <EditTextPreference android:order="8" android:summary="Every X milliseconds a full measurement will be performed." android:numeric="integer" android:key="measurement_interval" android:title="Measurement Interval" android:defaultValue="1000"/>
 </PreferenceScreen>

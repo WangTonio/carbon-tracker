@@ -118,7 +118,7 @@ public class ManualUploadSystem implements AsynchronousSubsystem{
 	
 	@Override
 	public String toString() {
-		return "ManualUploader";
+		return "ManualUploadSys";
 	}
 
 	

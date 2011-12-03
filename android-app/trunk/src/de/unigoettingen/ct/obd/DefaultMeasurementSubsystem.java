@@ -48,6 +48,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 	private List<ObdCommand> obdCmds;
 	
 	private ScheduledExecutorService exec;
+	private volatile boolean goOnWithPeriodic;
 	
 	private long measurementInterval;
 	private double lastLongitude;
@@ -138,8 +139,13 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 	final Runnable periodicTask = new Runnable() {
 		@Override
 		public void run() {
+			//this cancellation flag is necessary to prevent a race condition regarding the stop() runnable
+			if(!goOnWithPeriodic){
+				return;
+			}
+			
 			//use these values for a simple 'interpolation'
-			long beforeMeasurement = System.currentTimeMillis(); //TODO bad practice or not?
+			long beforeMeasurement = System.currentTimeMillis();
 			double lngBeforeMeasurement = lastLongitude;
 			double latBeforeMeasurement = lastLatitude;
 			double altBeforeMeasurement = lastAltitude;
@@ -195,6 +201,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 	
 	@Override
 	public void start(){
+		this.goOnWithPeriodic=true;
 		exec.scheduleAtFixedRate(periodicTask, 250, measurementInterval, TimeUnit.MILLISECONDS);
 	}
 	
@@ -204,7 +211,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 		//this will hopefully be the last job
 		//TODO there is a possible race condition that another periodic task gets executed after the clean up job
 		//it happens, if after the execute call below and before the shutDown call the scheduler prefers other threads
-		
+		this.goOnWithPeriodic=false;
 		this.locationMgr.removeUpdates(this); //it is possible this works from thread main only
 		this.exec.execute(new Runnable() {
 			@Override

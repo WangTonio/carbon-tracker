@@ -187,6 +187,9 @@ public abstract class AbstractCachingSystem implements AsynchronousSubsystem, Ge
 						Logg.log(Log.INFO, LOG_TAG, "Active Track could not be uploaded and is stored persistently.");
 						persistence.writeFullTrack(currentlyUploadedTrackPart); //this is the whole active track
 					}
+					else{
+						Logg.log(Log.INFO, LOG_TAG, "Active Track was uploaded successfully.");
+					}
 					//the following line does the right thing in both cases:
 					//it removes the data from the ram as it was either uploaded or stored persistently
 					handleSuccessfulUpload();
