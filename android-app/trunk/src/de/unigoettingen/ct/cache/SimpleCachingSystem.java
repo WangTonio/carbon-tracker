@@ -1,8 +1,7 @@
-package de.unigoettingen.ct.service;
+package de.unigoettingen.ct.cache;
 
 import java.util.List;
 
-import de.unigoettingen.ct.container.TrackCache;
 import de.unigoettingen.ct.data.OngoingTrack;
 import de.unigoettingen.ct.data.TrackSummary;
 
@@ -12,11 +11,11 @@ import de.unigoettingen.ct.data.TrackSummary;
  * @author Fabian Sudau
  *
  */
-public class SimpleCachingStratgey extends AbstractCachingStrategy{
+public class SimpleCachingSystem extends AbstractCachingSystem{
 
 	private static final int MEASUREMENT_THRESHOLD = 300; //there is no sophisticated reason for this number, approx. one upload every 5 min so far
 	
-	public SimpleCachingStratgey(TrackCache cache, OngoingTrack activeTrack, PersistenceBinder persistence) {
+	public SimpleCachingSystem(TrackCache cache, OngoingTrack activeTrack, PersistenceBinder persistence) {
 		super(cache, activeTrack, persistence);
 	}
 

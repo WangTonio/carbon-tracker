@@ -55,7 +55,7 @@ public interface CallbackUI {
 	public void promptUserToChooseFrom(int promptCode, String title, String[] options);
 	
 	/**
-	 * Displays a pop up asking the provided question. The will be presented the options
+	 * Displays a pop up asking the provided question. The user will be presented the options
 	 * 'yes' or 'no'. The GUI will call the method {@link TrackerServiceBinder#returnUserHasSelected(int,int)}
 	 * with 1 as the second argument, if the user chose 'yes', otherwise 0.
 	 * @param promptCode  a request code, that will be used again, when the callback mentioned above is performed. 

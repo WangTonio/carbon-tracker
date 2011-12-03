@@ -1,4 +1,4 @@
-package de.unigoettingen.ct.service;
+package de.unigoettingen.ct.cache;
 
 import static de.unigoettingen.ct.service.SubsystemStatus.States.ERROR_BUT_ONGOING;
 import static de.unigoettingen.ct.service.SubsystemStatus.States.IN_PROGRESS;
@@ -11,16 +11,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import android.util.Log;
-import de.unigoettingen.ct.container.Logg;
-import de.unigoettingen.ct.container.TrackCache;
 import de.unigoettingen.ct.data.GenericObserver;
+import de.unigoettingen.ct.data.Logg;
 import de.unigoettingen.ct.data.OngoingTrack;
 import de.unigoettingen.ct.data.TrackSummary;
 import de.unigoettingen.ct.data.io.TrackPart;
+import de.unigoettingen.ct.service.AsynchronousSubsystem;
+import de.unigoettingen.ct.service.SubsystemStatus;
+import de.unigoettingen.ct.service.SubsystemStatusListener;
 import de.unigoettingen.ct.upload.AbstractUploader;
 import de.unigoettingen.ct.upload.TrackPartUploader;
 
-public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, GenericObserver<List<TrackSummary>>{
+public abstract class AbstractCachingSystem implements AsynchronousSubsystem, GenericObserver<List<TrackSummary>>{
 
 	private static final String LOG_TAG = "Caching";
 	
@@ -37,7 +39,7 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 
 	private volatile boolean running; //indicates, whether this must react to changes in cache status
 	
-	public AbstractCachingStrategy(TrackCache cache, OngoingTrack activeTrack, PersistenceBinder persistence){
+	public AbstractCachingSystem(TrackCache cache, OngoingTrack activeTrack, PersistenceBinder persistence){
 		this.cache = cache;
 		this.activeTrack=activeTrack;
 		this.persistence= persistence;
@@ -69,8 +71,8 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 				
 				cache.setTracks(storedTracks, activeTrack);
 				activeTrack=null;
-				cache.addObserver(AbstractCachingStrategy.this);
-				statusListener.notify(new SubsystemStatus(SET_UP), AbstractCachingStrategy.this);
+				cache.addObserver(AbstractCachingSystem.this);
+				statusListener.notify(new SubsystemStatus(SET_UP), AbstractCachingSystem.this);
 			}
 		});
 	}
@@ -112,7 +114,7 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 							else{
 								Logg.log(Log.ERROR, LOG_TAG, "Can not upload measurements due to misconfiguration. Still "+
 										currentlyUploadedTrackPart.getMeasurements().length+" measurements in the pipe.");
-								statusListener.notify(new SubsystemStatus(ERROR_BUT_ONGOING, "Upload not possible, data will be stored persistently upon termination."), AbstractCachingStrategy.this);
+								statusListener.notify(new SubsystemStatus(ERROR_BUT_ONGOING, "Upload not possible, data will be stored persistently upon termination."), AbstractCachingSystem.this);
 								//TODO use persistence right now (not just when terminating the app) to reduce RAM impact
 							}
 						}
@@ -139,8 +141,6 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 	public void stop(){
 		//make sure not to respond to cache events anymore
 		this.running = false;
-		//TODO: the following is a mock-line:
-		this.cache.setTrackToClosed(cache.getSummary().size()-1);
 		//the rest involves I/O and is performed asynchronously
 		executor.execute(new Runnable() {	
 			@Override
@@ -195,13 +195,13 @@ public abstract class AbstractCachingStrategy implements AsynchronousSubsystem, 
 				//now store the non-active tracks
 				Log.i(LOG_TAG, (activeTrackIndex)+" non-active Tracks are stored persistently.");
 				for(int i=0; i<activeTrackIndex; i++){
-					//TODO so far, open tracks without any remaining data will not be stored
-					if(currentCacheState.get(i).getMeasurementCount() > 0){
+					//only those tracks, that are either still open or have still measurements, are saved
+					if(currentCacheState.get(i).getMeasurementCount() > 0 || !currentCacheState.get(i).isClosed()){
 						persistence.writeFullTrack(cache.getTrackPart(i));
 					}
 				}
 				persistence.close();
-				statusListener.notify(new SubsystemStatus(STOPPED_BY_USER), AbstractCachingStrategy.this);
+				statusListener.notify(new SubsystemStatus(STOPPED_BY_USER), AbstractCachingSystem.this);
 			}
 		});
 		this.executor.shutdown(); //make sure the thread is getting terminated after the jobs are through

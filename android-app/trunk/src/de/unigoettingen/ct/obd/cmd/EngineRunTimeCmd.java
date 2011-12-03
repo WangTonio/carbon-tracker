@@ -3,6 +3,7 @@ package de.unigoettingen.ct.obd.cmd;
 import java.io.IOException;
 
 import de.unigoettingen.ct.data.io.Measurement;
+import de.unigoettingen.ct.obd.UnsupportedObdCommandException;
 
 public class EngineRunTimeCmd extends ObdCommand{
 

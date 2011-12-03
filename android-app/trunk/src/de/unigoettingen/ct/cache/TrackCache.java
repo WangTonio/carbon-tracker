@@ -1,4 +1,4 @@
-package de.unigoettingen.ct.container;
+package de.unigoettingen.ct.cache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,12 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 		this.tracks = new ArrayList<OngoingTrack>(0);
 	}
 	
+	/**
+	 * Sets some optional non-active track and a single mandatory active track as the content of this containter.
+	 * Does not trigger an observer update.
+	 * @param storedTracks non-active tracks, can be empty or null
+	 * @param activeTrack not null
+	 */
 	public synchronized void setTracks(List<OngoingTrack> storedTracks, OngoingTrack activeTrack){
 		if(storedTracks == null){
 			storedTracks = new ArrayList<OngoingTrack>(1);

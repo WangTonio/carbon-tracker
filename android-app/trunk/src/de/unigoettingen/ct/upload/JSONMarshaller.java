@@ -1,4 +1,4 @@
-package de.unigoettingen.ct.json;
+package de.unigoettingen.ct.upload;
 
 import java.util.Calendar;
 

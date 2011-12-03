@@ -1,7 +1,6 @@
 package de.unigoettingen.ct.upload;
 
 import de.unigoettingen.ct.data.io.TrackPart;
-import de.unigoettingen.ct.json.JSONMarshaller;
 
 /**
  * Used to upload a {@link TrackPart} as described in {@link AbstractUploader}.

@@ -22,37 +22,55 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import de.unigoettingen.ct.container.Logg;
-import de.unigoettingen.ct.container.TrackCache;
+import de.unigoettingen.ct.cache.PersistenceBinder;
+import de.unigoettingen.ct.cache.SimpleCachingSystem;
+import de.unigoettingen.ct.cache.TrackCache;
+import de.unigoettingen.ct.data.Logg;
 import de.unigoettingen.ct.data.OngoingTrack;
 import de.unigoettingen.ct.data.io.Person;
+import de.unigoettingen.ct.obd.CommandProvider;
 import de.unigoettingen.ct.obd.DefaultMeasurementSubsystem;
-import de.unigoettingen.ct.obd.cmd.CommandProvider;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
 import de.unigoettingen.ct.ui.CallbackUI;
 import de.unigoettingen.ct.upload.ManualUploadSystem;
 
 public class TrackerService extends Service implements SubsystemStatusListener{
+	
+	//Sadly, this class does a bit to much and has too many fields & dependencies.
+	//This is due to this class' job as the big coordinator / facade to the subsystems.
+	//A better design would be appreciated.
 
+	//state and thread control
 	private boolean active=false;
-	private CallbackUI ui;
 	private Handler mainThread;
 	
+	//very important reference to interact with the ui
+	private CallbackUI ui;
+	
+	//fields for temporary use, that are null most of the time
 	private BluetoothAdapter btAdapter;
 	private BluetoothSocket btSocket;
 	private List<BluetoothDevice> btDevices;
 	private List<OngoingTrack> tracksToChooseFrom;
 	
+	//important references to subsystems doing the real work
 	private AsynchronousSubsystem cachingStrat;
 	private AsynchronousSubsystem measurementSystem;
+	//the manualUploadSystem is used temporarily and is null most of the time
 	private AsynchronousSubsystem manualUploadSystem;
 	
+	//last received states are remembered for future decision making
 	private SubsystemStatus.States cachingState;
 	private SubsystemStatus.States measurementState;
 	
+	//the data cache; a reference must be kept for track choosing and closing
+	private TrackCache trackCache;
+	
+	//constants
 	private static final String LOG_TAG = "TrackerService";
-	private static final String MY_UUID_STRING = "00001101-0000-1000-8000-00805F9B34FB"; //api documentation says this uuid must match the one of the
+	//api documentation says this uuid must match the one of the
 	//bt server (the adapter). however, i can not find it out and this random one seems to work !
+	private static final String MY_UUID_STRING = "00001101-0000-1000-8000-00805F9B34FB"; 
 	private static final int REQUESTCODE_ENABLE_BT = 1000;
 	private static final int PROMPT_CODE_SELECT_BT_DEVICE = 60001;
 	private static final int PROMPT_CODE_SELECT_TRACK = 60002;
@@ -177,14 +195,14 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 			//this mock implementation starts a new track on every service start so far
 			Log.d(LOG_TAG, "Creating subsystems");
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-			TrackCache cache = new TrackCache();
+			this.trackCache = new TrackCache();
 			
-			this.cachingStrat = new SimpleCachingStratgey(cache,activeTrack, new PersistenceBinder(getApplicationContext()));
+			this.cachingStrat = new SimpleCachingSystem(this.trackCache,activeTrack, new PersistenceBinder(getApplicationContext()));
 			this.cachingStrat.setStatusListener(this);
 			
 			List<ObdCommand> commands = CommandProvider.getDesiredObdCommands(prefs);
 			LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-			this.measurementSystem = new DefaultMeasurementSubsystem(cache, 1000, btSocket, locationManager, commands);
+			this.measurementSystem = new DefaultMeasurementSubsystem(this.trackCache, 1000, btSocket, locationManager, commands);
 			this.measurementSystem.setStatusListener(this);
 			
 			this.active = true;
@@ -354,6 +372,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		active = false;
 		btDevices = null;
 		tracksToChooseFrom = null;
+		trackCache=null;
 		if(measurementState != null && measurementState!=SubsystemStatus.States.FATAL_ERROR_STOPPED &&
 				measurementState != SubsystemStatus.States.STOPPED_BY_USER && measurementSystem!=null){
 			measurementSystem.stop(); //nulling will happen in the notify method
@@ -431,7 +450,11 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 					connectToSelectedDevice(btDevices.get(index));
 					break;
 				case PROMPT_CODE_CLOSE_TRACK:
-					terminate(); //TODO
+					if(index == 1){
+						//user has chosen to close the track
+						trackCache.setActiveTrackToClosed();
+					}
+					terminate(); 
 					break;
 				case PROMPT_CODE_SELECT_TRACK:
 					if(index == tracksToChooseFrom.size()){

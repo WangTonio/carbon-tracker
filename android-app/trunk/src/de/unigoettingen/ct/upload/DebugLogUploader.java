@@ -1,7 +1,6 @@
 package de.unigoettingen.ct.upload;
 
 import de.unigoettingen.ct.data.io.DebugLog;
-import de.unigoettingen.ct.json.JSONMarshaller;
 
 /**
  *  Used to upload a {@link DebugLog} as described in {@link AbstractUploader}.

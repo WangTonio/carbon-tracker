@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.util.Log;
 
 import de.unigoettingen.ct.data.io.Measurement;
+import de.unigoettingen.ct.obd.UnsupportedObdCommandException;
 
 public class EmptyCmd extends ObdCommand{
 

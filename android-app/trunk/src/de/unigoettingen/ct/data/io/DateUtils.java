@@ -1,4 +1,4 @@
-package de.unigoettingen.ct.data;
+package de.unigoettingen.ct.data.io;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import android.util.Log;
 
 import de.unigoettingen.ct.data.io.Measurement;
+import de.unigoettingen.ct.obd.UnsupportedObdCommandException;
 
 /**
  * Abstract superclass for all odb-command-encapsulating classes. The template method pattern is used here, as this class

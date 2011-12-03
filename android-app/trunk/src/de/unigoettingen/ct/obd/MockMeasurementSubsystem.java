@@ -7,8 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 import android.util.Log;
 
-import de.unigoettingen.ct.container.Logg;
-import de.unigoettingen.ct.container.TrackCache;
+import de.unigoettingen.ct.cache.TrackCache;
+import de.unigoettingen.ct.data.Logg;
 import de.unigoettingen.ct.data.io.Measurement;
 import de.unigoettingen.ct.service.AsynchronousSubsystem;
 import de.unigoettingen.ct.service.SubsystemStatus;

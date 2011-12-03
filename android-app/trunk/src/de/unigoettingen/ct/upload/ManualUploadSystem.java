@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import de.unigoettingen.ct.cache.AbstractCachingSystem;
+import de.unigoettingen.ct.cache.PersistenceBinder;
 import de.unigoettingen.ct.data.OngoingTrack;
-import de.unigoettingen.ct.service.AbstractCachingStrategy;
 import de.unigoettingen.ct.service.AsynchronousSubsystem;
-import de.unigoettingen.ct.service.PersistenceBinder;
 import de.unigoettingen.ct.service.SubsystemStatus;
 import de.unigoettingen.ct.service.SubsystemStatusListener;
 
 /**
  * This asynchronous system can be used to upload all measurement data, that is currently stored persistently on the device.
- * The important difference between this class and {@link AbstractCachingStrategy} is, that this class is for manual use.<br>
+ * The important difference between this class and {@link AbstractCachingSystem} is, that this class is for manual use.<br>
  * In other words: This class does not respond to a dynamically changing cache and it is strongly advised not to use this
  * while measurement is in progress. Instead, this is intended to be used in situations, where no obd system is present
  * but due to network difficulties, there is still data in the local cache that needs to be 'fired out'.

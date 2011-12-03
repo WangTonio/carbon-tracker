@@ -1,4 +1,4 @@
-package de.unigoettingen.ct.service;
+package de.unigoettingen.ct.cache;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,9 +70,9 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 		Cursor cur = db.rawQuery(SELECT_TRACK_ID_USING_PROPERTIES, new String[]{ String.valueOf(trackPart.getStartedAt().getTimeInMillis()), trackPart.getVin(), 
 				trackPart.getDriver().getForename(), trackPart.getDriver().getLastname()});
 		if(cur.getCount() > 1){
-			Log.e(LOG_TAG, "Corrupted db: Multiple track entries found for track "+trackPart);
 			cur.close();
-			//TODO throw exception
+			//the following log call kills the app as this condition is very unexpected
+			Log.wtf(LOG_TAG, "Corrupted db: Multiple track entries found for track "+trackPart);
 		}
 		if(cur.moveToFirst()){
 			int retVal = cur.getInt(cur.getColumnIndex("_id"));

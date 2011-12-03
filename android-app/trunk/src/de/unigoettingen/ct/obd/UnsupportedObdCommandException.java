@@ -1,4 +1,4 @@
-package de.unigoettingen.ct.obd.cmd;
+package de.unigoettingen.ct.obd;
 
 public class UnsupportedObdCommandException extends Exception{
 

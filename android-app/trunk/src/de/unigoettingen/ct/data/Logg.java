@@ -1,10 +1,9 @@
-package de.unigoettingen.ct.container;
+package de.unigoettingen.ct.data;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import de.unigoettingen.ct.data.GenericObservable;
 import de.unigoettingen.ct.data.io.DebugLog;
 import de.unigoettingen.ct.data.io.DebugMessage;
 
