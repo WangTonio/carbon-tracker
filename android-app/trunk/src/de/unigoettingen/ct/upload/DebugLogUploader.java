@@ -11,7 +11,8 @@ public class DebugLogUploader extends AbstractUploader{
 
 	private DebugLog log;
 	
-	public DebugLogUploader(DebugLog log){
+	public DebugLogUploader(String webServiceUrl, DebugLog log){
+		super(webServiceUrl);
 		this.log = log;
 	}
 	

@@ -24,6 +24,7 @@ import de.unigoettingen.ct.service.SubsystemStatusListener;
 public class ManualUploadSystem implements AsynchronousSubsystem{
 
 	private PersistenceBinder persistence;
+	private String webServiceUrl;
 	private List<OngoingTrack> tracks;
 	private volatile boolean stopRequested;
 	
@@ -34,7 +35,8 @@ public class ManualUploadSystem implements AsynchronousSubsystem{
 	 * Constructs the uploader. No upload is going on, until setUp() and then start() is called.
 	 * @param persistence persistence to load data from. Clients must ensure that there is no concurrent access.
 	 */
-	public ManualUploadSystem(PersistenceBinder persistence) {
+	public ManualUploadSystem(String webServiceUrl, PersistenceBinder persistence) {
+		this.webServiceUrl = webServiceUrl;
 		this.persistence = persistence;
 		this.stopRequested = false;
 		this.executor = Executors.newSingleThreadExecutor();
@@ -78,7 +80,7 @@ public class ManualUploadSystem implements AsynchronousSubsystem{
 			public void run() {
 				informListener(SubsystemStatus.States.IN_PROGRESS);
 				for(int i=0; i<tracks.size(); i++){
-					AbstractUploader uploader = new TrackPartUploader(tracks.get(i).getTrackPart());
+					AbstractUploader uploader = new TrackPartUploader(webServiceUrl, tracks.get(i).getTrackPart());
 					uploader.startUpload();
 					while(!uploader.isDone()){
 						try {

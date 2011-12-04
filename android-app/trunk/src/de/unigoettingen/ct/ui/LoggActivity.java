@@ -3,6 +3,7 @@ package de.unigoettingen.ct.ui;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -57,7 +58,8 @@ public class LoggActivity extends Activity implements OnClickListener, GenericOb
 	@Override
 	public void onClick(View v) {
 		if(logUploader == null){
-			logUploader = new DebugLogUploader(Logg.INSTANCE.getLogDump());
+			String webServiceUrl = PreferenceManager.getDefaultSharedPreferences(this).getString("serverurl", "http://134.76.21.30/CarbonTrackerWS/");
+			logUploader = new DebugLogUploader(webServiceUrl, Logg.INSTANCE.getLogDump());
 			logUploader.startUpload();
 			uploadBtn.setText("Uploading... Click again");
 			Toast.makeText(this, "Uploading ...", Toast.LENGTH_SHORT).show();

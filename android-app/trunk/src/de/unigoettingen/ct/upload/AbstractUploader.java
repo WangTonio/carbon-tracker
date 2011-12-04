@@ -29,10 +29,11 @@ public abstract class AbstractUploader {
 	private Thread uploadingThread;
 	private Exception caughtException;
 
-	private static final String WEB_SERVICE_URL = "http://134.76.21.30/CarbonTrackerWS/"; 
+	private final String WEB_SERVICE_URL; 
 	private static final String LOG_TAG = "AbstractUploader";
 	
-	public AbstractUploader(){
+	public AbstractUploader(String webServiceUrl){
+		this.WEB_SERVICE_URL=webServiceUrl;
 		Runnable updatingLogic = new Runnable() {	
 			@Override
 			public void run() {

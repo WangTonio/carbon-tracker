@@ -11,7 +11,8 @@ public class TrackPartUploader extends AbstractUploader{
 
 	private TrackPart track;
 
-	public TrackPartUploader(TrackPart track) {
+	public TrackPartUploader(String webServiceUrl, TrackPart track) {
+		super(webServiceUrl);
 		this.track = track;
 	}
 

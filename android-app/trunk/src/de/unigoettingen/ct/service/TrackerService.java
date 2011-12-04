@@ -207,7 +207,8 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			this.trackCache = new TrackCache();
 			
-			this.cachingStrat = new SimpleCachingSystem(this.trackCache, activeTrack, new PersistenceBinder(getApplicationContext()));
+			String webServiceUrl = prefs.getString("serverurl", "http://134.76.21.30/CarbonTrackerWS/");
+			this.cachingStrat = new SimpleCachingSystem(this.trackCache, activeTrack, new PersistenceBinder(getApplicationContext()), webServiceUrl);
 			this.cachingStrat.setStatusListener(this);
 			
 			List<ObdCommand> commands = CommandProvider.getDesiredObdCommands(prefs);
@@ -324,7 +325,8 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	}
 	
 	public void startManualUpload(){
-		this.manualUploadSystem = new ManualUploadSystem(new PersistenceBinder(getApplicationContext()));
+		String webServiceUrl = PreferenceManager.getDefaultSharedPreferences(this).getString("serverurl", "http://134.76.21.30/CarbonTrackerWS/");
+		this.manualUploadSystem = new ManualUploadSystem(webServiceUrl, new PersistenceBinder(getApplicationContext()));
 		this.manualUploadSystem.setStatusListener(this);
 		this.manualUploadSystem.setUp();
 		this.ui.indicateLoading(true);

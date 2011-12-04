@@ -42,6 +42,7 @@ public abstract class AbstractCachingSystem implements AsynchronousSubsystem, Ge
 	private TrackCache cache; //'ram' part
 	private OngoingTrack activeTrack; //needed only temporary for setUp()
 	private SubsystemStatusListener statusListener;
+	private String webServiceUrl;
 	
 	//the following three fields keep track if ongoing uploads
 	private volatile AbstractUploader currentUpload;
@@ -55,11 +56,13 @@ public abstract class AbstractCachingSystem implements AsynchronousSubsystem, Ge
 	 * @param cache the cache object EXPECTED TO BE EMPTY
 	 * @param activeTrack the track that is expected to be populated with data
 	 * @param persistence the persistence to load inactive tracks from and perform various read / write operations with
+	 * @param webServiceUrl the url (without suffix) to upload to
 	 */
-	public AbstractCachingSystem(TrackCache cache, OngoingTrack activeTrack, PersistenceBinder persistence){
+	public AbstractCachingSystem(TrackCache cache, OngoingTrack activeTrack, PersistenceBinder persistence, String webServiceUrl){
 		this.cache = cache;
 		this.activeTrack=activeTrack;
 		this.persistence= persistence;
+		this.webServiceUrl=webServiceUrl;
 		this.running = false;
 		this.executor = Executors.newSingleThreadExecutor();
 	}
@@ -125,7 +128,7 @@ public abstract class AbstractCachingSystem implements AsynchronousSubsystem, Ge
 							if(currentUpload.isRetryingPossible()){
 								//retry the upload, do not ask the subclass yet
 								Logg.log(Log.INFO, LOG_TAG, "Last upload failed. Retrying..");
-								currentUpload = new TrackPartUploader(currentlyUploadedTrackPart);
+								currentUpload = new TrackPartUploader(webServiceUrl, currentlyUploadedTrackPart);
 								currentUpload.startUpload();
 							}
 							else{
@@ -234,7 +237,7 @@ public abstract class AbstractCachingSystem implements AsynchronousSubsystem, Ge
 		currentlyUploadedIndex = trackIndex;
 		currentlyUploadedTrackPart = cache.getTrackPart(trackIndex);
 		Logg.log(Log.INFO, LOG_TAG, "Starting an upload to the server with "+currentlyUploadedTrackPart.getMeasurements().length+" measurements.");
-		currentUpload = new TrackPartUploader(currentlyUploadedTrackPart);
+		currentUpload = new TrackPartUploader(webServiceUrl, currentlyUploadedTrackPart);
 		currentUpload.startUpload();
 	}
 	

@@ -20,9 +20,10 @@ public class SimpleCachingSystem extends AbstractCachingSystem{
 	 * @param cache
 	 * @param activeTrack
 	 * @param persistence
+	 * @param webServiceUrl
 	 */
-	public SimpleCachingSystem(TrackCache cache, OngoingTrack activeTrack, PersistenceBinder persistence) {
-		super(cache, activeTrack, persistence);
+	public SimpleCachingSystem(TrackCache cache, OngoingTrack activeTrack, PersistenceBinder persistence, String webServiceUrl) {
+		super(cache, activeTrack, persistence, webServiceUrl);
 	}
 
 	@Override
