@@ -8,4 +8,5 @@
         <CheckBoxPreference android:key="ert" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Run Time since Engine Start" android:order="6"></CheckBoxPreference>
         <EditTextPreference android:order="7" android:summary="URL (without suffixes) of the server your data will be uploaded to." android:key="serverurl" android:title="Server URL" android:defaultValue="http://134.76.21.30/CarbonTrackerWS/"></EditTextPreference>
         <EditTextPreference android:order="8" android:summary="Every X milliseconds a full measurement will be performed." android:numeric="integer" android:key="measurement_interval" android:title="Measurement Interval" android:defaultValue="1000"/>
+        <CheckBoxPreference android:key="automatic_mode" android:defaultValue="false" android:summary="Will start up and take measurements without user interaction whenever the power cord is getting plugged in." android:title="Automatic Mode" android:order="9"></CheckBoxPreference>
 </PreferenceScreen>

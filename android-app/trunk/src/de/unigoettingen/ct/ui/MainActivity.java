@@ -58,6 +58,9 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
         	Log.i(LOG_TAG, "Service bound");
             serviceBinder = (TrackerServiceBinder) service;
             serviceBinder.setUIforCallbacks(MainActivity.this);
+            if(getIntent().getBooleanExtra("automaticMode", false)){
+            	serviceBinder.start(true);
+            }
         }
 
         @Override
@@ -125,10 +128,10 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
 	public void onClick(View v) {
 		if(v==this.startMeasurementBtn){
 			if(hasRunningService){
-				this.serviceBinder.stop();
+				this.serviceBinder.stop(false);
 			}
 			else{
-				this.serviceBinder.start();
+				this.serviceBinder.start(false);
 			}
 		}
 		else if(v == this.preferencesBtn){

@@ -53,6 +53,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 
 	//state and thread control
 	private boolean active=false;
+	private boolean automaticMode=false; //if true, do not ask the user anything and use defaults
 	private Handler mainThread;
 	
 	//very important reference to interact with the ui
@@ -110,8 +111,38 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 			else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)){
 				unregisterReceiver(mReceiver);  // ==this
 				ui.indicateLoading(false);
-				presentAvailableBluetoothDevices();
+				//paired devices will only be displayed, if they are in range
+				if(btDevices.isEmpty()){
+					logAndShowError("No Bluetooth devices found!");
+					cleanUp();
+					return;
+				}
+				if(automaticMode){
+					//prefer devices from diamex or those that show up early - automatic mode has it's disadvantages
+					boolean deviceAccepted=false;
+					for(BluetoothDevice currDevice: btDevices){
+						if(!deviceAccepted && currDevice.getName().contains("DIAMEX")){
+							deviceAccepted=true;
+							connectToSelectedDevice(currDevice);
+						}
+					}
+					if(!deviceAccepted){
+						connectToSelectedDevice(btDevices.get(0));
+					}
+				}
+				else{
+					presentAvailableBluetoothDevices();
+				}
 			}
+		}
+	};
+	
+	//when started in automatic mode, this is registered for the power off event in order to
+	//shut down taking measurements automatically, when the power cord is removed
+	private final BroadcastReceiver powerOffReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			mBinder.stop(true);
 		}
 	};
 	
@@ -125,9 +156,14 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		// check, if bluetooth is turned on
 		// if not, prompt the user to do so
 		if (!btAdapter.isEnabled()) {
-			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			ui.startActivityForResult(enableBtIntent, REQUESTCODE_ENABLE_BT);
-			// returns to onActivityResult
+			if(automaticMode){
+				logAndShowError("The bluetooth adapter is not enabled and can not be enabled without user interaction");
+			}
+			else{
+				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				ui.startActivityForResult(enableBtIntent, REQUESTCODE_ENABLE_BT);
+				// returns to onActivityResult
+			}
 		}
 		else {
 			scanForBluetoothDevices();
@@ -150,12 +186,6 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	}
 	
 	private void presentAvailableBluetoothDevices(){
-		//paired devices will only be displayed, if they are in range
-		if(btDevices.isEmpty()){
-			logAndShowError("No Bluetooth devices found!");
-			cleanUp();
-			return;
-		}
 		String[] userChoices = new String[btDevices.size()];
 		for(int i=0; i<userChoices.length; i++){
 			String stringForUi = "";
@@ -181,12 +211,17 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		}
 		Log.d(LOG_TAG, "Created Bluetooth socket for device "+device.toString());
 		Log.d(LOG_TAG, "Attempt to connect will be performed by the subsystem...");
-		Log.d(LOG_TAG, "Asking the user to select a track.");
 		btDevices=null;
-		presentAvailableTracks();
+		if(automaticMode){
+			setUpSubsystems(createNewTrack("In automatic mode"));
+		}
+		else{
+			presentAvailableTracks();
+		}
 	}
 	
 	private void presentAvailableTracks(){
+		Log.d(LOG_TAG, "Asking the user to select a track.");
 		PersistenceBinder persistence = new PersistenceBinder(getApplicationContext());
 		this.tracksToChooseFrom = persistence.loadOpenTracksEmpty();
 		persistence.close();
@@ -376,13 +411,31 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		}
 	}
 	
+	private OngoingTrack createNewTrack(String description){
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(TrackerService.this);
+		return new OngoingTrack(Calendar.getInstance(), null, description,
+				new Person(prefs.getString("forename", "Unknown"), prefs.getString("lastname", "Driver")));
+	}
+	
 	/**
 	 * Stops every subsystem, that is not already stopped and nulls everything in order to bind as few resources as possible.
 	 * The service will be in the idle state again, the system keeps it in that state.
 	 */
 	private void cleanUp(){
-		btAdapter = null;
 		active = false;
+		btAdapter = null;
+		try{
+			unregisterReceiver(mReceiver);
+		}
+		catch(IllegalArgumentException e){
+			//thrown, if receiver is not registered. we do not care.
+		}
+		try{
+			unregisterReceiver(powerOffReceiver);
+		}
+		catch(IllegalArgumentException e){
+			//thrown, if receiver is not registered. we do not care.
+		}
 		btDevices = null;
 		tracksToChooseFrom = null;
 		trackCache=null;
@@ -402,11 +455,12 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 			cachingStrat=null;
 			cachingStrat=null;
 		}
+		Log.i(LOG_TAG, "Released all bound resources. Idle state.");
 	}
 	
 	//binder below ---------------------------------------------------------------
 	
-	private final IBinder mBinder = new TrackerServiceBinder();
+	private final TrackerServiceBinder mBinder = new TrackerServiceBinder();
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -415,8 +469,10 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	
 	public class TrackerServiceBinder extends Binder{
 		
-		public void start(){
+		public void start(boolean automatic){
 			if(!active){
+				automaticMode=automatic;
+				registerReceiver(powerOffReceiver, new IntentFilter(Intent.ACTION_POWER_DISCONNECTED));
 				setUpBluetooth();
 			}
 			else{
@@ -430,10 +486,16 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 			}
 		}
 		
-		public void stop(){
+		public void stop(boolean automatic){
 			Log.d(LOG_TAG, "Termination is requested.");
 			if(active){
-				ui.promptUserToChooseYesOrNo(PROMPT_CODE_CLOSE_TRACK, "Mark Track as done?");
+				if(automatic){
+					trackCache.setActiveTrackToClosed();
+					terminate(); 
+				}
+				else{
+					ui.promptUserToChooseYesOrNo(PROMPT_CODE_CLOSE_TRACK, "Mark Track as done?");
+				}
 			}
 			else{
 				Log.e(LOG_TAG, "Stop requested without anything running.");
@@ -496,10 +558,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 						cleanUp();
 					}
 					else{
-						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(TrackerService.this);
-						OngoingTrack wantedTrack = new OngoingTrack(Calendar.getInstance(), null, text,
-								new Person(prefs.getString("forename", "Unknown"), prefs.getString("lastname", "Driver")));
-						setUpSubsystems(wantedTrack);
+						setUpSubsystems(createNewTrack(text));
 					}
 					break;
 				default: 
