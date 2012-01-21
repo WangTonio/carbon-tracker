@@ -44,6 +44,7 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
     
     private TrackerServiceBinder serviceBinder;
     private boolean hasRunningService = false;
+    private boolean startMeasurementAutomatically = false;
      
     
     /** Defines callbacks for service binding, initiated by bindService().
@@ -58,9 +59,7 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
         	Log.i(LOG_TAG, "Service bound");
             serviceBinder = (TrackerServiceBinder) service;
             serviceBinder.setUIforCallbacks(MainActivity.this);
-            if(getIntent().getBooleanExtra("automaticMode", false)){
-            	serviceBinder.start(true);
-            }
+            startAutomaticallyIfRequired();
         }
 
         @Override
@@ -68,6 +67,23 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
         	//the service exited; this will only happen in cases of unrecoverable errors
         }
     };
+    
+    @Override
+    protected void onNewIntent(Intent intent) {
+    	//this is getting called whenever an intent to 'show up' is received,
+    	//but an instance of this activity already exists.
+    	//remember, if the intent dictated automatic mode. 
+    	//that information is required at certain stages in the activity life cycle.
+    	if(!startMeasurementAutomatically){
+    		startMeasurementAutomatically = intent.getBooleanExtra("automaticMode", false);
+    	}
+    }
+    
+	@Override
+	protected void onResume() {
+		super.onResume();
+		startAutomaticallyIfRequired();
+	}
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +98,7 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
         this.uploadCacheBtn= (Button) findViewById(R.id.uploadCacheBtn);
         this.uploadCacheBtn.setOnClickListener(this);
         this.statusLine = (TextView) findViewById(R.id.statusLineTextView);
+        this.startMeasurementAutomatically = getIntent().getBooleanExtra("automaticMode", false);
         this.startAndBindService();
     }
     
@@ -114,6 +131,13 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
 		startService(intent);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         //the service will be bound and created
+	}
+	
+	private void startAutomaticallyIfRequired(){
+		if (startMeasurementAutomatically && serviceBinder != null) {
+			startMeasurementAutomatically = false;
+			serviceBinder.start(true);
+		}
 	}
 	
 	@Override
