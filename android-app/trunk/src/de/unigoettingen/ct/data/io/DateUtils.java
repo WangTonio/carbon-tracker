@@ -21,12 +21,12 @@ public class DateUtils {
 
 	}
 
-	public static String calendarToString(Calendar calendar) {
+	public synchronized static String calendarToString(Calendar calendar) {
 		return DATE_FORMAT.format(calendar.getTime());
 	}
 
 	
-	public static GregorianCalendar parseTimestamp(String timestamp) throws ParseException{
+	public synchronized static GregorianCalendar parseTimestamp(String timestamp) throws ParseException{
 		Date d = DATE_FORMAT.parse(timestamp);
 		GregorianCalendar ret = new GregorianCalendar();
 		ret.setTime(d);
