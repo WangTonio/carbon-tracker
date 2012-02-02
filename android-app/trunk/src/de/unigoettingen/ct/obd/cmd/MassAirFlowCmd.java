@@ -16,7 +16,7 @@ public class MassAirFlowCmd extends ObdCommand{
 		if(response.length() != 4){
 			throw new IOException("Mass Air Flow Rate command expected 2 bytes, but "+response.length()+" hex digits were returned.");
 		}
-		//TODO i hope this is right but can not guarantee anything
+		//the following is right according to standard scaling
 		measure.setMaf( (Integer.parseInt(response, 16) / 100D) );
 	}
 	
