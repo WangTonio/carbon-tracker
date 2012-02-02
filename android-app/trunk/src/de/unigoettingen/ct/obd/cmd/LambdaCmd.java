@@ -49,7 +49,7 @@ public class LambdaCmd extends ObdCommand{
 				Logg.log(Log.INFO, getClass().getSimpleName(), "Determined "+this.commandString+" as the best supported O2 sensor.");
 			}
 			else{
-				Logg.log(Log.ERROR, getClass().getSimpleName(), "Vehicle does not have any O2 sensors; lambda value can not be measured.");
+				throw new UnsupportedObdCommandException("Vehicle does not have any O2 sensors; lambda value can not be measured.");
 			}
 		}
 		else{
