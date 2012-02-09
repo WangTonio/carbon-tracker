@@ -292,9 +292,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 				}
 				
 				//2. decide on the interaction with the ui
-				ui.indicateLoading(oneStateIs(SubsystemStatus.States.SETTING_UP) || oneStateIs(SubsystemStatus.States.SET_UP));
-				ui.indicateRunning( (cachingState==SubsystemStatus.States.IN_PROGRESS || cachingState==SubsystemStatus.States.ERROR_BUT_ONGOING) &&
-						(measurementState==SubsystemStatus.States.IN_PROGRESS || measurementState==SubsystemStatus.States.ERROR_BUT_ONGOING) );
+				adjustUiState();
 
 				switch(status.getState()){
 					case SETTING_UP:
@@ -395,6 +393,12 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 				}
 			}
 		});
+	}
+	
+	private void adjustUiState(){
+		ui.indicateLoading(oneStateIs(SubsystemStatus.States.SETTING_UP) || oneStateIs(SubsystemStatus.States.SET_UP));
+		ui.indicateRunning( (cachingState==SubsystemStatus.States.IN_PROGRESS || cachingState==SubsystemStatus.States.ERROR_BUT_ONGOING) &&
+				(measurementState==SubsystemStatus.States.IN_PROGRESS || measurementState==SubsystemStatus.States.ERROR_BUT_ONGOING) );
 	}
 	
 	//helper methods (for convenience) below -------------------------------------
@@ -504,6 +508,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		
 		public void setUIforCallbacks(CallbackUI ui){
 			TrackerService.this.ui = ui;
+			adjustUiState();
 		}
 		
 		public void onActivityResult(int requestCode, int resultCode, Intent data) {
