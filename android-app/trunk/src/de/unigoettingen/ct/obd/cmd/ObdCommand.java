@@ -19,7 +19,7 @@ import de.unigoettingen.ct.obd.UnsupportedObdCommandException;
 public abstract class ObdCommand {
 	
 	private static final String CHARSET_USED = "ASCII";
-	private final byte[] buffer = new byte[30]; //will be used temporarily, when bytes are read from input streams. 
+	private final byte[] buffer = new byte[200]; //will be used temporarily, when bytes are read from input streams. 
 										//this is not located in the method scope to avoid allocation costs in every call.
 	private static final int MAX_NUMBER_OF_FAILS = 3;
 	private int failures = 0;
@@ -57,7 +57,7 @@ public abstract class ObdCommand {
 	 * @param measure
 	 * @throws IOException if the result could not be interpreted / was invalid
 	 */
-	public abstract void processResponse(String response, Measurement measure) throws IOException, UnsupportedObdCommandException;
+	public abstract void processResponse(String response, Measurement measure) throws UnsupportedObdCommandException;
 	
 	/**
 	 * Utility method, that reads as many ASCII characters from the stream until the command prompt has returned.
@@ -95,7 +95,13 @@ public abstract class ObdCommand {
 		
 		//check, if the ELM 'error code' for an unsupported command was returned
 		if(rawString.equalsIgnoreCase("NODATA")){
-			throw new UnsupportedObdCommandException("Command "+this.getCommandString()+" returns NODATA and is not supported by the vehicle.");
+			throw new UnsupportedObdCommandException("Command "+this.getCommandString()+" returns NODATA.");
+		}
+		
+		//if this special string is returned, the ELM chip can not figure out, how to talk to the obd bus.
+		//we can do nothing but abort.
+		if(rawString.equals("UNABLETOCONNECT")){
+			throw new IOException("Adapter says: UNABLE TO CONNECT.");
 		}
 		
 		//when obd commands were issued, the first 4 returned bytes echo the command itself back

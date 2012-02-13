@@ -114,38 +114,40 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 					new DisableElmEchoCmd().queryResult(null, DefaultMeasurementSubsystem.this.inStream, DefaultMeasurementSubsystem.this.outStream);
 				}
 				catch(IOException e){
+					dataCache.destroyActiveTrack();
 					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "Could not establish connection to the ELM bluetooth adapter.");
 					cleanUp();
 					return;
 				}		
 				catch(UnsupportedObdCommandException e){
+					dataCache.destroyActiveTrack();
 					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "ELM adapter did not respond to DISABLE_ECHO command.");
 					cleanUp();
 					return;
 				}
 				//if no exception is thrown, the link is established and the command is accepted
 				//now query for the VIN and see if it matches the one in memory (makes sure, we are in the right vehicle)
-				VehicleIdentificationNumberCmd vinCmd = new VehicleIdentificationNumberCmd();
-				String retrievedVin = null;
-				try {
-					vinCmd.queryResult(null, inStream, outStream);
-					retrievedVin = vinCmd.getVin();
-				}
-				catch (IOException e) {
-					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "Vin Command caused an IOException: "+e.getMessage());
-					cleanUp();
-					return;
-				}
-				catch (UnsupportedObdCommandException e) {
-					Logg.log(Log.WARN, LOG_TAG, "Vehicle does not privde vin. Using default value 'UNKNOWNVIN'");
-					retrievedVin = "UNKNOWNVIN";
-				}
-				if(!dataCache.matchVinOfActiveTrack(retrievedVin)){
+//				VehicleIdentificationNumberCmd vinCmd = new VehicleIdentificationNumberCmd();
+//				String retrievedVin = null;
+//				try {
+//					vinCmd.queryResult(null, inStream, outStream);
+//					retrievedVin = vinCmd.getVin();
+//				}
+//				catch (IOException e) {
+//					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "Vin Command caused an IOException: "+e.getMessage());
+//					cleanUp();
+//					return;
+//				}
+//				catch (UnsupportedObdCommandException e) {
+//					Logg.log(Log.WARN, LOG_TAG, "Vehicle does not privde vin. Using default value 'UNKNOWNVIN'");
+//					retrievedVin = "UNKNOWNVIN";
+//				}
+				if(!dataCache.matchVinOfActiveTrack("UNKNOWNVIN")){
 					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "The stored Track has a different VIN than the current vehicle. "+
 							"Start a new Track or use the original vehicle again.");
 					cleanUp();
 					return;
-				}
+				} 
 				//at this point everything went fine, the periodic measurement can be turned on using the start() method
 				notifyListener(SubsystemStatus.States.SET_UP);
 			}
@@ -179,13 +181,12 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 				}
 				catch(IOException e){
 					Log.e(LOG_TAG,"IOException by periodic Command:", e);
-					notifyListener(SubsystemStatus.States.ERROR_BUT_ONGOING, "Command "+currentCmd.getClass().getSimpleName()+" caused an IOException: "+e.getMessage());
-					success=false;
-//					cleanUp();
-//					return;
+					notifyListener(SubsystemStatus.States.FATAL_ERROR_STOPPED, "Command "+currentCmd.getClass().getSimpleName()+" caused an IOException: "+e.getMessage());
+					cleanUp();
+					return;
 				}
 				catch(UnsupportedObdCommandException e2){
-					notifyListener(SubsystemStatus.States.ERROR_BUT_ONGOING, "Command "+currentCmd.getClass().getSimpleName()+" is not supported.");
+					notifyListener(SubsystemStatus.States.ERROR_BUT_ONGOING, "Command "+currentCmd.getClass().getSimpleName()+" is not supported: "+e2.getMessage());
 					success = false;
 //					iterator.remove();
 				}

@@ -1,11 +1,7 @@
 package de.unigoettingen.ct.obd.cmd;
 
-import java.io.IOException;
-
 import android.util.Log;
-
 import de.unigoettingen.ct.data.io.Measurement;
-import de.unigoettingen.ct.obd.UnsupportedObdCommandException;
 
 /**
  * This command sends nothing to the adapter and does nothing with the response (except logging it). However, running this command 
@@ -23,7 +19,7 @@ public class EmptyCmd extends ObdCommand{
 	}
 
 	@Override
-	public void processResponse(String response, Measurement measure) throws IOException, UnsupportedObdCommandException {
+	public void processResponse(String response, Measurement measure){
 		Log.d("EmptyCmd", "Initial messag from the adapter after strip is :"+response);
 	}
 

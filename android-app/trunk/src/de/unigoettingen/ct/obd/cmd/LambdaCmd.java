@@ -1,9 +1,6 @@
 package de.unigoettingen.ct.obd.cmd;
 
-import java.io.IOException;
-
 import android.util.Log;
-
 import de.unigoettingen.ct.data.Logg;
 import de.unigoettingen.ct.data.io.Measurement;
 import de.unigoettingen.ct.obd.UnsupportedObdCommandException;
@@ -34,11 +31,11 @@ public class LambdaCmd extends ObdCommand{
 	}
 
 	@Override
-	public void processResponse(String response, Measurement measure) throws IOException, UnsupportedObdCommandException {
+	public void processResponse(String response, Measurement measure) throws UnsupportedObdCommandException {
 		if(this.commandString.equals("0113")){
 			//interpret result as response to the 'which sensors are available?' query
 			if(response.length() != 2){
-				throw new IOException("Location of Oxygen Sensors command expected 1 byte, but "+response.length()+" hex digits were returned.");
+				throw new UnsupportedObdCommandException("Location of Oxygen Sensors command expected 1 byte, but "+response.length()+" hex digits were returned.");
 			}
 			int bitmask = Integer.parseInt(response,16); //3 leading 00 bytes here
 			//map this bitmask to the table at the top.
@@ -55,7 +52,7 @@ public class LambdaCmd extends ObdCommand{
 		else{
 			//interpret result as actual oxygen sensor values
 			if(response.length() != 4){
-				throw new IOException("O2 sensor command expected 2 bytes, but "+response.length()+" hex digits were returned.");
+				throw new UnsupportedObdCommandException("O2 sensor command expected 2 bytes, but "+response.length()+" hex digits were returned.");
 			}
 			//the first 2 bytes are the oxygen sensor output voltage, the following two bytes are the short term fuel trim
 			double lambda = Integer.parseInt(response.substring(0, 2), 16);

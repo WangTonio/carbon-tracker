@@ -129,6 +129,22 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 		}
 	}
 	
+	/**
+	 * Returns a user-friendly string representation of the track at the specified index.
+	 * @param trackId index of the target Track, use size-1 for the active Track
+	 * @return 
+	 */
+	public synchronized String getDetailedDescription(int trackId){
+		return this.tracks.get(trackId).toDescription();
+	}
+	
+	/**
+	 * The active track and all it's associated measurements will be lost completely after this call.
+	 */
+	public synchronized void destroyActiveTrack(){
+		this.tracks.remove(this.tracks.size()-1);
+	}
+	
 	private List<TrackSummary> generateSummary(){
 		List<TrackSummary> retVal = new ArrayList<TrackSummary>(tracks.size());
 		for(OngoingTrack ot: this.tracks){

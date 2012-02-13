@@ -1,7 +1,6 @@
 package de.unigoettingen.ct.obd.cmd;
 
-import java.io.IOException;
-
+import android.util.Log;
 import de.unigoettingen.ct.data.io.Measurement;
 import de.unigoettingen.ct.obd.UnsupportedObdCommandException;
 
@@ -19,7 +18,8 @@ public class DisableElmEchoCmd extends ObdCommand{
 	}
 
 	@Override
-	public void processResponse(String response, Measurement measure) throws IOException, UnsupportedObdCommandException {
+	public void processResponse(String response, Measurement measure) throws UnsupportedObdCommandException {
+		Log.i("DisableElmEchoCmd", "response received");
 		if(!response.equalsIgnoreCase("OK")){
 			//if "OK" is not returned, something went wrong
 			throw new UnsupportedObdCommandException("Adapter did not respond to ate0 command");

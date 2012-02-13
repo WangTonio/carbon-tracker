@@ -1,8 +1,7 @@
 package de.unigoettingen.ct.obd.cmd;
 
-import java.io.IOException;
-
 import de.unigoettingen.ct.data.io.Measurement;
+import de.unigoettingen.ct.obd.UnsupportedObdCommandException;
 
 public class VehicleSpeedCmd extends ObdCommand{
 
@@ -12,9 +11,9 @@ public class VehicleSpeedCmd extends ObdCommand{
 	}
 
 	@Override
-	public void processResponse(String response, Measurement measure) throws IOException {
+	public void processResponse(String response, Measurement measure) throws UnsupportedObdCommandException {
 		if(response.length() != 2){
-			throw new IOException("Vehicle speed command expected only 1 byte, but "+response.length()+" hex digits were returned.");
+			throw new UnsupportedObdCommandException("Expected only 1 byte, but "+response.length()+" hex digits were returned.");
 		}
 		measure.setSpeed(Integer.parseInt(response, 16)); //this is in km/h. 255 is max ( poor ghost rider :( )
 	}

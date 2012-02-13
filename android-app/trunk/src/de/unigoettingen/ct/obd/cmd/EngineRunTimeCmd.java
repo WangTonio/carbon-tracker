@@ -1,7 +1,5 @@
 package de.unigoettingen.ct.obd.cmd;
 
-import java.io.IOException;
-
 import de.unigoettingen.ct.data.io.Measurement;
 import de.unigoettingen.ct.obd.UnsupportedObdCommandException;
 
@@ -19,9 +17,9 @@ public class EngineRunTimeCmd extends ObdCommand{
 	}
 
 	@Override
-	public void processResponse(String response, Measurement measure) throws IOException, UnsupportedObdCommandException {
+	public void processResponse(String response, Measurement measure) throws UnsupportedObdCommandException{
 		if(response.length() != 4){
-			throw new IOException("Run Time Since Engine Start command expected 2 bytes, but "+response.length()+" hex digits were returned.");
+			throw new UnsupportedObdCommandException("Expected 2 bytes, but "+response.length()+" hex digits were returned.");
 		}
 		measure.setErt(Integer.parseInt(response, 16)); //this is in seconds with 65535 max
 	}

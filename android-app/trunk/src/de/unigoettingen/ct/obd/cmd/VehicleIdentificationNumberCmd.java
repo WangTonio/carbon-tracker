@@ -1,7 +1,5 @@
 package de.unigoettingen.ct.obd.cmd;
 
-import java.io.IOException;
-
 import de.unigoettingen.ct.data.io.Measurement;
 
 public class VehicleIdentificationNumberCmd extends ObdCommand {
@@ -14,7 +12,7 @@ public class VehicleIdentificationNumberCmd extends ObdCommand {
 	}
 
 	@Override
-	public void processResponse(String response, Measurement measure) throws IOException {
+	public void processResponse(String response, Measurement measure)  {
 		// TODO Auto-generated method stub
 		//this is complicated, see the elm document
 	}

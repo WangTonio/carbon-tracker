@@ -31,7 +31,7 @@ public class SimpleCachingSystem extends AbstractCachingSystem{
 		if(tracks.size() > 1 && tracks.get(0).getMeasurementCount() > 0){
 			this.invokeUpload(0);
 		}
-		else if (tracks.get(0).getMeasurementCount() > MEASUREMENT_THRESHOLD){
+		else if (tracks.size() == 1 && tracks.get(0).getMeasurementCount() > MEASUREMENT_THRESHOLD){
 			this.invokeUpload(0);
 		}
 	}

@@ -192,6 +192,7 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
 
 	@Override
 	public void indicateLoading(boolean loading) {
+		this.startMeasurementBtn.setEnabled(!loading);
 		if(loading && this.loadingDialog == null){
 			this.loadingDialog = ProgressDialog.show(this, null, "Loading ...");
 			this.loadingDialog.show();

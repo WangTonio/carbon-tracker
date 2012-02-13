@@ -191,7 +191,7 @@ public abstract class AbstractCachingSystem implements AsynchronousSubsystem, Ge
 
 				List<TrackSummary> currentCacheState = cache.getSummary();
 				int activeTrackIndex = currentCacheState.size()-1;
-				if(currentCacheState.get(activeTrackIndex).getMeasurementCount() > 0){
+				if(activeTrackIndex >=0 && currentCacheState.get(activeTrackIndex).getMeasurementCount() > 0){
 					//active track has data
 					Logg.log(Log.INFO, LOG_TAG, "Active Track still has data in RAM, trying to upload it.");
 					invokeUpload(activeTrackIndex);
@@ -216,10 +216,11 @@ public abstract class AbstractCachingSystem implements AsynchronousSubsystem, Ge
 				}
 				
 				//now store the non-active tracks
-				Log.i(LOG_TAG, (activeTrackIndex)+" non-active Tracks are stored persistently.");
-				for(int i=0; i<activeTrackIndex; i++){
+				currentCacheState = cache.getSummary(); //refresh the info
+				for(int i=0; i<currentCacheState.size(); i++){
 					//only those tracks, that are either still open or have still measurements, are saved
 					if(currentCacheState.get(i).getMeasurementCount() > 0 || !currentCacheState.get(i).isClosed()){
+						Logg.log(Log.INFO, LOG_TAG, "Track "+cache.getDetailedDescription(i)+" is stored persistently.");
 						persistence.writeFullTrack(cache.getTrackPart(i));
 					}
 				}
@@ -236,7 +237,8 @@ public abstract class AbstractCachingSystem implements AsynchronousSubsystem, Ge
 		}
 		currentlyUploadedIndex = trackIndex;
 		currentlyUploadedTrackPart = cache.getTrackPart(trackIndex);
-		Logg.log(Log.INFO, LOG_TAG, "Starting an upload to the server with "+currentlyUploadedTrackPart.getMeasurements().length+" measurements.");
+		Logg.log(Log.INFO, LOG_TAG, "Starting an upload to the server with "+currentlyUploadedTrackPart.getMeasurements().length+" measurements. Track is "+
+				(currentlyUploadedTrackPart.isLastPart() ? "closed." : "still open."));
 		currentUpload = new TrackPartUploader(webServiceUrl, currentlyUploadedTrackPart);
 		currentUpload.startUpload();
 	}

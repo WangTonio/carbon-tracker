@@ -147,6 +147,9 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 			cal.setTimeInMillis(cur.getLong(cur.getColumnIndex("started_at")));
 			retVal.add(new OngoingTrack(cal, cur.getString(cur.getColumnIndex("vin")), cur.getString(cur.getColumnIndex("description")), 
 					new Person(cur.getString(cur.getColumnIndex("forename")), cur.getString(cur.getColumnIndex("lastname")))));
+			if(cur.getInt(cur.getColumnIndex("closed")) == 1){
+				retVal.get(retVal.size()-1).setClosed();
+			}
 		}
 		cur.close();
 		return retVal;
