@@ -6,6 +6,8 @@ import java.util.List;
 import de.unigoettingen.ct.obd.cmd.EngineOilTemperatureCmd;
 import de.unigoettingen.ct.obd.cmd.EngineRpmCmd;
 import de.unigoettingen.ct.obd.cmd.EngineRunTimeCmd;
+import de.unigoettingen.ct.obd.cmd.IntakeAirTemperatureCmd;
+import de.unigoettingen.ct.obd.cmd.IntakeManifoldAbsolutePressureCmd;
 import de.unigoettingen.ct.obd.cmd.LambdaCmd;
 import de.unigoettingen.ct.obd.cmd.MassAirFlowCmd;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
@@ -22,20 +24,31 @@ public class CommandProvider {
 	
 	/**
 	 * Returns a list of all OBD commands that must be used periodically.
-	 * This includes the obligatory OBD commands and enabled optional commands as well.
+	 * This depends solely on the user choice.
 	 * @param prefs the preferences to load the user choice from
 	 * @return 
 	 */
 	public static List<ObdCommand> getDesiredObdCommands(SharedPreferences prefs){
 		List<ObdCommand> retVal = new ArrayList<ObdCommand>();
-		//obligatory commands:
-		retVal.add(new MassAirFlowCmd());
-		retVal.add(new LambdaCmd());
 
-		//optional commands:
 		if(prefs.getBoolean("rpm", false)){
 			retVal.add(new EngineRpmCmd());
 		}
+		if(prefs.getBoolean("iat", false)){
+			retVal.add(new IntakeAirTemperatureCmd());
+		}
+		if(prefs.getBoolean("map", false)){
+			retVal.add(new IntakeManifoldAbsolutePressureCmd());
+		}
+		
+		if(prefs.getBoolean("lambda", false)){
+			retVal.add(new LambdaCmd());
+		}
+		
+		if(prefs.getBoolean("maf", false)){
+			retVal.add(new MassAirFlowCmd());
+		}
+		
 		if(prefs.getBoolean("eot", false)){
 			retVal.add(new EngineOilTemperatureCmd());
 		}

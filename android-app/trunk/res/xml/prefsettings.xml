@@ -2,11 +2,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="Settings">
         <EditTextPreference android:persistent="true" android:order="1" android:summary="Your first name." android:key="forename" android:title="Forename" android:defaultValue="UNKNOWN" android:inputType="text"></EditTextPreference>    
         <EditTextPreference android:persistent="true" android:order="2" android:summary="Your last name." android:key="lastname" android:title="Lastname" android:defaultValue="DRIVER" android:inputType="text"></EditTextPreference>
-        <CheckBoxPreference android:key="rpm" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Engine Rounds per Minute" android:order="3"></CheckBoxPreference>
-        <CheckBoxPreference android:key="speed" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Driving Speed" android:order="4"></CheckBoxPreference>
-        <CheckBoxPreference android:key="eot" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Engine Oil Temperature" android:order="5"></CheckBoxPreference>
-        <CheckBoxPreference android:key="ert" android:defaultValue="false" android:summary="Enable optional measurement." android:title="Run Time since Engine Start" android:order="6"></CheckBoxPreference>
-        <EditTextPreference android:order="7" android:summary="URL (without suffixes) of the server your data will be uploaded to." android:key="serverurl" android:title="Server URL" android:defaultValue="http://134.76.21.30/CarbonTrackerWS/"></EditTextPreference>
-        <EditTextPreference android:order="8" android:summary="Every X milliseconds a full measurement will be performed." android:numeric="integer" android:key="measurement_interval" android:title="Measurement Interval" android:defaultValue="1000"/>
-        <CheckBoxPreference android:key="automatic_mode" android:defaultValue="false" android:summary="Will start up and take measurements without user interaction whenever the power cord is getting plugged in." android:title="Automatic Mode" android:order="9"></CheckBoxPreference>
+        <CheckBoxPreference android:key="rpm" android:defaultValue="true" android:summary="Engine Rounds per Minute" android:title="RPM" android:order="3"></CheckBoxPreference>
+        <CheckBoxPreference android:key="iat" android:defaultValue="true" android:summary="Intake Air Temperature" android:title="IAT" android:order="4"></CheckBoxPreference>
+        <CheckBoxPreference android:key="map" android:defaultValue="true" android:summary="Intake Manifold Absolute Pressure" android:title="MAP" android:order="5"></CheckBoxPreference>
+        <CheckBoxPreference android:key="lambda" android:defaultValue="true" android:summary="Oxygen Sensor Voltage" android:title="Lambda" android:order="6"></CheckBoxPreference>
+        <CheckBoxPreference android:key="maf" android:defaultValue="false" android:summary="Mass Air Flow" android:title="MAF" android:order="7"></CheckBoxPreference>
+        <CheckBoxPreference android:key="speed" android:defaultValue="false" android:summary="Driving Speed" android:title="Speed" android:order="8"></CheckBoxPreference>
+        <CheckBoxPreference android:key="eot" android:defaultValue="false" android:summary="Engine Oil Temperature" android:title="EOT" android:order="9"></CheckBoxPreference>
+        <CheckBoxPreference android:key="ert" android:defaultValue="false" android:summary="Run Time since Engine Start" android:title="ERT" android:order="10"></CheckBoxPreference>
+        <EditTextPreference android:order="11" android:summary="URL (without suffixes) of the server your data will be uploaded to." android:key="serverurl" android:title="Server URL" android:defaultValue="http://134.76.21.30/CarbonTrackerWS/"></EditTextPreference>
+        <EditTextPreference android:order="12" android:summary="Every X milliseconds a full measurement will be performed." android:numeric="integer" android:key="measurement_interval" android:title="Measurement Interval" android:defaultValue="1000"/>
+        <CheckBoxPreference android:key="automatic_mode" android:defaultValue="false" android:summary="Will start up and take measurements without user interaction whenever the power cord is getting plugged in." android:title="Automatic Mode" android:order="13"></CheckBoxPreference>
 </PreferenceScreen>

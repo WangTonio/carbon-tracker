@@ -3,6 +3,7 @@ package de.unigoettingen.ct.upload;
 import java.util.Calendar;
 
 import de.unigoettingen.ct.data.io.DebugLog;
+import de.unigoettingen.ct.data.io.Measurement;
 import de.unigoettingen.ct.data.io.TrackPart;
 import flexjson.JSONSerializer;
 
@@ -20,7 +21,8 @@ public class JSONMarshaller {
 	}
 	
 	public static String marshalTrackPart(TrackPart tp){
-		JSONSerializer serializer = new JSONSerializer().prettyPrint(true).transform(new CalendarTransformer(), Calendar.class);
+		JSONSerializer serializer = new JSONSerializer().prettyPrint(true).transform(new CalendarTransformer(), Calendar.class).
+		transform(new MeasurementTransformer(), Measurement.class);
 		return serializer.deepSerialize(tp);
 	}
 }
