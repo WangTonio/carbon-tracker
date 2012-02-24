@@ -86,16 +86,19 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 				trackPart.getDriver().getForename(), trackPart.getDriver().getLastname()});
 		if(cur.getCount() > 1){
 			cur.close();
+			db.close();
 			//the following log call kills the app as this condition is very unexpected
 			Log.wtf(LOG_TAG, "Corrupted db: Multiple track entries found for track "+trackPart);
 		}
 		if(cur.moveToFirst()){
 			int retVal = cur.getInt(cur.getColumnIndex("_id"));
 			cur.close();
+			db.close();
 			return retVal;
 		}
 		else{
 			cur.close();
+			db.close();
 			return -1;
 		}
 	}
@@ -130,6 +133,7 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 				track.addMeasurement(currMeasurement);
 			}
 			cur.close();
+			db.close();
 		}
 		//the left-out else means the track is not present and this method simply becomes a no-op
 	}
@@ -152,6 +156,7 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 			}
 		}
 		cur.close();
+		db.close();
 		return retVal;
 	}
 	
@@ -182,6 +187,7 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 			SQLiteDatabase db = this.getReadableDatabase();
 			db.delete("T_Track", "_id = ?", new String[]{String.valueOf(primaryKeyTrack)});
 			db.delete("T_Measurement", "id_T_Track = ?", new String[]{String.valueOf(primaryKeyTrack)});
+			db.close();
 		}
 	}
 
@@ -218,6 +224,7 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 			row.put("lambda", m.getLambda());
 			db.insert("T_Measurement", null, row);
 		}
+		db.close();
 	}
 	
 	@Override

@@ -47,7 +47,11 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 	public void addMeasurementToActiveTrack(Measurement m){
 		List<TrackSummary> summary;
 		synchronized (this) {
-			this.tracks.get(this.tracks.size()-1).addMeasurement(m);
+			OngoingTrack activeTrack = this.tracks.get(this.tracks.size()-1);
+			if(activeTrack.isClosed()){
+				throw new IllegalStateException("Can not add any more measurements to a closed track.");
+			}
+			activeTrack.addMeasurement(m);
 			summary = this.generateSummary();
 		}
 		this.fireUpdates(summary);

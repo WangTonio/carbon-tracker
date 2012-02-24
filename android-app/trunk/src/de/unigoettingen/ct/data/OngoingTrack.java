@@ -29,9 +29,6 @@ public class OngoingTrack {
 	}
 	
 	public void addMeasurement(Measurement m){
-		if(this.wrappedTrackPart.isLastPart()){
-			throw new IllegalStateException("Can not add any more measurements to a closed track.");
-		}
 		this.measurementList.add(m);
 	}
 	
