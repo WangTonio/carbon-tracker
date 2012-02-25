@@ -84,6 +84,9 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 		this.measurementInterval = measurementInterval;
 		this.exec = Executors.newSingleThreadScheduledExecutor();
 		this.obdCmds = obdCmds;
+		this.lastLongitude=Double.NaN;
+		this.lastLatitude=Double.NaN;
+		this.lastAltitude=Double.NaN;
 	}
 	
 	@Override
@@ -203,9 +206,11 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 			currentMeasurement.setPointOfTime(timeStamp);
 			//coordinates are adjusted by calculating the arithmetic mean of the coordinates
 			//before and after the OBD measurement. It is an approximation.
-			currentMeasurement.setLongitude((lastLongitude + lngBeforeMeasurement)/2);
-			currentMeasurement.setLatitude((lastLatitude+latBeforeMeasurement)/2);
-			currentMeasurement.setAltitude((lastAltitude+altBeforeMeasurement)/2);
+			if(!Double.isNaN(lastAltitude) && !Double.isNaN(lastLatitude) && !Double.isNaN(lastLongitude)){
+				currentMeasurement.setLongitude((lastLongitude + lngBeforeMeasurement)/2);
+				currentMeasurement.setLatitude((lastLatitude+latBeforeMeasurement)/2);
+				currentMeasurement.setAltitude((lastAltitude+altBeforeMeasurement)/2);
+			}
 			//push the new populated measurement object into the cache
 			//the caching strategy will handle the event
 			dataCache.addMeasurementToActiveTrack(currentMeasurement);
