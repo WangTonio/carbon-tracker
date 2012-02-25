@@ -13,10 +13,17 @@ public class IntakeManifoldAbsolutePressureCmd extends ObdCommand {
 	@Override
 	public void processResponse(String response, Measurement measure) throws UnsupportedObdCommandException {
 		// TODO adjust for possibly different scaling
-		if(response.length() != 2){
-			throw new UnsupportedObdCommandException("Expected 1 byte, but "+response.length()+" hex digits were returned.");
-		}
 		measure.setMap(Integer.parseInt(response, 16)); //in kPa according to standard scaling	
+	}
+
+	@Override
+	public int getNumberOfExpectedChars() {
+		return 2;
+	}
+	
+	@Override
+	public String toString() {
+		return "Intake Manifold Absolute Pressure (MAP)";
 	}
 
 }

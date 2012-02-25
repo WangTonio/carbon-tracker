@@ -27,4 +27,14 @@ public class VehicleIdentificationNumberCmd extends ObdCommand {
 		return this.vin;
 	}
 
+	@Override
+	public int getNumberOfExpectedChars() {
+		return -1;
+	}
+	
+	@Override
+	public String toString() {
+		return "Vehicle Identification Number (VIN)";
+	}
+
 }

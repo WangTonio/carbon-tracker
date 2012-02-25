@@ -12,13 +12,18 @@ public class MassAirFlowCmd extends ObdCommand{
 
 	@Override
 	public void processResponse(String response, Measurement measure) throws UnsupportedObdCommandException {
-		if(response.length() != 4){
-			throw new UnsupportedObdCommandException("Expected 2 bytes, but "+response.length()+" hex digits were returned.");
-		}
-		//the following is right according to standard scaling
+		//TODO the following is right according to standard scaling
 		measure.setMaf( (Integer.parseInt(response, 16) / 100D) );
 	}
+
+	@Override
+	public int getNumberOfExpectedChars() {
+		return 4;
+	}
 	
-	
+	@Override
+	public String toString() {
+		return "Mass Air Flow (MAF)";
+	}
 
 }

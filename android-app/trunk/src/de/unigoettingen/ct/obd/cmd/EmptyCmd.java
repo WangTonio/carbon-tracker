@@ -23,4 +23,14 @@ public class EmptyCmd extends ObdCommand{
 		Log.d("EmptyCmd", "Initial messag from the adapter after strip is :"+response);
 	}
 
+	@Override
+	public int getNumberOfExpectedChars() {
+		return -1;
+	}
+	
+	@Override
+	public String toString() {
+		return "Empty";
+	}
+
 }

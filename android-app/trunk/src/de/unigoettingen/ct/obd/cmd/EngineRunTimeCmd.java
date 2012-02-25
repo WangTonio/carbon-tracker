@@ -18,10 +18,17 @@ public class EngineRunTimeCmd extends ObdCommand{
 
 	@Override
 	public void processResponse(String response, Measurement measure) throws UnsupportedObdCommandException{
-		if(response.length() != 4){
-			throw new UnsupportedObdCommandException("Expected 2 bytes, but "+response.length()+" hex digits were returned.");
-		}
 		measure.setErt(Integer.parseInt(response, 16)); //this is in seconds with 65535 max
+	}
+
+	@Override
+	public int getNumberOfExpectedChars() {
+		return 4;
+	}
+	
+	@Override
+	public String toString() {
+		return "Engine Run Time (ERT)";
 	}
 
 }

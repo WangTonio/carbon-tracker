@@ -38,7 +38,14 @@ public abstract class ObdCommand {
 			out.write((getCommandString()+"\r").getBytes(CHARSET_USED)); //a carriage return terminates a command. line feed not necessary.
 		}
 		out.flush();
-		processResponse(readResultBackIn(in), measure);
+		String response = readResultBackIn(in);
+		if(this.getNumberOfExpectedChars() != -1 && response.length() != this.getNumberOfExpectedChars()){
+			throw new UnsupportedObdCommandException("Expected "+this.getNumberOfExpectedChars()+" characters, but "+
+					response.length()+" were returned. Response was:"+response);
+		}
+		else{
+			processResponse(response, measure);
+		}
 	}
 	
 	
@@ -58,6 +65,13 @@ public abstract class ObdCommand {
 	 * @throws IOException if the result could not be interpreted / was invalid
 	 */
 	public abstract void processResponse(String response, Measurement measure) throws UnsupportedObdCommandException;
+	
+	/**
+	 * This template method must return the number of (hex) characters a specific command expects and 
+	 * thus is able to interpret.
+	 * @return number of characters or -1 for 'anything goes'
+	 */
+	public abstract int getNumberOfExpectedChars();
 	
 	/**
 	 * Utility method, that reads as many ASCII characters from the stream until the command prompt has returned.

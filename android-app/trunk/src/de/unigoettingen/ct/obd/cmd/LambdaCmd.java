@@ -34,9 +34,7 @@ public class LambdaCmd extends ObdCommand{
 	public void processResponse(String response, Measurement measure) throws UnsupportedObdCommandException {
 		if(this.commandString.equals("0113")){
 			//interpret result as response to the 'which sensors are available?' query
-			if(response.length() != 2){
-				throw new UnsupportedObdCommandException("Location of Oxygen Sensors command expected 1 byte, but "+response.length()+" hex digits were returned.");
-			}
+
 			int bitmask = Integer.parseInt(response,16); //3 leading 00 bytes here
 			//map this bitmask to the table at the top.
 			//the lowest order bit, that is set, wins the competition and becomes the future command
@@ -51,13 +49,30 @@ public class LambdaCmd extends ObdCommand{
 		}
 		else{
 			//interpret result as actual oxygen sensor values
-			if(response.length() != 4){
-				throw new UnsupportedObdCommandException("O2 sensor command expected 2 bytes, but "+response.length()+" hex digits were returned.");
-			}
 			//the first 2 bytes are the oxygen sensor output voltage, the following two bytes are the short term fuel trim
 			double lambda = Integer.parseInt(response.substring(0, 2), 16);
 			lambda = lambda * 0.005; //scaling in volt
 			measure.setLambda(lambda);
+		}
+	}
+
+	@Override
+	public int getNumberOfExpectedChars() {
+		if(this.commandString.equals("0113")){
+			return 2;
+		}
+		else{
+			return 4;
+		}
+	}
+	
+	@Override
+	public String toString() {
+		if(this.commandString.equals("0113")){
+			return "Location of Oxygen Sensors";
+		}
+		else{
+			return "O2 Sensor Voltage (Lambda)";
 		}
 	}
 

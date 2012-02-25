@@ -12,10 +12,17 @@ public class IntakeAirTemperatureCmd extends ObdCommand {
 
 	@Override
 	public void processResponse(String response, Measurement measure) throws UnsupportedObdCommandException {
-		if(response.length() != 2){
-			throw new UnsupportedObdCommandException("Expected 1 byte, but "+response.length()+" hex digits were returned.");
-		}
 		measure.setIat(Integer.parseInt(response, 16) - 40); //this is in degrees celsius with an offset of 40
+	}
+
+	@Override
+	public int getNumberOfExpectedChars() {
+		return 2;
+	}
+	
+	@Override
+	public String toString() {
+		return "Intake Air Temperature (IAT)";
 	}
 
 }

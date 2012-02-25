@@ -26,4 +26,14 @@ public class DisableElmEchoCmd extends ObdCommand{
 		}
 	}
 
+	@Override
+	public int getNumberOfExpectedChars() {
+		return -1;
+	}
+	
+	@Override
+	public String toString() {
+		return "Disable Elm Echo [ate0]";
+	}
+
 }
