@@ -102,6 +102,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 		this.exec.execute(new Runnable() {		
 			public void run() {
 				Log.d(LOG_TAG, "setUp executing in worker thread.");
+				notifyListener(SubsystemStatus.States.SETTING_UP);
 				//establish the bluetooth connection and try to send the obligatory (and always supported) ELM system command
 				try{
 					DefaultMeasurementSubsystem.this.socket.connect();
@@ -222,6 +223,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 	@Override
 	public void start(){
 		this.goOnWithPeriodic=true;
+		notifyListener(SubsystemStatus.States.IN_PROGRESS);
 		exec.scheduleAtFixedRate(periodicTask, 250, measurementInterval, TimeUnit.MILLISECONDS);
 	}
 	

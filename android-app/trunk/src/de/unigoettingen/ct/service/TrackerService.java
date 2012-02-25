@@ -31,6 +31,7 @@ import de.unigoettingen.ct.data.io.Person;
 import de.unigoettingen.ct.obd.CommandProvider;
 import de.unigoettingen.ct.obd.DefaultMeasurementSubsystem;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
+import de.unigoettingen.ct.service.SubsystemStatus.States;
 import de.unigoettingen.ct.ui.CallbackUI;
 import de.unigoettingen.ct.upload.ManualUploadSystem;
 
@@ -239,6 +240,8 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 	private void setUpSubsystems(OngoingTrack activeTrack) {
 		if (!active) {
 			Log.d(LOG_TAG, "Creating subsystems");
+			this.cachingState=null;
+			this.measurementState=null;
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			this.trackCache = new TrackCache();
 			
@@ -277,12 +280,13 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 		this.mainThread.post(new Runnable() {	
 			@Override
 			public void run() {
+				Log.d(LOG_TAG, "Caching: "+cachingState+"  Measurement: "+measurementState);
 				Log.d(LOG_TAG, status.getState()+ " from "+sender);
 				if(sender == manualUploadSystem){
 					handleManualUploaderUpdate(status);
+					return;
 				}
-				Log.d(LOG_TAG, "Caching: "+cachingState+"  Measurement: "+measurementState);
-				
+		
 				//1. remember the subsystem states for future decision making
 				if(sender == cachingStrat){
 					cachingState = status.getState();
@@ -293,33 +297,17 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 				
 				//2. decide on the interaction with the ui
 				adjustUiState();
-
-				switch(status.getState()){
-					case SETTING_UP:
-						break;
-					case SET_UP: 
-						break;
-					case IN_PROGRESS:
-						if(sender == measurementSystem){
-							ui.diplayText("Data is beeing retrieved.");
-						}
-						else{
-							//this is not interesting so far as this is just a mock implementation
-							//ui.diplayText("Caching mechanism is active.");
-						}
-						break;
-					case STOPPED_BY_USER:
-						break;
-					case ERROR_BUT_ONGOING: //both types of error cause the same message so far
-					case FATAL_ERROR_STOPPED:
-						Logg.log(Log.ERROR, sender.toString(), sender.toString()+" says: "+status.getAdditionalInfo());
-						ui.diplayText(sender.toString()+" says: "+status.getAdditionalInfo());
-						break;
-					default:
-						ui.diplayText(status.toString());
-						break;		
+				
+				if(sender == measurementSystem && status.getState() == States.IN_PROGRESS){
+					ui.diplayText("Data is beeing retrieved.");
 				}
 				
+				if(status.getState() == States.ERROR_BUT_ONGOING || status.getState() == States.FATAL_ERROR_STOPPED){
+					//error messages are always propagated to the ui
+					Logg.log(Log.ERROR, sender.toString(), sender.toString()+" says: "+status.getAdditionalInfo());
+					ui.diplayText(sender.toString()+" says: "+status.getAdditionalInfo());
+				}
+	
 				//3. decide on interaction with the subsystems
 				switch(status.getState()){
 					case SETTING_UP:
@@ -329,6 +317,9 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 						//ready? then go
 						sender.start();
 						if(sender==cachingStrat){
+							if(measurementState != null){
+								Log.wtf(LOG_TAG, "Measurement state is "+measurementState+", although the caching system just responded SET_UP.");
+							}
 							measurementSystem.setUp();
 						}
 						break;

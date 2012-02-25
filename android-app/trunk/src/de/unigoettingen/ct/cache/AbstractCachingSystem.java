@@ -19,6 +19,7 @@ import de.unigoettingen.ct.data.io.TrackPart;
 import de.unigoettingen.ct.service.AsynchronousSubsystem;
 import de.unigoettingen.ct.service.SubsystemStatus;
 import de.unigoettingen.ct.service.SubsystemStatusListener;
+import de.unigoettingen.ct.service.SubsystemStatus.States;
 import de.unigoettingen.ct.upload.AbstractUploader;
 import de.unigoettingen.ct.upload.TrackPartUploader;
 
@@ -72,6 +73,7 @@ public abstract class AbstractCachingSystem implements AsynchronousSubsystem, Ge
 		this.executor.execute(new Runnable() {
 			@Override
 			public void run() {
+				statusListener.notify(new SubsystemStatus(States.SETTING_UP), AbstractCachingSystem.this);
 				List<OngoingTrack> storedTracks = persistence.loadAllTracksEmpty();
 				//so far, everything gets loaded into ram as a whole
 				for(OngoingTrack currTrack: storedTracks){
