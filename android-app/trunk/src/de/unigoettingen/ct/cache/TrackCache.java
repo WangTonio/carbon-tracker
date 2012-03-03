@@ -3,6 +3,8 @@ package de.unigoettingen.ct.cache;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 import de.unigoettingen.ct.data.GenericObservable;
 import de.unigoettingen.ct.data.OngoingTrack;
 import de.unigoettingen.ct.data.TrackSummary;
@@ -49,7 +51,8 @@ public class TrackCache extends GenericObservable<List<TrackSummary>>{
 		synchronized (this) {
 			OngoingTrack activeTrack = this.tracks.get(this.tracks.size()-1);
 			if(activeTrack.isClosed()){
-				throw new IllegalStateException("Can not add any more measurements to a closed track.");
+				Log.i("TrackCache", "A Measurement will be discarded, as the active track is already closed.");
+				return;
 			}
 			activeTrack.addMeasurement(m);
 			summary = this.generateSummary();

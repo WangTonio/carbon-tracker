@@ -234,9 +234,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 	@Override
 	public void stop(){
 		//do idiot-safe clean up and indicate that this terminated gracefully
-		//this will hopefully be the last job
-		//TODO there is a possible race condition that another periodic task gets executed after the clean up job
-		//it happens, if after the execute call below and before the shutDown call the scheduler prefers other threads
+		//the goOnWithPeriodic flag prevents a possible race condition that another periodic task gets executed after the clean up job
 		this.goOnWithPeriodic=false;
 		this.locationMgr.removeUpdates(this); //it is possible this works from thread main only
 		this.exec.execute(new Runnable() {
