@@ -102,13 +102,18 @@ public class ManualUploadSystem implements AsynchronousSubsystem{
 					//upload was successful: no need to store the data locally any more
 					persistence.deleteTrackCompletely(tracks.get(i).getEmptyTrackPart());
 					if(stopRequested){
+						executor.shutdown();
+						persistence.close();
 						informListener(SubsystemStatus.States.STOPPED_BY_USER,
 								"Upload stopped. Already uploaded "+i+" of "+tracks.size()+" Tracks.");
-						executor.shutdown();
 						return; //exits the loop
 					}
 					//if the upload went fine and no stop was requested, go on with the next track !
 				}
+				//all tracks done at this point
+				executor.shutdown();
+				persistence.close();
+				informListener(SubsystemStatus.States.STOPPED_BY_USER, "Everything is uploaded.");
 			}
 		});
 	}
