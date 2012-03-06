@@ -176,7 +176,7 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 			double altBeforeMeasurement = lastAltitude;
 			
 			Measurement currentMeasurement = new Measurement();
-			for(Iterator<ObdCommand> iterator = obdCmds.iterator(); iterator.hasNext(); ){
+			for(Iterator<ObdCommand> iterator = obdCmds.iterator(); iterator.hasNext() && goOnWithPeriodic; ){
 				ObdCommand currentCmd = iterator.next();
 				boolean success;
 				try{
