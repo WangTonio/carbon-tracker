@@ -17,7 +17,7 @@ public class MassAirFlowCmd extends ObdCommand{
 	
 	private double scaling = 0.01; //default
 	private ObdCommand wrappedCommand = new ScalingCommand();
-	boolean firstExecution = false;
+	boolean firstExecution = true;
 
 	@Override
 	public String getCommandString() {
