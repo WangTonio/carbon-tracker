@@ -98,13 +98,13 @@ public abstract class ObdCommand {
 			}
 		}
 		String rawString = new String(this.buffer,0,index);
-		Log.d(this.getClass().getSimpleName(), "OBD Output after filtering is:"+rawString);
+		Log.d(this.toString(), "OBD Output after filtering is:"+rawString);
 		
 		//in the initialization phase, SEARCHING... is sometimes part of the output
 		//TODO figure out why and get rid of this hack
 		if(rawString.startsWith("SEARCHING...")){
 			rawString = rawString.substring(12);
-			Log.d(this.getClass().getSimpleName(), "Output contained SEARCHING an was truncated to:"+rawString);
+			Log.d(this.toString(), "Output contained SEARCHING an was truncated to:"+rawString);
 		}
 		
 		//check, if the ELM 'error code' for an unsupported command was returned
@@ -125,7 +125,7 @@ public abstract class ObdCommand {
 			rawString = rawString.substring(4);
 		}
 
-		Log.d(this.getClass().getSimpleName(), "Processing OBD String:"+rawString);
+		Log.d(this.toString(), "Processing OBD String:"+rawString);
 		return rawString;
 	}
 	
