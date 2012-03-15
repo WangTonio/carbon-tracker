@@ -369,6 +369,7 @@ public class TrackerService extends Service implements SubsystemStatusListener{
 					case SET_UP:
 						ui.diplayText(state.getAdditionalInfo());
 						ui.indicateLoading(true);
+						manualUploadSystem.start();
 						break;
 					case IN_PROGRESS:
 						ui.indicateLoading(true);
