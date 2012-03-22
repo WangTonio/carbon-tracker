@@ -205,8 +205,8 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 			currentMeasurement.setPointOfTime(timeStamp);
 			//coordinates are adjusted by calculating the arithmetic mean of the coordinates
 			//before and after the OBD measurement. It is an approximation.
-			if(!Double.isNaN(lastAltitude) && !Double.isNaN(lastLatitude) && !Double.isNaN(lastLongitude)){
-				currentMeasurement.setLongitude((lastLongitude + lngBeforeMeasurement)/2);
+			if(!Double.isNaN(altBeforeMeasurement) && !Double.isNaN(latBeforeMeasurement) && !Double.isNaN(lngBeforeMeasurement)){
+				currentMeasurement.setLongitude((lastLongitude+lngBeforeMeasurement)/2);
 				currentMeasurement.setLatitude((lastLatitude+latBeforeMeasurement)/2);
 				currentMeasurement.setAltitude((lastAltitude+altBeforeMeasurement)/2);
 			}
