@@ -65,10 +65,12 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 				    "latitude REAL , "+
 				    "altitude REAL , "+
 				    "rpm INTEGER , "+
-				    "maf REAL , "+
+				    "iat INTEGER , "+
+				    "map INTEGER , "+
 				    "speed INTEGER , "+
 				    "eot INTEGER , "+
 				    "ert INTEGER , "+
+				    "maf REAL , "+
 				    "lambda REAL "+
 				    ")");
 		
@@ -118,15 +120,39 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 				Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(cur.getLong(cur.getColumnIndex("point_of_time")));
 				currMeasurement.setPointOfTime(cal);
-				currMeasurement.setLongitude(cur.getDouble(cur.getColumnIndex("longitude")));
-				currMeasurement.setLatitude(cur.getDouble(cur.getColumnIndex("latitude")));
-				currMeasurement.setAltitude(cur.getDouble(cur.getColumnIndex("altitude")));
-				currMeasurement.setRpm(cur.getInt(cur.getColumnIndex("rpm")));
-				currMeasurement.setMaf(cur.getDouble(cur.getColumnIndex("maf")));
-				currMeasurement.setSpeed(cur.getInt(cur.getColumnIndex("speed")));
-				currMeasurement.setEot(cur.getInt(cur.getColumnIndex("eot")));
-				currMeasurement.setErt(cur.getInt(cur.getColumnIndex("ert")));
-				currMeasurement.setLambda(cur.getDouble(cur.getColumnIndex("lambda")));
+				if(!cur.isNull(cur.getColumnIndex("longitude"))){
+					currMeasurement.setLongitude(cur.getDouble(cur.getColumnIndex("longitude")));
+				}
+				if(!cur.isNull(cur.getColumnIndex("latitude"))){
+					currMeasurement.setLatitude(cur.getDouble(cur.getColumnIndex("latitude")));
+				}
+				if(!cur.isNull(cur.getColumnIndex("altitude"))){
+					currMeasurement.setAltitude(cur.getDouble(cur.getColumnIndex("altitude")));
+				}
+				if(!cur.isNull(cur.getColumnIndex("rpm"))){
+					currMeasurement.setRpm(cur.getInt(cur.getColumnIndex("rpm")));
+				}
+				if(!cur.isNull(cur.getColumnIndex("iat"))){
+					currMeasurement.setIat(cur.getInt(cur.getColumnIndex("iat")));
+				}
+				if(!cur.isNull(cur.getColumnIndex("map"))){
+					currMeasurement.setMap(cur.getInt(cur.getColumnIndex("map")));
+				}
+				if(!cur.isNull(cur.getColumnIndex("speed"))){
+					currMeasurement.setSpeed(cur.getInt(cur.getColumnIndex("speed")));
+				}
+				if(!cur.isNull(cur.getColumnIndex("eot"))){
+					currMeasurement.setEot(cur.getInt(cur.getColumnIndex("eot")));
+				}
+				if(!cur.isNull(cur.getColumnIndex("ert"))){
+					currMeasurement.setErt(cur.getInt(cur.getColumnIndex("ert")));
+				}
+				if(!cur.isNull(cur.getColumnIndex("maf"))){
+					currMeasurement.setMaf(cur.getDouble(cur.getColumnIndex("maf")));
+				}
+				if(!cur.isNull(cur.getColumnIndex("lambda"))){
+					currMeasurement.setLambda(cur.getDouble(cur.getColumnIndex("lambda")));
+				}	
 				track.addMeasurement(currMeasurement);
 			}
 			cur.close();
@@ -207,15 +233,39 @@ public class PersistenceBinder extends SQLiteOpenHelper{
 			row = new ContentValues();
 			row.put("id_T_Track", trackPrimaryKey);
 			row.put("point_of_time", m.getPointOfTime().getTimeInMillis());
-			row.put("longitude", m.getLongitude());
-			row.put("latitude", m.getLatitude());
-			row.put("altitude", m.getAltitude());
-			row.put("rpm", m.getRpm());
-			row.put("maf", m.getMaf());
-			row.put("speed", m.getSpeed());
-			row.put("eot", m.getEot());
-			row.put("ert", m.getErt());
-			row.put("lambda", m.getLambda());
+			if(m.hasLongitude()){
+				row.put("longitude", m.getLongitude());
+			}
+			if(m.hasLatitude()){
+				row.put("latitude", m.getLatitude());
+			}
+			if(m.hasAltitude()){
+				row.put("altitude", m.getAltitude());
+			}
+			if(m.hasRpm()){
+				row.put("rpm", m.getRpm());
+			}
+			if(m.hasIat()){
+				row.put("iat", m.getIat());
+			}
+			if(m.hasMap()){
+				row.put("map", m.getMap());
+			}
+			if(m.hasSpeed()){
+				row.put("speed", m.getSpeed());
+			}
+			if(m.hasEot()){
+				row.put("eot", m.getEot());
+			}
+			if(m.hasErt()){
+				row.put("ert", m.getErt());
+			}
+			if(m.hasMaf()){
+				row.put("maf", m.getMaf());
+			}
+			if(m.hasLambda()){
+				row.put("lambda", m.getLambda());
+			}
 			db.insert("T_Measurement", null, row);
 		}
 	}
