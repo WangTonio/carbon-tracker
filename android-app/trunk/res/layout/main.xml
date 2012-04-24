@@ -1,18 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Welcome !" android:textSize="24dp" android:id="@+id/statusLineTextView"></TextView>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/startMeasurementBtn" android:text="Start Measurement"></Button>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Preferences" android:id="@+id/preferencesBtn"></Button>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="View Log" android:id="@+id/logBtn"></Button>
+    android:background="@drawable/screen_shape"
+    android:orientation="vertical" >
 
     <Button
-        android:id="@+id/uploadCacheBtn"
+        android:id="@+id/startMeasurementBtn"
+        style="@style/button_style"
+        android:layout_width="fill_parent"
+        android:layout_gravity="left"
+        android:layout_marginTop="20dp"
+        android:text="Start Measurement" >
+    </Button>
+
+    <TextView
+        android:id="@+id/statusLineTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Upload Local Data" />
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Welcome !"
+        android:textColor="@color/light_grey"
+        android:textSize="40sp" >
+    </TextView>
+
+    <ProgressBar
+        android:id="@+id/loadingCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/stoppedImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/stop_icon" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/ct_icon" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp" >
+
+        <Button
+            android:id="@+id/uploadCacheBtn"
+            style="@style/button_style"
+            android:layout_weight="1"
+            android:text="Upload Local Data" >
+        </Button>
+
+        <Button
+            android:id="@+id/logBtn"
+            style="@style/button_style"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="View Log" >
+        </Button>
+
+        <Button
+            android:id="@+id/preferencesBtn"
+            style="@style/button_style"
+            android:layout_weight="1"
+            android:text="Preferences" >
+        </Button>
+    </LinearLayout>
 
 </LinearLayout>

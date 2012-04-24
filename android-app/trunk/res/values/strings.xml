@@ -2,4 +2,16 @@
 <resources>
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">Carbon Tracker</string>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="light_grey">#F4F4F4</color>
+    <color name="dark_grey">#444444</color>
+    <color name="transparent">#00000000</color>
+    <style name="button_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:padding">7dp</item>
+        <item name="android:textColor">@color/button_text_color</item>
+    </style>
 </resources>

@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.unigoettingen.ct.R;
@@ -33,6 +35,7 @@ import de.unigoettingen.ct.service.TrackerService.TrackerServiceBinder;
 public class MainActivity extends Activity implements OnClickListener, CallbackUI{
 
     private static final int SETTINGS = 3;
+    private static final int ABOUT = 4;
     private static final String LOG_TAG = "MainActivity";
     
     private Button startMeasurementBtn;
@@ -41,6 +44,8 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
     private Button uploadCacheBtn;
     private TextView statusLine;
     private ProgressDialog loadingDialog;
+    private ProgressBar loadingCircle;
+    private ImageView stoppedImageView;
     
     private TrackerServiceBinder serviceBinder;
     private boolean hasRunningService = false;
@@ -98,20 +103,26 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
         this.uploadCacheBtn= (Button) findViewById(R.id.uploadCacheBtn);
         this.uploadCacheBtn.setOnClickListener(this);
         this.statusLine = (TextView) findViewById(R.id.statusLineTextView);
+        this.loadingCircle = (ProgressBar) findViewById(R.id.loadingCircle);
+        this.stoppedImageView = (ImageView) findViewById(R.id.stoppedImageView);
         this.startMeasurementAutomatically = getIntent().getBooleanExtra("automaticMode", false);
         this.startAndBindService();
     }
     
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, SETTINGS, 0, "Settings");
+        menu.add(0, ABOUT, 1, "About");
         return true;
     }
     
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case SETTINGS:
-        	updateConfig();
-        	return true;
+	        case SETTINGS:
+	        	updateConfig();
+	        	return true;
+	        case ABOUT:
+	        	showAboutScreen();
+	        	return true;
         }
         return false;
     }
@@ -119,6 +130,11 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
     private void updateConfig() {
     	Intent configIntent = new Intent(this,PrefsActivity.class);
     	startActivity(configIntent);
+    }
+    
+    private void showAboutScreen(){
+    	Intent aboutIntent = new Intent(this, AboutActivity.class);
+    	startActivity(aboutIntent);
     }
     
     private void goToLoggActivity(){
@@ -181,11 +197,15 @@ public class MainActivity extends Activity implements OnClickListener, CallbackU
 		if(running){
 			this.statusLine.setText("Running ...");
 			this.startMeasurementBtn.setText("Stop Measurement");
+			this.stoppedImageView.setVisibility(View.GONE);
+			this.loadingCircle.setVisibility(View.VISIBLE);
 			this.hasRunningService = true;
 		}
 		else{
 			this.statusLine.setText("Stopped");
 			this.startMeasurementBtn.setText("Start Measurement");
+			this.stoppedImageView.setVisibility(View.VISIBLE);
+			this.loadingCircle.setVisibility(View.GONE);
 			this.hasRunningService = false;
 		}
 	}

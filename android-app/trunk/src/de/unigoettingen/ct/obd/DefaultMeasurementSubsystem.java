@@ -23,7 +23,6 @@ import de.unigoettingen.ct.data.io.Measurement;
 import de.unigoettingen.ct.obd.cmd.DisableElmEchoCmd;
 import de.unigoettingen.ct.obd.cmd.EmptyCmd;
 import de.unigoettingen.ct.obd.cmd.ObdCommand;
-import de.unigoettingen.ct.obd.cmd.VehicleIdentificationNumberCmd;
 import de.unigoettingen.ct.service.AsynchronousSubsystem;
 import de.unigoettingen.ct.service.SubsystemStatus;
 import de.unigoettingen.ct.service.SubsystemStatusListener;
@@ -129,6 +128,8 @@ public class DefaultMeasurementSubsystem implements LocationListener, Asynchrono
 					cleanUp();
 					return;
 				}
+				// the following is commented-out, because the vin parsing is difficult and results in a dead lock, if it fails
+				
 				//if no exception is thrown, the link is established and the command is accepted
 				//now query for the VIN and see if it matches the one in memory (makes sure, we are in the right vehicle)
 //				VehicleIdentificationNumberCmd vinCmd = new VehicleIdentificationNumberCmd();

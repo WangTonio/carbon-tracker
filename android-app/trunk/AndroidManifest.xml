@@ -10,7 +10,7 @@
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
 	<uses-permission android:name="android.permission.CONTROL_LOCATION_UPDATES"></uses-permission>
 
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
+    <application android:icon="@drawable/ct_icon_light" android:label="@string/app_name">
         <receiver
 	    android:label="@string/app_name"
 	    android:name=".ui.PowerConnectedReceiver" >
@@ -32,6 +32,7 @@
         </activity>
         <activity android:name=".ui.PrefsActivity" android:label="Settings"></activity>
         <activity android:name=".ui.LoggActivity" android:label="Log"></activity>
+        <activity android:name=".ui.AboutActivity" android:label="About"></activity>
 	 <service android:name="de.unigoettingen.ct.service.TrackerService" android:exported="false"></service>
     </application>
     <uses-sdk android:minSdkVersion="8" />

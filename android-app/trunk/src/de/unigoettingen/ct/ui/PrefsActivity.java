@@ -14,6 +14,7 @@ public class PrefsActivity extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.prefs);
 		addPreferencesFromResource(R.xml.prefsettings);
 	}
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/screen_shape"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:text="About"
+        android:textColor="@color/light_grey"
+        android:textSize="30sp" >
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="App by Fabian Sudau, 2011/2012"
+        android:textColor="@color/light_grey"
+        android:textSize="15sp" >
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="20dp"
+        android:text="Released under Apache License Version 2.0. See:"
+        android:textColor="@color/light_grey"
+        android:textSize="15sp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/apache_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="1dp"
+        android:text="http://www.apache.org/licenses/LICENSE-2.0"
+        android:textColor="@color/light_grey"
+        android:textSize="15sp" >
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="45dp"
+        android:text="Please make sure that the installation of OBD equipment is conforming to the law of your country before trying out this app."
+        android:textColor="@color/light_grey"
+        android:textSize="15sp" >
+    </TextView>
+    
+   <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="45dp"
+        android:text="Car icon by The Noun Project\n(http://www.thenounproject.com/)\nCO² icon by Simplefly\n(http://simplefly.nl/icons_shop/)"
+        android:textColor="@color/black"
+        android:textSize="13sp" >
+    </TextView>
+
+</LinearLayout>
